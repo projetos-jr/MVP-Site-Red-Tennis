@@ -1,0 +1,68 @@
+{
+  "saibro-vertical": {
+    "width": 640,
+    "height": 800,
+    "widths": [
+      480,
+      640
+    ]
+  },
+  "saibro-quadras": {
+    "width": 1283,
+    "height": 655,
+    "widths": [
+      480,
+      800,
+      1283
+    ]
+  },
+  "rapida-quadra": {
+    "width": 1273,
+    "height": 660,
+    "widths": [
+      480,
+      800,
+      1273
+    ]
+  },
+  "rapida-paredao": {
+    "width": 650,
+    "height": 520,
+    "widths": [
+      480,
+      650
+    ]
+  },
+  "saibro-rede": {
+    "width": 620,
+    "height": 525,
+    "widths": [
+      480,
+      620
+    ]
+  },
+  "saibro-linha": {
+    "width": 760,
+    "height": 435,
+    "widths": [
+      480,
+      760
+    ]
+  },
+  "saibro-refletores": {
+    "width": 560,
+    "height": 700,
+    "widths": [
+      480,
+      560
+    ]
+  },
+  "rapida-linhas": {
+    "width": 760,
+    "height": 420,
+    "widths": [
+      480,
+      760
+    ]
+  }
+}
