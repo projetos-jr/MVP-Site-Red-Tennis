@@ -3,9 +3,10 @@ import { pagina } from "@/lib/seo";
 import { Cabeca, TituloSecao } from "@/components/Cabeca";
 import { Faq } from "@/components/Faq";
 import { Fecho } from "@/components/Fecho";
+import { Convite } from "@/components/Convite";
 import { Carteirinhas } from "@/components/home/Carteirinhas";
 import { Btn } from "@/components/ui";
-import { beneficios, comparativo, faqClube, mensagens, planos, regrasRanking } from "@/content/red";
+import { beneficios, comparativo, faqClube, indicacao, mensagens, planos, regrasRanking } from "@/content/red";
 import { wa } from "@/lib/wa";
 
 export const metadata: Metadata = pagina({
@@ -15,11 +16,6 @@ export const metadata: Metadata = pagina({
   compartilhar: { titulo: "Clube Red · O clube de quem joga toda semana", descricao: "Aula em grupo, ranking, torneio do mês e desconto na quadra. Planos mensais da Red Tennis, no Rudge Ramos." },
 });
 
-const INDICACAO = [
-  { t: "Você indica", d: "Chame um amigo para uma aula experimental na Red." },
-  { t: "Ele fecha o plano", d: "E informa o seu nome na recepção." },
-  { t: "Você ganha", d: "Uma aula particular no mês seguinte. Sem limite de indicações." },
-];
 
 export default function ClubeRed() {
   return (
@@ -97,20 +93,13 @@ export default function ClubeRed() {
         </div>
       </section>
 
-      <section className="secao sup-vinho" aria-labelledby="ind-titulo">
+      <section className="secao sup-vinho" aria-labelledby="ind-titulo" id="indicacao">
         <div className="wrap">
-          <TituloSecao id="ind-titulo" className="mb-12">
-            Traga um amigo, ganhe uma aula
+          <TituloSecao id="ind-titulo" className="mb-6">
+            {indicacao.titulo}
           </TituloSecao>
-          <ol className="passos">
-            {INDICACAO.map((p, i) => (
-              <li key={p.t}>
-                <span className="placar">{i + 1}</span>
-                <h3 className="sub">{p.t}</h3>
-                <p className="sec">{p.d}</p>
-              </li>
-            ))}
-          </ol>
+          <p className="lead sec mb-12">{indicacao.intro}</p>
+          <Convite />
         </div>
       </section>
 

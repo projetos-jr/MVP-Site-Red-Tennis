@@ -29,6 +29,32 @@ export function Estudio() {
     s.setGrain(n("grain", 0.035));
     s.repouso();
     if (q.has("mx")) s.amassado(n("mx", 0), n("my", 0), n("me", 0.8));
+    const lista = (k: string) => (q.get(k) ?? "").split(",").map(Number);
+    if (q.has("fundo")) s.setMarcaFundo(n("fundo", 1));
+    if (q.has("raq")) {
+      const [x, y, ang, sc] = lista("raq");
+      s.setRaquete(x, y, (ang * Math.PI) / 180, sc);
+    }
+    if (q.has("var")) {
+      const [x, y, int, esp] = lista("var");
+      s.setVarrido(x, y, int, esp);
+    }
+    if (q.has("deslize")) {
+      // marca de deslize: um traço longo e levemente curvo
+      const [x1, y1, x2, y2, r] = lista("deslize");
+      const pts = Array.from({ length: 60 }, (_, i) => {
+        const t = i / 59;
+        // desliza reto e termina num leve gancho, onde o pé freia
+        const curva = Math.pow(t, 3) * r * 2.2;
+        return { x: x1 + (x2 - x1) * t, y: y1 + (y2 - y1) * t + curva };
+      });
+      s.marcaManual(pts, 0.65, r);
+    }
+    if (q.has("quique")) {
+      // marca da bola no saibro: oval curto
+      const [x, y, r] = lista("quique");
+      s.marcaManual([{ x: x - r * 0.9, y: y - r * 0.2 }, { x: x + r * 0.9, y: y + r * 0.2 }], 0.75, r);
+    }
     if (q.has("trail")) {
       const pts: { x: number; y: number }[] = [];
       for (let i = 0; i <= 40; i++) {

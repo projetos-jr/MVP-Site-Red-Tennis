@@ -7,14 +7,16 @@ type Props = {
   /** Imagem de fundo (slot). Sem foto, usa o campo de cor. */
   foto?: string;
   tom?: "saibro" | "bordo" | "vinho";
+  /** Mostra a foto em retícula de duas tintas (fotos reais da Red em baixa resolução). */
+  ret?: boolean;
   children?: ReactNode;
 };
 
 /** Cabeça das páginas internas: título grande sobre a imagem de material, uma frase e a ação. */
-export function Cabeca({ titulo, intro, foto, tom = "saibro", children }: Props) {
+export function Cabeca({ titulo, intro, foto, tom = "saibro", ret, children }: Props) {
   return (
     <header className={`cabeca sup-${tom} ${foto ? "" : "com-grao"}`}>
-      {foto && <PhotoSlot name={foto} alt="" sizes="100vw" prioridade className="cabeca-foto" />}
+      {foto && <PhotoSlot name={foto} alt="" sizes="100vw" prioridade className={`cabeca-foto ${ret ? "cabeca-ret" : "com-grao-foto"}`} ret={ret} />}
       <div className="wrap cabeca-corpo">
         <h1 className="display cabeca-titulo">{titulo}</h1>
         <div className="cabeca-pe">

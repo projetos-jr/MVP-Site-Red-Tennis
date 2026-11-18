@@ -6,7 +6,7 @@ import { contato, mensagens, nav, site } from "@/content/red";
 import { wa } from "@/lib/wa";
 import { HorariosSemana } from "./Aberto";
 import { FooterMarca } from "./FooterMarca";
-import { Btn } from "./ui";
+import { BtnAula } from "./Agendar";
 
 export function Footer() {
   const e = contato.endereco;
@@ -31,9 +31,7 @@ export function Footer() {
               </address>
             )}
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
-              <Btn href={wa(mensagens.aula)} tom="claro">
-                Agendar aula experimental
-              </Btn>
+              <BtnAula tom="claro" />
             </div>
           </div>
           {!semHorarios && (

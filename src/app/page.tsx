@@ -15,6 +15,7 @@ import { Btn, BtnLinha } from "@/components/ui";
 import { agenda, beneficios, contato, depoimentos, eventos, mensagens, site } from "@/content/red";
 import { pagina } from "@/lib/seo";
 import { wa } from "@/lib/wa";
+import { BtnAula } from "@/components/Agendar";
 
 export const metadata: Metadata = {
   ...pagina({
@@ -46,7 +47,7 @@ export default function Home() {
               Individual, em dupla ou em turma de até quatro. Da bola vermelha, aos quatro anos, ao treino de quem joga o Circuito.
             </p>
             <div className="mt-8 grid gap-2 justify-items-start">
-              <Btn href={wa(mensagens.aula)}>Agendar aula experimental</Btn>
+              <BtnAula />
               <BtnLinha href="/aulas/">Ver os programas</BtnLinha>
             </div>
           </div>

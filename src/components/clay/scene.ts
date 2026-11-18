@@ -116,6 +116,8 @@ export class ClayScene {
   private tLuz = 0;
   private desenho = 1;
   private grain = 0.035;
+  private raq: [number, number, number, number] = [0, 0, 0, 0];
+  private varrido: [number, number, number, number] = [0, 0, 0, 1];
 
   /** Chamado quando a bola toca o chão (para som ou haptics no futuro). */
   onQuique?: (forca: number) => void;
@@ -223,7 +225,7 @@ export class ClayScene {
     this.main = this.programa(MAIN_FRAG, [
       "uRes", "uNoise", "uTrail", "uTime", "uLineW", "uT", "uDraw", "uSideX", "uNetY", "uNetH", "uMesh",
       "uSun", "uSunCol", "uAmb", "uNight", "uL0", "uL1", "uL2", "uL3", "uBall", "uSpin", "uMouse", "uRipple",
-      "uIntro", "uGrain",
+      "uIntro", "uGrain", "uRaq", "uVar", "uMarca",
     ]);
   }
 
@@ -488,7 +490,7 @@ export class ClayScene {
     gl.uniform2f(u.uRes, this.w, this.h);
     gl.uniform2f(u.uA, this.stampA.x, this.stampA.y);
     gl.uniform2f(u.uB, this.stampB.x, this.stampB.y);
-    gl.uniform1f(u.uR, Math.max(16, this.layout.lineW * 1.2));
+    gl.uniform1f(u.uR, this.raioMarca || Math.max(16, this.layout.lineW * 1.2));
     gl.uniform1f(u.uStrength, this.stampForca);
     gl.uniform1f(u.uSweep, this.sweep < 0 ? -1 : this.sweep * (this.w + 200) - 100);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -548,21 +550,42 @@ export class ClayScene {
     gl.uniform4f(m.u.uRipple, this.onda.x, this.onda.y, this.onda.t, this.onda.t < 3.5 ? this.onda.a : 0);
     gl.uniform1f(m.u.uIntro, 1 - Math.pow(1 - this.intro, 3));
     gl.uniform1f(m.u.uGrain, this.grain);
+    gl.uniform4f(m.u.uRaq, ...this.raq);
+    gl.uniform4f(m.u.uVar, ...this.varrido);
+    gl.uniform1f(m.u.uMarca, this.marcaFundo);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
   /** Para gerar imagens paradas: carimba um rastro e um amassado fixos. */
-  marcaManual(pontos: { x: number; y: number }[], forca = 0.5) {
+  marcaManual(pontos: { x: number; y: number }[], forca = 0.5, raio?: number) {
+    this.raioMarca = raio ?? 0;
     for (let i = 1; i < pontos.length; i++) {
       this.stampA = pontos[i - 1];
       this.stampB = pontos[i];
       this.stampForca = forca;
       this.desenha(0);
     }
+    this.raioMarca = 0;
+  }
+  private raioMarca = 0;
+  private marcaFundo = 1;
+  /** Profundidade das marcas no pó (imagens paradas). */
+  setMarcaFundo(f: number) {
+    this.marcaFundo = f;
   }
 
   amassado(x: number, y: number, e: number) {
     this.mouse = { x, y, e, px: x, py: y, ativo: false };
+  }
+
+  /** Sombra de raquete no piso (imagens paradas): centro, ângulo em radianos e escala. */
+  setRaquete(x: number, y: number, ang: number, escala: number) {
+    this.raq = [x, y, ang, escala];
+  }
+
+  /** Vassourada em arcos (imagens paradas): centro, intensidade e espaçamento dos arcos. */
+  setVarrido(x: number, y: number, intensidade: number, espaco: number) {
+    this.varrido = [x, y, intensidade, espaco];
   }
 
   setGrain(g: number) {

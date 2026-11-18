@@ -95,14 +95,15 @@
     "fonte": "estudio"
   },
   "quadra-noite": {
-    "width": 1500,
-    "height": 1000,
+    "width": 2560,
+    "height": 1440,
     "widths": [
       480,
       640,
       800,
       1280,
-      1500
+      1800,
+      2560
     ],
     "ret": false,
     "fonte": "estudio"
@@ -134,14 +135,71 @@
     "fonte": "estudio"
   },
   "hero-saibro": {
-    "width": 1800,
-    "height": 1100,
+    "width": 2560,
+    "height": 1440,
     "widths": [
       480,
       640,
       800,
       1280,
-      1800
+      1800,
+      2560
+    ],
+    "ret": false,
+    "fonte": "estudio"
+  },
+  "deslize": {
+    "width": 2560,
+    "height": 1440,
+    "widths": [
+      480,
+      640,
+      800,
+      1280,
+      1800,
+      2560
+    ],
+    "ret": false,
+    "fonte": "estudio"
+  },
+  "vassourada": {
+    "width": 2560,
+    "height": 1440,
+    "widths": [
+      480,
+      640,
+      800,
+      1280,
+      1800,
+      2560
+    ],
+    "ret": false,
+    "fonte": "estudio"
+  },
+  "raquete-tarde": {
+    "width": 2560,
+    "height": 1280,
+    "widths": [
+      480,
+      640,
+      800,
+      1280,
+      1800,
+      2560
+    ],
+    "ret": false,
+    "fonte": "estudio"
+  },
+  "bola-fora": {
+    "width": 2560,
+    "height": 1440,
+    "widths": [
+      480,
+      640,
+      800,
+      1280,
+      1800,
+      2560
     ],
     "ret": false,
     "fonte": "estudio"

@@ -591,3 +591,19 @@ export const planta: QuadraPlanta[] = [
   { id: "q3", nome: "Quadra 3", piso: "saibro", luz: "6 refletores", agenda: 4 },
   { id: "q4", nome: "Quadra rápida", piso: "rapida", luz: "Iluminada", agenda: 1 },
 ];
+
+/** Indicação do Clube Red: os dois lados ganham. CONFIRMAR com a Red: benefícios. */
+export const indicacao = {
+  titulo: "Traga seu parceiro de duplas",
+  intro:
+    "Tênis se joga com alguém do outro lado da rede. Chame um amigo: ele faz a aula experimental com você, na mesma quadra, e os dois saem ganhando.",
+  amigoGanha: "A aula experimental em dupla com você, com professor, e 10% na primeira mensalidade.", // CONFIRMAR com a Red
+  voceGanha: "Uma aula particular para cada amigo que entrar no Clube. Sem limite.", // CONFIRMAR com a Red
+  passos: [
+    { titulo: "Mande o convite", texto: "Escreva seu nome e toque no botão. A mensagem sai pronta, com o link." },
+    { titulo: "Batam bola juntos", texto: "Vocês marcam a experimental em dupla e jogam na mesma quadra." },
+    { titulo: "Ele entra, você ganha", texto: "A aula particular entra no seu cadastro no mês seguinte." },
+  ],
+  convite: (nome: string, url: string) =>
+    `Bora jogar tênis comigo na Red Tennis, no Rudge Ramos? A aula experimental é em dupla: a gente bate bola junto, com professor. Marca por aqui: ${url}/aulas/?indicado=${encodeURIComponent(nome)}#experimental`,
+};

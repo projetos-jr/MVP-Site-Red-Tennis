@@ -21,7 +21,7 @@ export default function Aulas() {
     <>
       <Cabeca
         titulo="Aprenda no saibro"
-        foto="bola-na-linha"
+        foto="deslize"
         intro="Aulas individuais, em dupla ou em grupos de até quatro. Do Red Kids, aos quatro anos, ao treino de quem disputa ranking."
       >
         <Btn href="#experimental" tom="claro">

@@ -117,6 +117,9 @@ uniform vec3 uMouse;      // xy px, energia 0..1
 uniform vec4 uRipple;     // xy px, tempo desde o quique (s), amplitude
 uniform float uIntro;     // 0..1 entrada da luz
 uniform float uGrain;
+uniform vec4 uRaq;        // sombra de raquete: xy centro (px), z ângulo (rad), w escala (0 desliga)
+uniform float uMarca;     // profundidade das marcas no pó (1 = normal)
+uniform vec4 uVar;        // vassourada em arcos: xy centro (px), z intensidade (0 desliga), w espaçamento (px)
 
 // ---------------------------------------------------------------- relevo
 float ripple(vec2 p) {
@@ -147,7 +150,19 @@ float heightAt(vec2 p) {
   float u = texture2D(uNoise, p / 1100.0).g;
   float h = (g - 0.5) * 2.4 + (u - 0.5) * 7.0;
   float tr = texture2D(uTrail, vec2(p.x / uRes.x, 1.0 - p.y / uRes.y)).r;
-  h -= tr * 6.0;
+  h -= tr * 6.0 * uMarca;
+  // a borda da pisada empurra o pó para cima
+  h += tr * (1.0 - tr) * 11.0 * uMarca;
+  // vassourada: arcos concêntricos com fiapos ao longo do arco
+  if (uVar.z > 0.0) {
+    vec2 d = p - uVar.xy;
+    float r = length(d);
+    float ang = atan(d.y, d.x);
+    float arco = sin(r / uVar.w * 6.2832);
+    float fiapo = texture2D(uNoise, vec2(ang * 3.0, r / 900.0)).b - 0.5;
+    float irregular = texture2D(uNoise, vec2(ang * 1.3, r / 2400.0)).g;
+    h += uVar.z * (arco * (0.5 + irregular) + fiapo * 2.2) * smoothstep(0.0, uVar.w * 2.0, r);
+  }
   h += crumple(p);
   h += ripple(p);
   return h;
@@ -289,6 +304,37 @@ vec3 aces(vec3 x) {
   return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0);
 }
 
+// Sombra de uma raquete (aro oval, encordoamento, garganta e cabo) projetada no piso.
+float raquete(vec2 p) {
+  if (uRaq.w <= 0.0) return 0.0;
+  vec2 q = p - uRaq.xy;
+  float c = cos(-uRaq.z), s = sin(-uRaq.z);
+  q = vec2(c * q.x - s * q.y, s * q.x + c * q.y) / uRaq.w;
+  float bl = 3.2 / uRaq.w;
+  // cabeça: elipse centrada em y = -200
+  vec2 h = q - vec2(0.0, -200.0);
+  float e = length(h / vec2(118.0, 152.0));
+  float aro = smoothstep(1.0 + bl * 0.012, 1.0 - bl * 0.004, e) * smoothstep(0.885 - bl * 0.012, 0.905, e);
+  // encordoamento por dentro do aro
+  float dentro = smoothstep(0.9, 0.88, e);
+  vec2 g = abs(fract(h / 17.0) - 0.5);
+  float fio = max(smoothstep(0.09 + bl * 0.01, 0.04, g.x), smoothstep(0.09 + bl * 0.01, 0.04, g.y));
+  float cordas = dentro * fio * 0.85;
+  // garganta: dois braços do aro até o cabo
+  float garganta = 0.0;
+  for (int i = 0; i < 2; i++) {
+    float lado = i == 0 ? -1.0 : 1.0;
+    vec2 a = vec2(lado * 62.0, -72.0);
+    vec2 b = vec2(lado * 14.0, 40.0);
+    vec2 pa = q - a, ba = b - a;
+    float t = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
+    garganta = max(garganta, smoothstep(11.0 + bl, 9.0 - bl, length(pa - ba * t)));
+  }
+  // cabo
+  float cabo = smoothstep(19.0 + bl, 17.0 - bl, abs(q.x)) * smoothstep(30.0, 34.0, q.y) * smoothstep(300.0, 296.0, q.y);
+  return max(max(aro, cordas), max(garganta, cabo));
+}
+
 vec3 clayAlbedo(vec2 p, float tr) {
   vec4 n = texture2D(uNoise, p / 512.0);
   vec4 n2 = texture2D(uNoise, p / 160.0 + 0.5);
@@ -340,6 +386,7 @@ void main() {
   // relevo realçado: razão entre o relevo e o plano
   float relief = diff / max(flatDiff, 0.05);
   float sh = 1.0 - netShadow(L, p, 0.0035);
+  sh *= 1.0 - raquete(p) * 0.82;
   sh *= 1.0 - ballShadowDir(p, L, 0.012) * 0.85;
   vec3 light = uAmb + uSunCol * flatDiff * pow(relief, 1.35) * sh * sunVis;
 

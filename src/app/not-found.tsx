@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Página não encontrada", robots: { 
 export default function NotFound() {
   return (
     <section className="fora sup-saibro">
-      <PhotoSlot name="rede-manha" alt="" sizes="100vw" className="cabeca-foto" />
+      <PhotoSlot name="bola-fora" alt="" sizes="100vw" className="cabeca-foto" />
       <span className="fora-bola" aria-hidden="true">
         <Bola className="fora-y" />
       </span>

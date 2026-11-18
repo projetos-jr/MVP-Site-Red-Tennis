@@ -19,6 +19,7 @@ export default function Sobre() {
       <Cabeca
         titulo="Feito no saibro"
         foto="saibro-quadras"
+        ret
         intro={`Desde ${site.fundacao} no Rudge Ramos, ensinando a bater na bola, cuidando do pó de tijolo e juntando quem gosta de jogar.`}
       />
 

@@ -6,10 +6,12 @@ import { useEffect, useRef, useState } from "react";
 import { contato, mensagens, nav } from "@/content/red";
 import { wa } from "@/lib/wa";
 import { AbertoStatus } from "./Aberto";
-import { Bola, Btn, Logo } from "./ui";
+import { Bola, Logo } from "./ui";
+import { BtnAula, useAgendar } from "./Agendar";
 
 export function Header() {
   const caminho = usePathname();
+  const agendar = useAgendar();
   const [fixo, setFixo] = useState(false);
   const [aberto, setAberto] = useState(false);
   const [barra, setBarra] = useState(false);
@@ -91,7 +93,7 @@ export function Header() {
           </nav>
           <div className="header-acoes">
             <AbertoStatus />
-            <Btn href={wa(mensagens.aula)}>Agendar aula</Btn>
+            <BtnAula>Agendar aula</BtnAula>
             <button ref={gatilho} className="menu-btn ui" onClick={() => setAberto(true)} aria-expanded={aberto} aria-controls="menu">
               Menu <i aria-hidden="true" />
             </button>
@@ -119,9 +121,7 @@ export function Header() {
         </nav>
         <div className="wrap menu-pe">
           <AbertoStatus />
-          <Btn href={wa(mensagens.aula)} tom="claro" className="btn-largo">
-            Agendar aula experimental
-          </Btn>
+          <BtnAula tom="claro" className="btn-largo" />
           <Link href="/quadras/#reserva" className="btn-linha" onClick={() => setAberto(false)}>
             Reservar quadra
           </Link>
@@ -132,7 +132,16 @@ export function Header() {
       </div>
 
       <nav className="barra ui" aria-label="Ações rápidas" data-visivel={barra && !aberto && !coberta} inert={!(barra && !aberto && !coberta)}>
-        <a href={wa(mensagens.aula)} target="_blank" rel="noopener noreferrer">
+        <a
+          href={wa(mensagens.aula)}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-haspopup="dialog"
+          onClick={(e) => {
+            e.preventDefault();
+            agendar();
+          }}
+        >
           <Bola /> Agendar aula
         </a>
         <a href={wa(mensagens.quadra)} target="_blank" rel="noopener noreferrer">

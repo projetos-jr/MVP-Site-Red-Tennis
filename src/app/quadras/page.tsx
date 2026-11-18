@@ -21,7 +21,7 @@ export default function Quadras() {
     <>
       <Cabeca
         titulo="Três de saibro, uma rápida"
-        foto="rede-manha"
+        foto="vassourada"
         intro="Quadras isoladas por alambrados altos, cada uma com entrada própria, iluminadas por 18 refletores em seis postes."
       >
         <Btn href="#reserva" tom="claro">

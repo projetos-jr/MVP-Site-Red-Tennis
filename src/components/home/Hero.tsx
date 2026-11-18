@@ -5,7 +5,8 @@ import type { ClayScene, Layout } from "@/components/clay/scene";
 import { mensagens } from "@/content/red";
 import { wa } from "@/lib/wa";
 import { PhotoSlot } from "../PhotoSlot";
-import { Bola, Btn, BtnLinha } from "../ui";
+import { Bola, BtnLinha } from "../ui";
+import { BtnAula } from "../Agendar";
 
 type Modo = "dia" | "noite";
 type Medida = Layout & { w: number; h: number };
@@ -215,7 +216,7 @@ export function Hero() {
     <section ref={secao} className="hero" data-luz={modo} style={estilo} aria-labelledby="hero-titulo">
       <div className="hero-fundo" data-gl={gl} aria-hidden="true">
         {/* base: o mesmo saibro renderizado antes, aparece na hora; o WebGL entra por cima quando há GPU */}
-        <PhotoSlot name="hero-saibro" alt="" sizes="100vw" prioridade className="hero-still" />
+        <PhotoSlot name="hero-saibro" alt="" sizes="100vw" prioridade className="hero-still com-grao-foto" />
         <div className="hero-css">
           <span className="grao" />
           {medida && (
@@ -298,9 +299,7 @@ export function Hero() {
             iluminado.
           </p>
           <div className="hero-acoes">
-            <Btn href={wa(mensagens.aula)} tom="claro">
-              Agendar aula experimental
-            </Btn>
+            <BtnAula tom="claro" />
             <BtnLinha href={wa(mensagens.quadra)}>Reservar quadra</BtnLinha>
           </div>
         </div>

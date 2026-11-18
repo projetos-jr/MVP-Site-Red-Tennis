@@ -6,6 +6,7 @@ import { Header } from "@/components/Header";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { contato, horarios, site } from "@/content/red";
 import "./globals.css";
+import { AgendarProvider } from "@/components/Agendar";
 
 const anybody = Anybody({
   subsets: ["latin"],
@@ -102,9 +103,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <a href="#conteudo" className="ui sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[70] focus:bg-bola focus:text-vinho focus:p-3">
             Pular para o conteúdo
           </a>
-          <Header />
-          <main id="conteudo">{children}</main>
-          <Footer />
+          <AgendarProvider>
+            <Header />
+            <main id="conteudo">{children}</main>
+            <Footer />
+          </AgendarProvider>
         </SmoothScroll>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </body>

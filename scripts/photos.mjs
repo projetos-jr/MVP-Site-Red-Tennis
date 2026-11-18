@@ -17,7 +17,7 @@ const out = path.join(root, "public/fotos");
 const SAIBRO = path.join(root, "referencias/site-atual/02-quadras-saibro.png");
 const RAPIDA = path.join(root, "referencias/site-atual/01-quadra-rapida.png");
 const estudio = (n) => path.join(root, "fotos/estudio", n + ".jpg");
-const WIDTHS = [480, 640, 800, 1280, 1800];
+const WIDTHS = [480, 640, 800, 1280, 1800, 2560];
 
 const TINTA = { r: 0x6b, g: 0x1d, b: 0x21 };
 const PAPEL = "#fcfaf6";
@@ -34,6 +34,10 @@ const slots = [
   { name: "rapida-linhas", src: RAPIDA, crop: [190, 290, 760, 420], ret: true },
   // material renderizado (ilustração)
   { name: "hero-saibro", src: estudio("hero-saibro") },
+  { name: "deslize", src: estudio("deslize") },
+  { name: "vassourada", src: estudio("vassourada") },
+  { name: "raquete-tarde", src: estudio("raquete-tarde") },
+  { name: "bola-fora", src: estudio("bola-fora") },
   { name: "bola-na-linha", src: estudio("bola-na-linha") },
   { name: "quadra-noite", src: estudio("quadra-noite") },
   { name: "linha-tarde", src: estudio("linha-tarde") },
@@ -117,15 +121,16 @@ for (const slot of slots) {
   }
   const base = await img.png().toBuffer({ resolveWithObject: true });
   const { width, height } = base.info;
-  const widths = WIDTHS.filter((w) => w < width * 0.9).concat(Math.min(width, 2000));
+  const widths = WIDTHS.filter((w) => w < width * 0.9).concat(Math.min(width, 2560));
   const comRet = Boolean(slot.ret && !nova);
 
   for (const w of widths) {
     const r = sharp(base.data).resize({ width: w });
     // texturas renderizadas aguentam mais compressão que fotografia
     const material = !nova && !slot.crop;
-    await r.clone().avif({ quality: material ? 40 : 52 }).toFile(path.join(out, `${slot.name}-${w}.avif`));
-    await r.clone().webp({ quality: material ? 66 : 74 }).toFile(path.join(out, `${slot.name}-${w}.webp`));
+    // texturas: qualidade suficiente para não borrar; o grão fino vem de uma camada em CSS no site
+    await r.clone().avif({ quality: material ? 58 : 52, chromaSubsampling: material ? "4:4:4" : "4:2:0" }).toFile(path.join(out, `${slot.name}-${w}.avif`));
+    await r.clone().webp({ quality: material ? 72 : 74 }).toFile(path.join(out, `${slot.name}-${w}.webp`));
     if (comRet) {
       // duas tintas: PNG de paleta comprime pontos de meio-tom muito melhor que formatos com perdas
       const ret = await reticula(base.data, w);
