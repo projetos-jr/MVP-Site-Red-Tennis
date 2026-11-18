@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { contato, mensagens, nav, site } from "@/content/red";
 import { wa } from "@/lib/wa";
 import { HorariosSemana } from "./Aberto";
@@ -7,30 +10,38 @@ import { Btn } from "./ui";
 
 export function Footer() {
   const e = contato.endereco;
+  const caminho = usePathname();
+  // onde a página acabou de mostrar endereço (e horários), o rodapé não repete
+  const semEndereco = caminho === "/" || caminho.startsWith("/contato");
+  const semHorarios = caminho.startsWith("/contato");
   return (
     <footer className="rodape sup-vinho">
       <span className="corredor" style={{ borderColor: "var(--saibro)" }} aria-hidden="true" />
       <div className="wrap" style={{ paddingTop: "clamp(3.5rem, 7vw, 6rem)" }}>
         <div className="g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full md:col-span-6 lg:col-span-5">
-            <h2 className="sub t-h3">Venha jogar</h2>
-            <address className="lead not-italic mt-4">
-              {e.rua}
-              <br />
-              {e.bairro}, {e.cidade}
-              <br />
-              CEP {e.cep}
-            </address>
+            <h2 className="sub t-h3">{semEndereco ? "Sua próxima aula começa aqui" : "Venha jogar"}</h2>
+            {!semEndereco && (
+              <address className="lead not-italic mt-4">
+                {e.rua}
+                <br />
+                {e.bairro}, {e.cidade}
+                <br />
+                CEP {e.cep}
+              </address>
+            )}
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
               <Btn href={wa(mensagens.aula)} tom="claro">
                 Agendar aula experimental
               </Btn>
             </div>
           </div>
-          <div className="col-span-full md:col-span-6 lg:col-span-3 lg:col-start-7">
-            <h2 className="ui sec mb-3">Horários</h2>
-            <HorariosSemana />
-          </div>
+          {!semHorarios && (
+            <div className="col-span-full md:col-span-6 lg:col-span-3 lg:col-start-7">
+              <h2 className="ui sec mb-3">Horários</h2>
+              <HorariosSemana />
+            </div>
+          )}
           <div className="col-span-full md:col-span-6 lg:col-span-3 lg:col-start-10">
             <h2 className="ui sec mb-3">Contato</h2>
             <ul className="grid gap-2 ui" style={{ fontSize: "1rem" }}>

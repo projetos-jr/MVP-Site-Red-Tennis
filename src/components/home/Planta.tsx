@@ -15,8 +15,8 @@ function Quadra({ x, y, w, piso, ativa }: { x: number; y: number; w: number; pis
   const fundo = piso === "rapida" ? "var(--bordo)" : ativa ? "var(--saibro-fundo)" : "transparent";
   return (
     <g transform={`translate(${x} ${y})`} className="pl-quadra">
-      {piso === "rapida" && <rect x={-k * 1.6} y={-k * 1.6} width={w + k * 3.2} height={h + k * 3.2} fill="#c8582f" />}
-      <rect width={w} height={h} fill={fundo} />
+      {piso === "rapida" && <rect x={-k * 1.6} y={-k * 1.6} width={w + k * 3.2} height={h + k * 3.2} fill="var(--saibro-fundo)" />}
+      <rect className="pl-borda" width={w} height={h} fill={fundo} />
       <g fill="none" stroke="var(--papel)" strokeWidth={ativa ? 2.2 : 1.4}>
         <rect width={w} height={h} />
         <path d={`M${al} 0v${h}M${w - al} 0v${h}M${al} ${h / 2 - sv}h${w - 2 * al}M${al} ${h / 2 + sv}h${w - 2 * al}M${w / 2} ${h / 2 - sv}v${sv * 2}M${w / 2} 0v${k * 0.3}M${w / 2} ${h}v${-k * 0.3}`} />
@@ -38,9 +38,14 @@ export function Planta() {
   const [sel, setSel] = useState(planta[0].id);
   const [prox, setProx] = useState<Record<string, string | null>>({});
   useEffect(() => {
-    const m: Record<string, string | null> = {};
-    for (const q of planta) m[q.id] = proximoLivre(q.id, q.agenda);
-    setProx(m);
+    const calcula = () => {
+      const m: Record<string, string | null> = {};
+      for (const q of planta) m[q.id] = proximoLivre(q.id, q.agenda);
+      setProx(m);
+    };
+    calcula();
+    const t = setInterval(calcula, 60_000);
+    return () => clearInterval(t);
   }, []);
   const q = useMemo(() => planta.find((p) => p.id === sel) ?? planta[0], [sel]);
   const quando = prox[q.id];
@@ -48,7 +53,7 @@ export function Planta() {
 
   return (
     <div className="planta">
-      <svg viewBox="0 0 700 420" className="planta-svg" role="group" aria-label="Planta ilustrativa da Red Tennis">
+      <svg viewBox="30 30 640 392" className="planta-svg" role="group" aria-label="Planta ilustrativa da Red Tennis">
         {/* muros e áreas de apoio */}
         <g fill="none" stroke="var(--papel)" strokeWidth="1" opacity="0.55">
           <rect x="30" y="30" width="640" height="360" />
@@ -61,10 +66,13 @@ export function Planta() {
         <g className="pl-area-txt" fontFamily="var(--f-display)" fontSize="13" fontWeight="650" fill="var(--papel)" style={{ fontVariationSettings: '"wdth" 110' }}>
           <text x="82" y="362">Vestiários, armários e Wi-Fi</text>
           <text x="500" y="362">Paredão e squash</text>
-          <text x="40" y="412">Entrada pela Av. Winston Churchill</text>
+          <text x="32" y="414">Entrada pela Av. Winston Churchill</text>
         </g>
         {/* paredão */}
-        <rect x="650" y="70" width="8" height="240" fill="var(--bordo)" stroke="var(--papel)" strokeWidth="1" />
+        <rect x="646" y="70" width="14" height="240" fill="var(--bordo)" stroke="var(--papel)" strokeWidth="1" />
+        <text className="pl-area-txt" x="638" y="190" textAnchor="middle" transform="rotate(-90 638 190)" fontFamily="var(--f-display)" fontSize="13" fontWeight="650" fill="var(--papel)" style={{ fontVariationSettings: '"wdth" 110' }}>
+          Paredão
+        </text>
         {planta.map((p) => {
           const pos = LAYOUT[p.id];
           return (
@@ -73,7 +81,7 @@ export function Planta() {
               role="button"
               tabIndex={0}
               aria-pressed={sel === p.id}
-              aria-label={`${p.nome}, ${p.piso === "saibro" ? "saibro" : "quadra rápida"}`}
+              aria-label={`${p.nome}${p.piso === "saibro" ? ", saibro" : ""}`}
               className="pl-alvo"
               onClick={() => setSel(p.id)}
               onPointerEnter={(e) => e.pointerType === "mouse" && setSel(p.id)}
@@ -93,9 +101,9 @@ export function Planta() {
           );
         })}
       </svg>
-      <div className="planta-ficha" aria-live="polite">
+      <div className="planta-ficha">
         <p className="sub t-h3">{q.nome}</p>
-        <dl className="ficha-dados ui">
+        <dl className="ficha-dados ui" aria-live="polite">
           <div>
             <dt>Piso</dt>
             <dd>{q.piso === "saibro" ? "Saibro (pó de tijolo)" : "Rápida, base asfáltica"}</dd>

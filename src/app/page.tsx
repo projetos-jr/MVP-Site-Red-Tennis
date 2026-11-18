@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { AbertoStatus } from "@/components/Aberto";
 import { Carteirinhas } from "@/components/home/Carteirinhas";
 import { Casa } from "@/components/home/Casa";
@@ -11,8 +12,19 @@ import { Cartaz, Contagem } from "@/components/home/Torneio";
 import { Mapa } from "@/components/Mapa";
 import { Fecho } from "@/components/Fecho";
 import { Btn, BtnLinha } from "@/components/ui";
-import { beneficios, contato, depoimentos, eventos, mensagens } from "@/content/red";
+import { agenda, beneficios, contato, depoimentos, eventos, mensagens, site } from "@/content/red";
+import { pagina } from "@/lib/seo";
 import { wa } from "@/lib/wa";
+
+export const metadata: Metadata = {
+  ...pagina({
+    titulo: "Aulas de tênis e quadras de saibro em São Bernardo",
+    descricao: site.descricao,
+    caminho: "/",
+    compartilhar: { titulo: "Red Tennis · Aulas de tênis e quadras de saibro no Rudge Ramos", descricao: site.descricao },
+  }),
+  title: { absolute: "Aulas de tênis e quadras de saibro em São Bernardo | Red Tennis" },
+};
 
 export default function Home() {
   const e = contato.endereco;
@@ -66,7 +78,7 @@ export default function Home() {
             <h2 id="clube-titulo" className="titulo col-span-full lg:col-span-8">
               O clube de quem joga toda semana
             </h2>
-            <p className="col-span-full lg:col-span-4 sec">
+            <p className="col-span-full lg:col-span-4 lead sec">
               Aluno de turma já é sócio. Uma mensalidade, horário garantido e motivo para voltar: ranking, torneio do mês e desconto na quadra.
             </p>
           </div>
@@ -95,7 +107,7 @@ export default function Home() {
             <h2 id="equipe-titulo" className="titulo col-span-full lg:col-span-8">
               Quem está do outro lado da rede
             </h2>
-            <p className="col-span-full lg:col-span-4 sec">Três professores e uma equipe de rebatedores para treinar sem depender de parceiro.</p>
+            <p className="col-span-full lg:col-span-4 lead sec">Três professores e uma equipe de rebatedores para treinar sem depender de parceiro.</p>
           </div>
           <Equipe />
         </div>
@@ -104,11 +116,11 @@ export default function Home() {
       {/* Torneios */}
       <section className="secao sup-po torneios" aria-labelledby="torneios-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
-          <div className="col-span-full md:col-span-7 lg:col-span-6">
+          <div className="col-span-full md:col-span-6 lg:col-span-6">
             <Cartaz />
           </div>
-          <div className="col-span-full md:col-span-5 lg:col-span-5 lg:col-start-8 torneios-lado">
-            <h2 id="torneios-titulo" className="titulo">
+          <div className="col-span-full md:col-span-6 lg:col-span-5 lg:col-start-8 torneios-lado">
+            <h2 id="torneios-titulo" className="titulo titulo-lado">
               Jogo valendo, o ano inteiro
             </h2>
             <p className="sec mt-5">
@@ -116,7 +128,7 @@ export default function Home() {
             </p>
             <Contagem />
             <ul className="agenda">
-              {eventos.slice(1, 4).map((ev) => (
+              {agenda.filter((ev) => ev.id !== eventos[0].id).slice(0, 3).map((ev) => (
                 <li key={ev.id}>
                   <time dateTime={ev.inicio} className="placar">
                     {ev.dataCurta.replace("—", "–")}
@@ -166,7 +178,7 @@ export default function Home() {
       <section className="secao sup-vinho visite" aria-labelledby="visite-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full lg:col-span-4">
-            <h2 id="visite-titulo" className="titulo">
+            <h2 id="visite-titulo" className="titulo titulo-lado">
               Venha bater bola
             </h2>
             <AbertoStatus className="mt-8" />

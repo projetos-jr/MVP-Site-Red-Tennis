@@ -26,7 +26,7 @@ export default function ClubeRed() {
     <>
       <Cabeca
         titulo="O clube de quem joga toda semana"
-        tom="bordo"
+        tom="vinho"
         intro="Aluno de turma já é sócio. Uma mensalidade, horário garantido e motivo para voltar: ranking, torneio do mês e desconto na quadra."
       >
         <Btn href={wa(mensagens.clube)} tom="claro">
@@ -42,15 +42,17 @@ export default function ClubeRed() {
 
       <section className="secao sup-papel" aria-labelledby="comp-titulo">
         <div className="wrap g12" style={{ rowGap: "2rem" }}>
-          <TituloSecao id="comp-titulo" className="col-span-full lg:col-span-4">
+          <TituloSecao lado id="comp-titulo" className="col-span-full lg:col-span-4">
             Lado a lado
           </TituloSecao>
-          <div className="col-span-full lg:col-span-8 rolagem" tabIndex={0} role="group" aria-label="Comparativo dos planos">
-            <table className="tabela" style={{ minWidth: 560 }}>
+          <div className="col-span-full lg:col-span-8">
+            <table className="tabela comparativo">
               <caption className="sr-only">Comparativo dos planos do Clube Red</caption>
               <thead>
                 <tr>
-                  <th scope="col">O que inclui</th>
+                  <th scope="col" className="item-largo">
+                    O que inclui
+                  </th>
                   {planos.map((p) => (
                     <th key={p.id} scope="col">
                       {p.nome}
@@ -59,24 +61,32 @@ export default function ClubeRed() {
                 </tr>
               </thead>
               <tbody>
-                {comparativo.linhas.map((l) => (
+                {comparativo.linhas.flatMap((l) => [
+                  <tr key={l.item + "-c"} className="so-celular" aria-hidden="true">
+                    <th colSpan={4}>{l.item}</th>
+                  </tr>,
                   <tr key={l.item}>
-                    <th scope="row" style={{ fontWeight: 400 }}>
+                    <th scope="row" className="item-largo" style={{ fontWeight: 400 }}>
                       {l.item}
                     </th>
                     {l.valores.map((v, i) => (
                       <td key={i} className="ui">
+                        <span className="sr-only">{l.item}: </span>
                         {v}
                       </td>
                     ))}
-                  </tr>
-                ))}
+                  </tr>,
+                ])}
+                <tr className="so-celular" aria-hidden="true">
+                  <th colSpan={4}>Mensalidade</th>
+                </tr>
                 <tr>
-                  <th scope="row" className="ui">
+                  <th scope="row" className="ui item-largo">
                     Mensalidade
                   </th>
                   {planos.map((p) => (
                     <td key={p.id} className="placar" style={{ fontSize: "2.2rem", color: "var(--saibro)" }}>
+                      <span className="sr-only">Mensalidade: </span>
                       {p.preco.replace("R$ ", "R$")}
                     </td>
                   ))}
@@ -107,7 +117,7 @@ export default function ClubeRed() {
       <section className="secao sup-papel" aria-labelledby="vant-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full lg:col-span-5">
-            <TituloSecao id="vant-titulo">O que o sócio tem a mais</TituloSecao>
+            <TituloSecao lado id="vant-titulo">O que o sócio tem a mais</TituloSecao>
             <ul className="lista-fio mt-8" style={{ ["--risco" as string]: "var(--saibro)" }}>
               {beneficios.map((b) => (
                 <li key={b.titulo} style={{ gridTemplateColumns: "none" }}>
@@ -118,7 +128,7 @@ export default function ClubeRed() {
             </ul>
           </div>
           <div className="col-span-full lg:col-span-6 lg:col-start-7">
-            <TituloSecao id="regras">Regras do ranking</TituloSecao>
+            <TituloSecao lado id="regras">Regras do ranking</TituloSecao>
             <ol className="lista-fio mt-8">
               {regrasRanking.map((r, i) => (
                 <li key={r} style={{ gridTemplateColumns: "3rem 1fr", gap: "0.75rem" }}>
@@ -138,7 +148,7 @@ export default function ClubeRed() {
 
       <section className="secao sup-bordo" aria-labelledby="faq-titulo">
         <div className="wrap g12" style={{ rowGap: "2rem" }}>
-          <TituloSecao id="faq-titulo" className="col-span-full lg:col-span-4">
+          <TituloSecao lado id="faq-titulo" className="col-span-full lg:col-span-4">
             Sem letra miúda
           </TituloSecao>
           <div className="col-span-full lg:col-span-7 lg:col-start-6">

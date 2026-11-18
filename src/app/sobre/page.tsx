@@ -34,7 +34,7 @@ export default function Sobre() {
             />
           </div>
           <div className="col-span-full md:col-span-6 lg:col-span-6 lg:col-start-7 grid gap-5 content-center">
-            <TituloSecao id="casa-titulo">Um clube de bairro com saibro de verdade</TituloSecao>
+            <TituloSecao lado id="casa-titulo">Um clube de bairro com saibro de verdade</TituloSecao>
             <p className="lead mt-2">
               A Red é onde o ABC joga tênis no saibro sem atravessar a cidade. Três quadras de pó de tijolo, uma quadra
               rápida e um paredão iluminado, na Av. Winston Churchill.
@@ -81,7 +81,7 @@ export default function Sobre() {
 
       <section className="secao sup-vinho" aria-labelledby="estrutura-titulo">
         <div className="wrap g12" style={{ rowGap: "2rem" }}>
-          <TituloSecao id="estrutura-titulo" className="col-span-full lg:col-span-4">
+          <TituloSecao lado id="estrutura-titulo" className="col-span-full lg:col-span-4">
             Tudo no lugar
           </TituloSecao>
           <ul className="lista-fio col-span-full lg:col-span-8">

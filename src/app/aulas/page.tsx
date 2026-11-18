@@ -97,7 +97,7 @@ export default function Aulas() {
       <section id="experimental" className="secao sup-vinho" aria-labelledby="exp-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full lg:col-span-5">
-            <TituloSecao id="exp-titulo">Venha bater bola</TituloSecao>
+            <TituloSecao lado id="exp-titulo">Venha bater bola</TituloSecao>
             <p className="sec mt-6">Preencha e a mensagem sai pronta no WhatsApp da Red. A gente responde com os horários da sua turma.</p>
           </div>
           <div className="col-span-full lg:col-span-6 lg:col-start-7">
@@ -109,7 +109,7 @@ export default function Aulas() {
       <section className="secao sup-papel" aria-labelledby="faq-titulo">
         <div className="wrap g12" style={{ rowGap: "2rem" }}>
           <div className="col-span-full lg:col-span-4">
-            <TituloSecao id="faq-titulo">Antes de entrar em quadra</TituloSecao>
+            <TituloSecao lado id="faq-titulo">Antes de entrar em quadra</TituloSecao>
             <BtnLinha href={wa(mensagens.geral)} className="mt-6">
               Outra dúvida? Pergunte no WhatsApp
             </BtnLinha>

@@ -19,7 +19,7 @@ export function useStatus(): Status | null {
 export function AbertoStatus({ className = "" }: { className?: string }) {
   const s = useStatus();
   return (
-    <p className={`status ui ${className}`} aria-live="polite">
+    <p className={`status ui ${className}`} aria-live={s ? "polite" : undefined}>
       <span className="ponto-vivo" data-pulsa={s?.aberto ?? false} data-fechado={s ? !s.aberto : false} />
       <span>{s ? s.texto : "Seg a qui, das 7h às 22h"}</span>
     </p>

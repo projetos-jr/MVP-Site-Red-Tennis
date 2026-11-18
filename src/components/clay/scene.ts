@@ -85,6 +85,16 @@ export class ClayScene {
   private t0 = performance.now();
   private ultimo = performance.now();
   private parado = false;
+  private perdido = false;
+  /** Chamado se o navegador derrubar o contexto WebGL (pouca memória, troca de app). */
+  onPerda?: () => void;
+  private aoPerder = (e: Event) => {
+    e.preventDefault();
+    this.perdido = true;
+    cancelAnimationFrame(this.raf);
+    this.raf = 0;
+    if (!this.parado) this.onPerda?.();
+  };
 
   // estado vivo
   private mouse = { x: -9999, y: -9999, e: 0, px: -9999, py: -9999, ativo: false };
@@ -134,6 +144,7 @@ export class ClayScene {
     });
     if (!gl) throw new Error("WebGL indisponível");
     this.gl = gl;
+    canvas.addEventListener("webglcontextlost", this.aoPerder);
     const escala = opts.escala ?? 1;
     this.dpr = Math.min(window.devicePixelRatio || 1, opts.dprMax ?? 1.5) * escala;
     this.init();
@@ -211,12 +222,21 @@ export class ClayScene {
 
   /** Ajusta o tamanho do canvas ao elemento (px CSS). */
   resize(w: number, h: number) {
-    this.w = Math.max(1, w);
-    this.h = Math.max(1, h);
+    w = Math.max(1, Math.round(w));
+    h = Math.max(1, Math.round(h));
+    // mesmo tamanho: nada a refazer (e o rastro do cursor continua)
+    if (this.trails && w === this.w && h === this.h) return;
+    this.w = w;
+    this.h = h;
     this.canvas.width = Math.round(this.w * this.dpr);
     this.canvas.height = Math.round(this.h * this.dpr);
     const tw = Math.max(8, Math.round(this.w * TRAIL_SCALE));
     const th = Math.max(8, Math.round(this.h * TRAIL_SCALE));
+    // libera as texturas do tamanho anterior antes de criar as novas
+    for (const t of this.trails ?? []) {
+      this.gl.deleteFramebuffer(t.fb);
+      this.gl.deleteTexture(t.tex);
+    }
     this.trails = [this.alvo(tw, th), this.alvo(tw, th)];
     for (const t of this.trails) {
       this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, t.fb);
@@ -301,12 +321,13 @@ export class ClayScene {
   }
 
   pede() {
-    if (this.parado || this.raf || !this.visivel) return;
+    if (this.parado || this.perdido || this.raf || !this.visivel) return;
     this.raf = requestAnimationFrame((t) => this.quadro(t));
   }
 
   destruir() {
     this.parado = true;
+    this.canvas.removeEventListener("webglcontextlost", this.aoPerder);
     cancelAnimationFrame(this.raf);
     const ext = this.gl.getExtension("WEBGL_lose_context");
     ext?.loseContext();

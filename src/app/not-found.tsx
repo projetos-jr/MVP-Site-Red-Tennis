@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { Bola, Btn, BtnLinha } from "@/components/ui";
+
+export const metadata: Metadata = { title: "Página não encontrada", robots: { index: false } };
 
 export default function NotFound() {
   return (

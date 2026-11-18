@@ -37,7 +37,7 @@ export default function Contato() {
       <section className="secao sup-papel" aria-labelledby="canais-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full lg:col-span-5">
-            <TituloSecao id="canais-titulo">Canais</TituloSecao>
+            <TituloSecao lado id="canais-titulo">Canais</TituloSecao>
             <ul className="canais mt-8">
               {canais.map((c) => (
                 <li key={c.rotulo}>
@@ -52,7 +52,7 @@ export default function Contato() {
             </ul>
           </div>
           <div className="col-span-full lg:col-span-6 lg:col-start-7">
-            <TituloSecao>Escreva para a gente</TituloSecao>
+            <TituloSecao lado>Escreva para a gente</TituloSecao>
             <div className="mt-8">
               <FormContato />
             </div>
@@ -60,10 +60,10 @@ export default function Contato() {
         </div>
       </section>
 
-      <section className="secao sup-vinho" aria-labelledby="chegar-titulo">
+      <section className="secao sup-po" aria-labelledby="chegar-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full lg:col-span-4">
-            <TituloSecao id="chegar-titulo">Como chegar</TituloSecao>
+            <TituloSecao lado id="chegar-titulo">Como chegar</TituloSecao>
             <AbertoStatus className="mt-8" />
             <address className="lead not-italic mt-4">
               {e.rua}
@@ -72,14 +72,14 @@ export default function Contato() {
               <br />
               CEP {e.cep}
             </address>
-            <Btn href={contato.mapa} tom="claro" className="mt-8">
+            <Btn href={contato.mapa} className="mt-8">
               Abrir no Google Maps
             </Btn>
           </div>
           <div className="col-span-full md:col-span-5 lg:col-span-3 lg:col-start-5">
             <HorariosSemana />
           </div>
-          <div className="col-span-full md:col-span-7 lg:col-span-5 lg:col-start-8" style={{ ["--papel-mapa" as string]: "var(--vinho)" }}>
+          <div className="col-span-full md:col-span-7 lg:col-span-5 lg:col-start-8" style={{ ["--papel-mapa" as string]: "var(--po)" }}>
             <Mapa />
           </div>
         </div>

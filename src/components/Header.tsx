@@ -13,31 +13,66 @@ export function Header() {
   const [fixo, setFixo] = useState(false);
   const [aberto, setAberto] = useState(false);
   const [barra, setBarra] = useState(false);
+  const [coberta, setCoberta] = useState(false);
   const fechar = useRef<HTMLButtonElement>(null);
   const gatilho = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    // páginas internas sem cabeça de cor começam com o cabeçalho já em papel
+    const claro = /^\/(styleguide|og|estudio)/.test(caminho);
     const aoRolar = () => {
-      setFixo(window.scrollY > 40);
+      setFixo(claro || window.scrollY > 40);
       setBarra(window.scrollY > window.innerHeight * 0.7);
     };
     aoRolar();
     window.addEventListener("scroll", aoRolar, { passive: true });
     return () => window.removeEventListener("scroll", aoRolar);
-  }, []);
+  }, [caminho]);
 
   useEffect(() => setAberto(false), [caminho]);
+
+  // a barra some sobre formulários, a grade de reserva e o rodapé, e enquanto se digita
+  useEffect(() => {
+    const visiveis = new Set<Element>();
+    const io = new IntersectionObserver((entradas) => {
+      for (const e of entradas) {
+        if (e.isIntersecting) visiveis.add(e.target);
+        else visiveis.delete(e.target);
+      }
+      setCoberta(visiveis.size > 0);
+    });
+    const alvos = document.querySelectorAll("#experimental, #reserva, main form, footer.rodape");
+    alvos.forEach((el) => io.observe(el));
+    const foco = (e: FocusEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t?.matches("input, textarea, select")) setCoberta(true);
+    };
+    document.addEventListener("focusin", foco);
+    return () => {
+      io.disconnect();
+      document.removeEventListener("focusin", foco);
+    };
+  }, [caminho]);
 
   useEffect(() => {
     if (!aberto) return;
     const g = gatilho.current;
     document.documentElement.style.overflow = "hidden";
     fechar.current?.focus();
+    // o foco não escapa para trás do menu
+    const fundo = [document.querySelector(".header"), document.getElementById("conteudo"), document.querySelector("footer.rodape")];
+    fundo.forEach((el) => el?.setAttribute("inert", ""));
     const tecla = (e: KeyboardEvent) => e.key === "Escape" && setAberto(false);
     window.addEventListener("keydown", tecla);
+    // tablet girado para paisagem: o menu deixa de existir, então fecha
+    const largo = window.matchMedia("(min-width: 64rem)");
+    const aoAlargar = () => largo.matches && setAberto(false);
+    largo.addEventListener("change", aoAlargar);
     return () => {
       document.documentElement.style.overflow = "";
       window.removeEventListener("keydown", tecla);
+      largo.removeEventListener("change", aoAlargar);
+      fundo.forEach((el) => el?.removeAttribute("inert"));
       g?.focus();
     };
   }, [aberto]);
@@ -87,20 +122,23 @@ export function Header() {
           <Btn href={wa(mensagens.aula)} tom="claro" className="btn-largo">
             Agendar aula experimental
           </Btn>
+          <Link href="/quadras/#reserva" className="btn-linha" onClick={() => setAberto(false)}>
+            Reservar quadra
+          </Link>
           <a className="ui link" href={wa(mensagens.geral)} target="_blank" rel="noopener noreferrer">
             WhatsApp {contato.whatsappLegivel}
           </a>
         </div>
       </div>
 
-      <div className="barra ui" data-visivel={barra && !aberto}>
+      <nav className="barra ui" aria-label="Ações rápidas" data-visivel={barra && !aberto && !coberta} inert={!(barra && !aberto && !coberta)}>
         <a href={wa(mensagens.aula)} target="_blank" rel="noopener noreferrer">
           <Bola /> Agendar aula
         </a>
         <a href={wa(mensagens.quadra)} target="_blank" rel="noopener noreferrer">
           Reservar quadra
         </a>
-      </div>
+      </nav>
     </>
   );
 }

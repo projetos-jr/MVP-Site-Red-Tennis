@@ -70,6 +70,7 @@ export function Hero() {
   const [real, setReal] = useState<Modo>("dia");
   const [modo, setModo] = useState<Modo>("dia");
   const [fs, setFs] = useState(160);
+  const [anuncio, setAnuncio] = useState("");
 
   const medir = useCallback(() => {
     const s = secao.current;
@@ -115,7 +116,11 @@ export function Hero() {
     medir();
     const ro = new ResizeObserver(() => medir());
     if (secao.current) ro.observe(secao.current);
-    const relogio = setInterval(() => setHora(horaSP()), 60_000);
+    const relogio = setInterval(() => {
+      const agora = horaSP();
+      setHora(agora);
+      setReal(ehNoite(agora) ? "noite" : "dia");
+    }, 60_000);
     return () => {
       vivo = false;
       ro.disconnect();
@@ -139,6 +144,12 @@ export function Hero() {
         if (!ClayScene.suportado(forcar)) throw new Error("sem webgl");
         const estreito = window.innerWidth < 768;
         const sc = new ClayScene(c, { dprMax: estreito ? 1.5 : 1.25, escala: estreito ? 0.8 : 1, software: forcar });
+        // se o navegador derrubar o contexto (pouca memória, troca de app), volta à imagem parada
+        sc.onPerda = () => {
+          sc.destruir();
+          cena.current = null;
+          setGl("falhou");
+        };
         cena.current = sc;
         setGl("pronto");
         if (!reduz) sc.entrada();
@@ -170,14 +181,19 @@ export function Hero() {
     };
   }, []);
 
-  // repassa medidas e luz ao motor
+  // quando o sol se põe (ou nasce) com a página aberta, a cena acompanha
+  useEffect(() => setModo(real), [real]);
+
+  // tamanho e luz em efeitos separados: a luz muda a cada minuto, o tamanho quase nunca
   useEffect(() => {
     const sc = cena.current;
     if (!sc || !medida || gl !== "pronto") return;
     sc.resize(medida.w, medida.h);
     sc.setLayout(medida);
-    sc.setLuz({ modo, hora: modo === real ? hora : 17.1 });
-  }, [medida, modo, real, hora, gl]);
+  }, [medida, gl]);
+  useEffect(() => {
+    if (gl === "pronto") cena.current?.setLuz({ modo, hora: modo === real ? hora : 17.1 });
+  }, [modo, real, hora, gl]);
 
   const sombra = sombras(modo, modo === real ? hora : 17.1, fs);
   const estilo = { "--sombra-texto": sombra.texto, "--sombra-fato": sombra.fato } as CSSProperties;
@@ -202,7 +218,7 @@ export function Hero() {
         <canvas ref={canvas} />
       </div>
 
-      {medida && (
+      {medida && gl === "pronto" && (
         <button
           type="button"
           className="hero-bola-btn"
@@ -217,14 +233,23 @@ export function Hero() {
         />
       )}
 
-      <div className="hero-luz ui">
-        <p aria-live="polite">{legenda(modo, real, hora)}</p>
-        <button type="button" onClick={() => setModo(modo === "dia" ? "noite" : "dia")}>
-          {modo === "dia" ? "Acender os refletores" : "Ver de dia"}
-        </button>
-      </div>
-
       <div className="wrap hero-corpo">
+        <div className="hero-luz ui">
+          <p>{legenda(modo, real, hora)}</p>
+          <p className="sr-only" aria-live="polite">
+            {anuncio}
+          </p>
+          <button
+            type="button"
+            onClick={() => {
+              const novo = modo === "dia" ? "noite" : "dia";
+              setModo(novo);
+              setAnuncio(novo === "noite" ? "Refletores acesos." : "Quadra de dia.");
+            }}
+          >
+            {modo === "dia" ? "Acender os refletores" : "Ver de dia"}
+          </button>
+        </div>
         <h1 id="hero-titulo" ref={titulo} className="hero-titulo display">
           <span className="mask">
             <span className="sobe" style={{ "--i": 0 } as CSSProperties}>

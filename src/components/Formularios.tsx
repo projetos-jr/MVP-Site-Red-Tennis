@@ -13,6 +13,12 @@ function Enviar({ children }: { children: string }) {
   );
 }
 
+/** Abre o WhatsApp: na mesma aba no celular (navegadores de app, como o do Instagram, bloqueiam janelas novas). */
+export function abrirWhatsApp(url: string) {
+  if (window.matchMedia("(hover: none)").matches) window.location.href = url;
+  else window.open(url, "_blank", "noopener");
+}
+
 function Opcoes({ nome, legenda, opcoes, valor, muda }: { nome: string; legenda: string; opcoes: string[]; valor: string; muda: (v: string) => void }) {
   return (
     <fieldset className="campo">
@@ -77,7 +83,7 @@ export function FormAula({ nivelInicial }: { nivelInicial?: string }) {
       ? `Olá, Red! Vim pelo site e quero agendar uma aula experimental do Red Kids ${paraQuem === "Para meu filho" ? "para meu filho" : "para minha filha"} de ${idade} anos. Meu nome é ${nome}. ${quando}`
       : `Olá, Red! Vim pelo site e quero agendar uma aula experimental. Meu nome é ${nome}, tenho ${idade} anos e ${FRASE[nivel]}. ${quando}`;
     if (indicado) msg += ` Fui indicado por ${indicado} e quero a experimental em dupla.`;
-    window.open(wa(msg), "_blank", "noopener");
+    abrirWhatsApp(wa(msg));
   };
   return (
     <form onSubmit={enviar} className="grid gap-7">
@@ -90,11 +96,11 @@ export function FormAula({ nivelInicial }: { nivelInicial?: string }) {
       <div className="grid gap-7 md:grid-cols-[2fr_1fr]">
         <div className="campo">
           <label htmlFor="aula-nome">Seu nome</label>
-          <input id="aula-nome" name="nome" required autoComplete="given-name" placeholder="Como a gente te chama" />
+          <input id="aula-nome" name="nome" required autoComplete="given-name" enterKeyHint="next" placeholder="Como a gente te chama" />
         </div>
         <div className="campo">
           <label htmlFor="aula-idade">{crianca ? "Idade da criança" : "Sua idade"}</label>
-          <input id="aula-idade" name="idade" required inputMode="numeric" pattern="[0-9]{1,2}" maxLength={2} placeholder="Anos" />
+          <input id="aula-idade" name="idade" required inputMode="numeric" pattern="[0-9]{1,2}" maxLength={2} enterKeyHint="done" placeholder="Anos" />
         </div>
       </div>
       {!crianca && <Opcoes nome="nivel" legenda="Sua história com o tênis" opcoes={NIVEIS} valor={nivel} muda={setNivel} />}
@@ -113,13 +119,13 @@ export function FormContato() {
     e.preventDefault();
     const d = new FormData(e.currentTarget);
     const msg = `Olá, Red! Vim pelo site. Meu nome é ${d.get("nome")}. Assunto: ${assunto}. ${d.get("mensagem")}`;
-    window.open(wa(msg), "_blank", "noopener");
+    abrirWhatsApp(wa(msg));
   };
   return (
     <form onSubmit={enviar} className="grid gap-7">
       <div className="campo">
         <label htmlFor="ct-nome">Nome</label>
-        <input id="ct-nome" name="nome" required autoComplete="name" placeholder="Como a gente te chama" />
+        <input id="ct-nome" name="nome" required autoComplete="name" enterKeyHint="next" placeholder="Como a gente te chama" />
       </div>
       <Opcoes nome="assunto" legenda="Assunto" opcoes={ASSUNTOS} valor={assunto} muda={setAssunto} />
       <div className="campo">

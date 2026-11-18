@@ -51,9 +51,9 @@ export function Numeros() {
                 {Array.from({ length: 6 }).map((_, i) => (
                   <svg key={i} viewBox="0 0 14 60">
                     <path d="M7 14v46" stroke="var(--vinho)" strokeWidth="2" />
-                    <circle cx="2.5" cy="4" r="2.3" fill="var(--bola)" stroke="var(--vinho)" strokeWidth="0.8" />
-                    <circle cx="7" cy="4" r="2.3" fill="var(--bola)" stroke="var(--vinho)" strokeWidth="0.8" />
-                    <circle cx="11.5" cy="4" r="2.3" fill="var(--bola)" stroke="var(--vinho)" strokeWidth="0.8" />
+                    <circle cx="2.5" cy="4" r="2.3" fill="var(--papel)" stroke="var(--vinho)" strokeWidth="0.8" />
+                    <circle cx="7" cy="4" r="2.3" fill="var(--papel)" stroke="var(--vinho)" strokeWidth="0.8" />
+                    <circle cx="11.5" cy="4" r="2.3" fill="var(--papel)" stroke="var(--vinho)" strokeWidth="0.8" />
                     <path d="M1 9h12" stroke="var(--vinho)" strokeWidth="2" />
                   </svg>
                 ))}

@@ -13,7 +13,7 @@
   .semana-dias {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: minmax(11rem, 1fr);
+    grid-auto-columns: calc((100vw - var(--margem)) / 2.3);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
@@ -31,7 +31,8 @@
     border-top: 1px solid color-mix(in srgb, var(--papel) 20%, transparent);
   }
   .semana-dias li + li { padding-left: 1rem; border-left: 1px solid color-mix(in srgb, var(--papel) 20%, transparent); }
-  .semana-dias .placar { font-size: 2rem; color: var(--bola); }
+  .semana-dias .placar { font-size: 2rem; color: var(--papel); }
+  .semana-dias li[data-hoje="true"] .placar::after { content: ""; display: inline-block; width: 0.42em; height: 0.42em; margin-left: 0.3em; border-radius: 99px; background: var(--bola); vertical-align: 0.5em; }
   .semana-dias .ui { color: var(--claro-2); font-size: 0.9375rem; line-height: 1.3; }
   .semana-dias li[data-hoje="true"] { background: var(--bordo); }
   @media (min-width: 64rem) {
@@ -174,7 +175,8 @@
     .pl-longo, .pl-area-txt { display: none; }
     .pl-curto { display: inline; }
   }
-  .pl-alvo:focus-visible .pl-quadra > rect:nth-child(2) { stroke: var(--bola); stroke-width: 3; }
+  .pl-alvo:focus-visible .pl-borda { stroke: var(--papel); stroke-width: 4; outline: none; }
+  .pl-alvo:focus-visible text { text-decoration: underline; }
   .pl-quadra rect, .pl-quadra path, .pl-quadra g { transition: fill 300ms var(--sai), stroke-width 300ms var(--sai); }
   .planta-ficha { display: grid; gap: 1.25rem; align-content: start; }
   .ficha-dados > div {
@@ -261,6 +263,9 @@
     border-bottom: 1px solid color-mix(in srgb, var(--papel) 18%, transparent);
   }
   .plano-lista li::before { content: ""; flex: none; width: 0.55rem; height: 0.55rem; border-radius: 99px; background: var(--saibro); transform: translateY(-0.05rem); }
+  @media (min-width: 48rem) and (max-width: 63.99rem) {
+    .plano { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+  }
   @media (min-width: 64rem) {
     .carteirinhas { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2rem; }
   }
@@ -315,7 +320,7 @@
   .cartaz-data { align-self: start; margin-top: 1.25rem; font-size: clamp(4.5rem, 11vw, 9.5rem); line-height: 0.8; }
   .cartaz-data span { display: block; font-family: var(--f-display); font-variation-settings: "wdth" 150; font-weight: 900; font-style: italic;
     font-family: var(--f-display-it); font-size: 0.42em; text-transform: uppercase; margin-top: 0.1em; }
-  .cartaz-chave { position: absolute; right: clamp(1.25rem, 2.5vw, 2rem); bottom: 24%; width: 48%; height: auto; }
+  .cartaz-chave { position: absolute; left: clamp(1.25rem, 2.5vw, 2rem); right: clamp(1.25rem, 2.5vw, 2rem); bottom: 21%; width: auto; height: auto; }
   .cartaz-pe { padding-top: 0.9rem; border-top: var(--linha) solid var(--papel); display: grid; gap: 0.35rem; }
   .cartaz-nome { font-family: var(--f-display); font-variation-settings: "wdth" 150; font-weight: 900; font-style: italic;
     font-family: var(--f-display-it); text-transform: uppercase; font-size: clamp(1.6rem, 3.2vw, 2.6rem); line-height: 0.92; }
@@ -361,5 +366,36 @@
 @layer components {
   .carteirinhas-nota { grid-column: 1 / -1; margin-top: -1rem; }
   .depo-nota { margin-top: clamp(2.5rem, 5vw, 4rem); }
-  .convite-aviso { padding: 0.9rem 1rem; background: var(--bola); color: var(--vinho); }
+  .convite-aviso { padding: 0.9rem 1rem; background: var(--po); color: var(--vinho); }
+}
+
+@layer components {
+  .casa-grade { row-gap: 3rem; align-items: start; }
+  .casa-figura figcaption {
+    margin-top: 0.75rem;
+    font-family: var(--f-texto);
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--tinta-2);
+  }
+  @media (min-width: 64rem) { .casa-figura { margin-top: 0.6rem; } }
+}
+
+@layer components {
+  .fichas { grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+  .ficha-corpo { grid-template-rows: auto auto 1fr; }
+  .ficha .ficha-dados { align-self: end; }
+  .apoio {
+    display: grid;
+    gap: 1rem 2rem;
+    margin-top: 1.25rem;
+    padding: 1.25rem;
+    border: var(--linha) solid var(--vinho);
+    background: var(--po);
+    align-items: center;
+  }
+  .apoio-picto { width: 5rem; height: 5rem; color: var(--saibro); }
+  @media (min-width: 48rem) {
+    .apoio { grid-template-columns: auto minmax(0, 1.4fr) minmax(0, 1fr); }
+  }
 }

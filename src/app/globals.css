@@ -23,6 +23,7 @@
     background: var(--vinho);
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: calc(var(--header) + 16px);
+    scroll-padding-bottom: 72px;
     scrollbar-color: var(--saibro) var(--papel);
     scrollbar-width: thin;
   }
@@ -57,6 +58,9 @@
   h1, h2, h3, h4 {
     text-wrap: balance;
     overflow-wrap: break-word;
+  }
+  @media (min-width: 64rem) {
+    h1, h2, h3 { overflow-wrap: normal; }
   }
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: var(--papel); }
@@ -146,6 +150,7 @@
     letter-spacing: -0.01em;
     font-size: var(--t-h2);
   }
+  .titulo.titulo-lado { font-size: var(--t-h2-lado); }
   .sub {
     font-family: var(--f-display);
     font-variation-settings: "wdth" 118;
@@ -245,6 +250,7 @@
     display: inline-flex;
     align-items: center;
     min-height: 56px;
+    padding-block: 0.6rem 1.1rem;
     font-family: var(--f-display);
     font-variation-settings: "wdth" 110;
     font-weight: 650;
@@ -259,7 +265,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 14px;
+    bottom: 0.45rem;
     height: var(--linha);
     background: var(--risco);
     transform-origin: left;
@@ -270,7 +276,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 14px;
+    bottom: 0.45rem;
     height: var(--linha);
     background: currentColor;
     transform: scaleX(0);
@@ -494,8 +500,11 @@
   .menu li:first-child a { border-top: 1px solid color-mix(in srgb, var(--papel) 18%, transparent); }
   .menu-pe {
     display: grid;
-    gap: 1rem;
+    gap: 0.75rem;
     padding-block: 1.25rem 1.75rem;
+  }
+  @media (max-height: 640px) {
+    .menu li a { font-size: clamp(1.8rem, 8vh, 4rem); padding-block: 0.3rem; }
   }
 
   /* barra fixa do celular */
@@ -506,6 +515,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     background: var(--vinho);
+    border-top: var(--linha) solid var(--saibro);
     padding-bottom: env(safe-area-inset-bottom);
     transform: translateY(101%);
     transition: transform 420ms var(--sai);
@@ -517,6 +527,8 @@
     justify-content: center;
     gap: 0.6rem;
     min-height: 58px;
+    padding-inline: 0.75rem;
+    text-align: center;
     text-decoration: none;
     color: var(--papel);
   }
@@ -615,15 +627,15 @@
     -webkit-tap-highlight-color: transparent;
   }
   .hero-luz {
-    position: absolute;
-    top: 96px;
-    right: var(--margem);
+    position: relative;
     z-index: 2;
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.25rem;
-    text-align: right;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 1.25rem;
+    margin-bottom: auto;
+    padding-bottom: 2rem;
+    text-shadow: var(--sombra-fato, none);
   }
   .hero-luz button {
     min-height: 44px;
@@ -645,6 +657,8 @@
   /* ---------------------------------------------------------- rodapé */
   .rodape { overflow: hidden; padding-bottom: 58px; }
   @media (min-width: 64rem) { .rodape { padding-bottom: 0; } }
+  .rodape ul.grid { gap: 0; }
+  .rodape ul.grid a { display: inline-flex; align-items: center; min-height: 44px; }
   .rodape-marca {
     display: block;
     font-size: min(10.4vw, 12.5rem);
@@ -782,8 +796,8 @@
     display: inline-block;
     margin-left: 0.4rem;
     padding: 0.05rem 0.4rem;
-    background: var(--bola);
-    color: var(--vinho);
+    background: var(--saibro);
+    color: var(--papel);
     font-size: 0.8125rem;
     vertical-align: 0.1em;
   }

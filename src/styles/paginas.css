@@ -117,7 +117,7 @@
   .metodo > li { position: relative; padding: 1.5rem 1.25rem 1.75rem; border-bottom: var(--linha) solid var(--papel); display: grid; gap: 0.75rem; align-content: start; }
   .metodo > li:last-child { border-bottom: 0; }
   .metodo > li:nth-child(2) { border-bottom: 10px double var(--papel); }
-  .metodo .placar { font-size: 3.4rem; color: var(--bola); }
+  .metodo .placar { font-size: 3.4rem; color: var(--papel); }
   .metodo .sub { font-size: 1.5rem; text-transform: uppercase; }
   @media (min-width: 64rem) {
     .metodo { grid-template-columns: repeat(4, minmax(0, 1fr)); min-height: 360px; }
@@ -142,9 +142,11 @@
     cursor: pointer;
   }
   .reserva button:active { transform: scale(0.96); }
-  .reserva button:not(:disabled):hover,
-  .reserva button[aria-pressed="true"] { background: var(--papel); color: var(--vinho); border-color: var(--papel); }
-  .reserva button[aria-pressed="true"] { background: var(--bola); border-color: var(--bola); }
+  @media (hover: hover) {
+    .reserva button:not(:disabled):hover { background: var(--papel); color: var(--vinho); border-color: var(--papel); }
+  }
+  .reserva button[aria-pressed="true"],
+  .reserva button[aria-pressed="true"]:hover { background: var(--papel); color: var(--vinho); border-color: var(--papel); box-shadow: inset 0 0 0 3px var(--saibro); }
   .reserva button:disabled {
     color: color-mix(in srgb, var(--papel) 40%, transparent);
     text-decoration: line-through;
@@ -172,7 +174,7 @@
 
   /* ------------------------------------------------ ranking */
   .sobe-desce { font-family: var(--f-display); font-weight: 700; font-variation-settings: "wdth" 80; }
-  .sobe-desce[data-dir="sobe"] { color: var(--bola); }
+  .sobe-desce[data-dir="sobe"] { color: var(--papel); }
   .sobe-desce[data-dir="desce"] { color: var(--claro-2); }
   .sup-papel .sobe-desce[data-dir="sobe"], .sup-po .sobe-desce[data-dir="sobe"] { color: #3d6a12; }
 
@@ -184,6 +186,7 @@
 
   /* ------------------------------------------------ 404 */
   .fora { position: relative; isolation: isolate; overflow: hidden; min-height: 100svh; display: flex; align-items: flex-end; }
+  .fora .cabeca-foto img { object-position: 50% 15%; }
   .fora-bola { position: absolute; width: clamp(48px, 6vw, 84px); height: auto; z-index: 1; animation: fora 1.6s cubic-bezier(0.3, 0.6, 0.5, 1) 0.3s both; }
   @keyframes fora {
     0% { transform: translate(-30vw, -60vh) rotate(-200deg); }
@@ -219,5 +222,94 @@
     bottom: 0;
     height: calc(var(--linha) * 2 + 0.875rem);
     border-block: var(--linha) solid var(--papel);
+  }
+}
+
+/* ------------------------------------------------ correções da revisão mobile */
+@layer components {
+  /* títulos: largura da fonte por tela (seletores com mais peso que .display/.titulo) */
+  .programa .programa-nome { font-variation-settings: "wdth" 104; font-size: clamp(1.9rem, 8.6vw, 4.25rem); }
+  .cabeca .cabeca-titulo { font-variation-settings: "wdth" 112; }
+  @media (min-width: 48rem) {
+    .programa .programa-nome { font-variation-settings: "wdth" 132; font-size: clamp(2.2rem, 5vw, 4.25rem); }
+  }
+  @media (min-width: 64rem) {
+    .cabeca .cabeca-titulo { font-variation-settings: "wdth" 150; }
+    .programa .programa-nome { font-variation-settings: "wdth" 112; font-size: clamp(2.2rem, calc(min(100vw, 1440px) * 0.042), 3.75rem); }
+  }
+  @media (max-width: 63.99rem) {
+    main .titulo { font-variation-settings: "wdth" 118; }
+  }
+
+  /* cabeça com foto: base mais escura no celular, para a introdução ler sobre linha e bola */
+  @media (max-width: 47.99rem) {
+    .cabeca .cabeca-foto::after, .fora .cabeca-foto::after {
+      background:
+        linear-gradient(180deg, rgb(40 8 8 / 0.55) 0, rgb(40 8 8 / 0) 150px),
+        linear-gradient(0deg, rgb(40 8 8 / 0.82) 0, rgb(40 8 8 / 0.4) 55%, rgb(40 8 8 / 0) 78%);
+    }
+    .comp .comp-nome { font-size: clamp(1.1rem, 5vw, 6.5rem); }
+  }
+
+  /* placar dos campeões sem quebrar */
+  .placar-jogo { white-space: nowrap; word-spacing: 0.35em; }
+
+  /* tabelas que cabem no celular: grupo com título próprio */
+  .tabela .grupo th { padding-top: 1.4rem; border-bottom: 0; }
+  .tabela .so-celular { display: none; }
+  @media (max-width: 47.99rem) {
+    .tabela .so-celular { display: table-row; }
+    .tabela .item-largo { display: none; }
+    .tabela .so-celular th { padding-bottom: 0.1rem; border-bottom: 0; font-weight: 600; }
+  }
+
+  /* reserva: no celular, um dia por vez */
+  .reserva-dias { display: none; }
+  @media (max-width: 47.99rem) {
+    .reserva-dias { display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; margin-bottom: 1rem; }
+    .reserva-dias::-webkit-scrollbar { display: none; }
+    .reserva-dias button {
+      flex: none;
+      min-height: 52px;
+      min-width: 4.4rem;
+      padding: 0.3rem 0.6rem;
+      border: 1.5px solid color-mix(in srgb, var(--papel) 35%, transparent);
+      color: var(--papel);
+      font-family: var(--f-display);
+      font-variation-settings: "wdth" 104;
+      font-weight: 650;
+      font-size: 0.875rem;
+      line-height: 1.15;
+      text-transform: capitalize;
+    }
+    .reserva-dias button[aria-pressed="true"] { background: var(--papel); color: var(--vinho); border-color: var(--papel); }
+    .rolagem-reserva { overflow: visible; }
+    .reserva { display: block; min-width: 0; }
+    .reserva > div { display: none; }
+    .reserva > div[data-sel="true"] { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    .reserva > div[data-sel="true"] .reserva-dia { display: none; }
+  }
+  .reserva-confirma {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin-top: 1.5rem;
+    padding-block: 1rem;
+    background: var(--vinho);
+    border-top: 1px solid color-mix(in srgb, var(--papel) 20%, transparent);
+  }
+}
+
+@layer components {
+  .reserva-vazio { padding: 0.75rem 0.25rem; }
+  @media (max-width: 47.99rem) {
+    .reserva > div[data-sel="true"] .reserva-vazio { grid-column: 1 / -1; }
+  }
+}
+
+@layer components {
+  @media (max-width: 47.99rem) {
+    .comparativo .so-celular + tr td { padding-top: 0.25rem; }
+    .comparativo td { font-size: 0.875rem; }
   }
 }

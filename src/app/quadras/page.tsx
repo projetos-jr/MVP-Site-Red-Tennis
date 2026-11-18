@@ -35,7 +35,7 @@ export default function Quadras() {
             <TituloSecao id="pisos-titulo" className="col-span-full lg:col-span-7">
               Dois pisos, dois jogos
             </TituloSecao>
-            <p className="col-span-full lg:col-span-5 sec">Arraste a linha e compare. No saibro o ponto se constrói; na rápida, se decide.</p>
+            <p className="col-span-full lg:col-span-5 lead sec">Arraste a linha e compare. No saibro o ponto se constrói; na rápida, se decide.</p>
           </div>
           <Comparador />
           <div className="g12 mt-10" style={{ rowGap: "2.5rem" }}>
@@ -70,16 +70,15 @@ export default function Quadras() {
       <section className="secao sup-papel" aria-labelledby="preco-titulo">
         <div className="wrap g12" style={{ rowGap: "2rem" }}>
           <div className="col-span-full lg:col-span-4">
-            <TituloSecao id="preco-titulo">Preço da quadra</TituloSecao>
+            <TituloSecao lado id="preco-titulo">Preço da quadra</TituloSecao>
             <p className="sec mt-6">{locacao.nota}</p>
             <p className="sec mt-3">Sócio do Clube Red paga de 10% a 20% menos na quadra.</p>
           </div>
-          <div className="col-span-full lg:col-span-8 rolagem" tabIndex={0} role="group" aria-label="Tabela de preços de locação">
-            <table className="tabela" style={{ minWidth: 560 }}>
+          <div className="col-span-full lg:col-span-8">
+            <table className="tabela">
               <caption className="sr-only">Preços de locação por faixa de horário, piso e modalidade</caption>
               <thead>
                 <tr>
-                  <th scope="col">Faixa</th>
                   <th scope="col">Piso</th>
                   {locacao.colunas.map((c) => (
                     <th key={c} scope="col" className="num">
@@ -88,29 +87,35 @@ export default function Quadras() {
                   ))}
                 </tr>
               </thead>
-              <tbody>
-                {locacao.linhas.flatMap((l) => [
-                  <tr key={l.faixa + "s"}>
-                    <th scope="rowgroup" rowSpan={2} className="ui">
+              {locacao.linhas.map((l) => (
+                <tbody key={l.faixa}>
+                  <tr className="grupo">
+                    <th colSpan={3} scope="colgroup" className="ui">
                       {l.faixa}
                     </th>
-                    <td>Saibro</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" style={{ fontWeight: 400 }}>
+                      Saibro
+                    </th>
                     {l.saibro.map((v, k) => (
                       <td key={k} className="num placar" style={{ fontSize: "2rem" }}>
                         {v.replace("R$ ", "R$")}
                       </td>
                     ))}
-                  </tr>,
-                  <tr key={l.faixa + "r"}>
-                    <td>Rápida</td>
+                  </tr>
+                  <tr>
+                    <th scope="row" style={{ fontWeight: 400 }}>
+                      Rápida
+                    </th>
                     {l.rapida.map((v, k) => (
                       <td key={k} className="num placar" style={{ fontSize: "2rem" }}>
                         {v.replace("R$ ", "R$")}
                       </td>
                     ))}
-                  </tr>,
-                ])}
-              </tbody>
+                  </tr>
+                </tbody>
+              ))}
             </table>
           </div>
         </div>
@@ -122,7 +127,7 @@ export default function Quadras() {
             <TituloSecao id="reserva-titulo" className="col-span-full lg:col-span-7">
               Escolha dia e hora
             </TituloSecao>
-            <p className="col-span-full lg:col-span-5 sec">Toque num horário livre e confirme pelo WhatsApp. Quer esse horário toda semana? Peça para ser mensalista.</p>
+            <p className="col-span-full lg:col-span-5 lead sec">Toque num horário livre e confirme pelo WhatsApp. Quer esse horário toda semana? Peça para ser mensalista.</p>
           </div>
           <Reserva />
           <BtnLinha href={wa(mensagens.quadra)} className="mt-8">
@@ -133,7 +138,7 @@ export default function Quadras() {
 
       <section className="secao sup-bordo" aria-labelledby="estrutura-titulo">
         <div className="wrap g12" style={{ rowGap: "2rem" }}>
-          <TituloSecao id="estrutura-titulo" className="col-span-full lg:col-span-4">
+          <TituloSecao lado id="estrutura-titulo" className="col-span-full lg:col-span-4">
             Além da quadra
           </TituloSecao>
           <ul className="lista-fio col-span-full lg:col-span-8">

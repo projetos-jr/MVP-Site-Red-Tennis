@@ -1,7 +1,39 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { eventos } from "@/content/red";
+import { eventos, ranking } from "@/content/red";
+
+/** A chave do torneio como arte: oito nomes na primeira rodada e a bola no campeão (nomes de exemplo, do ranking). */
+function Chave() {
+  const nomes = ranking.slice(0, 8).map((j) => j.nome);
+  const ordem = [0, 7, 3, 4, 2, 5, 1, 6]; // cabeças de chave nas pontas
+  const y = (i: number) => 18 + i * 26;
+  return (
+    <svg className="cartaz-chave" viewBox="0 0 520 220" aria-hidden="true">
+      <g fill="none" stroke="var(--papel)" strokeWidth="2.5">
+        {ordem.map((_, i) => (
+          <path key={i} d={`M0 ${y(i)}h150`} />
+        ))}
+        {[0, 1, 2, 3].map((k) => (
+          <path key={k} d={`M150 ${y(2 * k)}V${y(2 * k + 1)}M150 ${31 + 52 * k}H270`} />
+        ))}
+        {[0, 1].map((j) => (
+          <path key={j} d={`M270 ${31 + 104 * j}V${83 + 104 * j}M270 ${57 + 104 * j}H380`} />
+        ))}
+        <path d="M380 57V161M380 109H468" />
+      </g>
+      <g fill="var(--papel)" fontFamily="var(--f-display)" fontSize="13" fontWeight="650" style={{ fontVariationSettings: '"wdth" 108' }}>
+        {ordem.map((n, i) => (
+          <text key={i} x="2" y={y(i) - 6}>
+            {nomes[n]}
+          </text>
+        ))}
+      </g>
+      <circle cx="490" cy="109" r="16" fill="var(--bola)" />
+      <path d="M478 99c5 4 6 13 1 20M502 99c-5 4-6 13-1 20" stroke="#f9fbe9" strokeWidth="2" fill="none" />
+    </svg>
+  );
+}
 
 /** Cartaz do próximo torneio: data gigante, a chave do torneio como arte. */
 export function Cartaz() {
@@ -11,28 +43,13 @@ export function Cartaz() {
     <article className="cartaz sup-saibro com-grao" aria-label={`${e.nome}, ${e.tipo}, ${e.dataCurta}`}>
       <header className="cartaz-topo ui">
         <span>Red Tennis apresenta</span>
-        <span>Temporada 2026</span>
+        <span>Temporada {e.inicio.slice(0, 4)}</span>
       </header>
       <p className="cartaz-data placar">
         {dias.replace("—", "–")}
         <span>{mes}</span>
       </p>
-      <svg className="cartaz-chave" viewBox="0 0 220 200" aria-hidden="true">
-        <g fill="none" stroke="var(--papel)" strokeWidth="3">
-          {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
-            <path key={i} d={`M0 ${12 + i * 24}h44`} />
-          ))}
-          {[0, 1, 2, 3].map((i) => (
-            <path key={i} d={`M44 ${12 + i * 48}v24h44`} />
-          ))}
-          {[0, 1].map((i) => (
-            <path key={i} d={`M88 ${24 + i * 96}v48h44`} />
-          ))}
-          <path d="M132 48v96h44" />
-        </g>
-        <circle cx="194" cy="96" r="13" fill="var(--bola)" />
-        <path d="M184 88c4 3 5 10 1 16M204 88c-4 3-5 10-1 16" stroke="#f9fbe9" strokeWidth="1.8" fill="none" />
-      </svg>
+      <Chave />
       <footer className="cartaz-pe">
         <p className="cartaz-nome">{e.nome}</p>
         <p className="ui">
@@ -43,16 +60,32 @@ export function Cartaz() {
   );
 }
 
+/** Dias (no calendário de São Paulo) até a data; negativo se já passou. */
 function diasAte(iso: string) {
-  const alvo = new Date(iso + "T09:00:00-03:00").getTime();
-  return Math.max(0, Math.ceil((alvo - Date.now()) / 86_400_000));
+  const hoje = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Sao_Paulo" }).format(new Date());
+  return Math.round((Date.parse(iso + "T12:00:00Z") - Date.parse(hoje + "T12:00:00Z")) / 86_400_000);
 }
 
 /** Contagem regressiva em placar. */
 export function Contagem() {
   const e = eventos[0];
   const [d, setD] = useState<number | null>(null);
-  useEffect(() => setD(diasAte(e.inicio)), [e.inicio]);
+  const [acabou, setAcabou] = useState(false);
+  useEffect(() => {
+    setD(diasAte(e.inicio));
+    setAcabou(diasAte(e.fim ?? e.inicio) < 0);
+  }, [e.inicio, e.fim]);
+  if (acabou) return null;
+  if (d !== null && d <= 0) {
+    return (
+      <p className="contagem">
+        <span className="placar contagem-num">Hoje</span>
+        <span className="ui sec">
+          É a {e.tipo.toLowerCase()} do {e.nome}. Venha assistir às finais.
+        </span>
+      </p>
+    );
+  }
   return (
     <p className="contagem">
       <span className="ui sec">Faltam</span>

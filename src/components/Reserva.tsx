@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { quadras } from "@/content/red";
 import { agendaDaSemana, type DiaAgenda } from "@/lib/reservas";
 import { wa } from "@/lib/wa";
@@ -19,11 +19,23 @@ export function Reserva() {
   const [quadra, setQuadra] = useState(quadras[0].id);
   const [agenda, setAgenda] = useState<DiaAgenda[]>([]);
   const [escolha, setEscolha] = useState<{ dia: Date; hora: string } | null>(null);
+  const [diaSel, setDiaSel] = useState(0);
+  const confirma = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setAgenda(agendaDaSemana(quadra, new Date()));
+    const semana = agendaDaSemana(quadra, new Date());
+    setAgenda(semana);
     setEscolha(null);
+    // começa no primeiro dia que ainda tem horário livre
+    const i = semana.findIndex((d) => d.horarios.some((h) => h.livre));
+    setDiaSel(Math.max(0, i));
   }, [quadra]);
+
+  const escolher = (dia: Date, hora: string) => {
+    setEscolha({ dia, hora });
+    // no celular, o botão de confirmar entra na tela
+    requestAnimationFrame(() => confirma.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }));
+  };
 
   const nome = quadras.find((q) => q.id === quadra)?.nome.toLowerCase() ?? "";
   const link = escolha
@@ -44,10 +56,20 @@ export function Reserva() {
         <p className="ui sec">Demonstração com horários de exemplo</p>
       </div>
 
-      <div className="rolagem" data-lenis-prevent tabIndex={0} role="group" aria-label="Horários da semana">
+      <div className="reserva-dias" role="group" aria-label="Dia">
+        {agenda.map((d, i) => (
+          <button key={d.data.toISOString()} type="button" aria-pressed={diaSel === i} onClick={() => setDiaSel(i)}>
+            {i === 0 ? "Hoje" : i === 1 ? "Amanhã" : fmtDia.format(d.data).replace(".", "")}
+            <br />
+            {fmtData.format(d.data)}
+          </button>
+        ))}
+      </div>
+
+      <div className="rolagem rolagem-reserva" data-lenis-prevent role="group" aria-label="Horários da semana">
         <div className="reserva">
-          {agenda.map((d) => (
-            <div key={d.data.toISOString()} className="grid gap-px content-start">
+          {agenda.map((d, i) => (
+            <div key={d.data.toISOString()} className="grid gap-px content-start" data-sel={diaSel === i}>
               <p className="reserva-dia ui">
                 {fmtDia.format(d.data).replace(".", "")}
                 <br />
@@ -62,18 +84,19 @@ export function Reserva() {
                     disabled={!h.livre}
                     aria-pressed={ativo}
                     aria-label={`${fmtLongo.format(d.data)}, ${h.hora}, ${h.livre ? "livre" : "ocupado"}`}
-                    onClick={() => setEscolha({ dia: d.data, hora: h.hora })}
+                    onClick={() => escolher(d.data, h.hora)}
                   >
                     {h.hora}
                   </button>
                 );
               })}
+              {d.horarios.length === 0 && <p className="ui sec reserva-vazio">Fechado</p>}
             </div>
           ))}
         </div>
       </div>
 
-      <div className="mt-6 flex flex-wrap items-center justify-between gap-4" aria-live="polite">
+      <div ref={confirma} className="reserva-confirma flex flex-wrap items-center justify-between gap-4" aria-live="polite">
         <p className="lead">
           {escolha ? (
             <>

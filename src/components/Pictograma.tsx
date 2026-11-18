@@ -33,7 +33,7 @@ export function Pictograma({ pose, className }: { pose: keyof typeof POSES; clas
   const p = POSES[pose];
   const [rx, ry, ang] = p.raquete;
   return (
-    <svg viewBox="0 0 100 100" className={className} aria-hidden="true">
+    <svg viewBox="-8 -14 116 116" className={className} aria-hidden="true">
       <circle cx={p.cabeca[0]} cy={p.cabeca[1]} r="7.5" fill="currentColor" />
       <path d={p.d} fill="none" stroke="currentColor" strokeWidth="8.5" strokeLinecap="round" strokeLinejoin="round" />
       <g transform={`translate(${rx} ${ry}) rotate(${ang})`}>

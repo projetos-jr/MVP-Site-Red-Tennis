@@ -41,11 +41,11 @@ export default function Torneios() {
 
       <section className="secao sup-po" aria-labelledby="agenda-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
-          <div className="col-span-full md:col-span-7 lg:col-span-6">
+          <div className="col-span-full md:col-span-6 lg:col-span-6">
             <Cartaz />
           </div>
-          <div className="col-span-full md:col-span-5 lg:col-span-5 lg:col-start-8 torneios-lado">
-            <TituloSecao id="agenda-titulo">Próximos eventos</TituloSecao>
+          <div className="col-span-full md:col-span-6 lg:col-span-5 lg:col-start-8 torneios-lado">
+            <TituloSecao lado id="agenda-titulo">Próximos eventos</TituloSecao>
             <Contagem />
             <ul className="agenda">
               {agenda.map((ev) => (
@@ -66,7 +66,7 @@ export default function Torneios() {
 
       <section className="secao sup-papel" aria-labelledby="res-titulo">
         <div className="wrap g12" style={{ rowGap: "2.5rem" }}>
-          <TituloSecao id="res-titulo" className="col-span-full lg:col-span-4">
+          <TituloSecao lado id="res-titulo" className="col-span-full lg:col-span-4">
             Quem levantou a taça
           </TituloSecao>
           <div className="col-span-full lg:col-span-7 lg:col-start-6">
@@ -95,7 +95,7 @@ export default function Torneios() {
                         <td className="sub" style={{ fontSize: "1.25rem" }}>
                           {c.nome}
                         </td>
-                        <td className="num placar" style={{ fontSize: "1.5rem" }}>
+                        <td className="num placar placar-jogo" style={{ fontSize: "1.5rem" }}>
                           {c.placar}
                         </td>
                       </tr>
@@ -111,7 +111,7 @@ export default function Torneios() {
       <section className="secao sup-vinho" aria-labelledby="rank-titulo">
         <div className="wrap g12" style={{ rowGap: "2.5rem" }}>
           <div className="col-span-full lg:col-span-4">
-            <TituloSecao id="rank-titulo">Ranking do mês</TituloSecao>
+            <TituloSecao lado id="rank-titulo">Ranking do mês</TituloSecao>
             <p className="sec mt-6">Quatro categorias, de A a D. A classificação nova sai todo fim de mês, somando os jogos do mês à anterior.</p>
             <div className="mt-8 grid gap-2 justify-items-start">
               <Btn href={wa(mensagens.ranking)}>Entrar no ranking</Btn>

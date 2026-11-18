@@ -27,9 +27,9 @@ export function Cabeca({ titulo, intro, foto, tom = "saibro", children }: Props)
 }
 
 /** Título de seção das páginas internas. */
-export function TituloSecao({ id, children, className = "" }: { id?: string; children: ReactNode; className?: string }) {
+export function TituloSecao({ id, children, className = "", lado }: { id?: string; children: ReactNode; className?: string; lado?: boolean }) {
   return (
-    <h2 id={id} className={`titulo ${className}`}>
+    <h2 id={id} className={`titulo ${lado ? "titulo-lado" : ""} ${className}`}>
       {children}
     </h2>
   );

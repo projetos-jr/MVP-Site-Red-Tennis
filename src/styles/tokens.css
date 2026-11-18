@@ -23,9 +23,11 @@
   --f-texto: var(--font-newsreader), Georgia, serif;
 
   --t-hero: clamp(3.4rem, 11.2vw, 10.75rem);
-  --t-h1: clamp(2.9rem, 8.4vw, 7.5rem);
-  --t-h2: clamp(2.2rem, 5.2vw, 5.25rem);
-  --t-h3: clamp(1.5rem, 2.5vw, 2.25rem);
+  /* tamanhos presos à largura máxima do layout (1440): em telas largas o título não cresce sozinho */
+  --t-h1: clamp(2.9rem, calc(min(100vw, 1440px) * 0.084), 7.5rem);
+  --t-h2: clamp(2.2rem, calc(min(100vw, 1440px) * 0.052), 4.68rem);
+  --t-h2-lado: clamp(2.2rem, calc(min(100vw, 1440px) * 0.04), 3.5rem);
+  --t-h3: clamp(1.5rem, calc(min(100vw, 1440px) * 0.025), 2.25rem);
   --t-h4: clamp(1.125rem, 1.4vw, 1.375rem);
   --t-lead: clamp(1.3rem, 2vw, 1.75rem);
   --t-texto: clamp(1.0625rem, 1.15vw, 1.1875rem);
