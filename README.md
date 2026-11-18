@@ -84,6 +84,16 @@ Para processar só alguns slots: `node scripts/photos.mjs hero-saibro bola-na-li
 
 ## Publicar
 
+**Prévia atual:** https://red-tennis-site.pages.dev (Cloudflare Pages, projeto `red-tennis-site`). A prévia sai com `noindex` (cabeçalho `X-Robots-Tag` e `robots.txt` bloqueando tudo) para não aparecer no Google antes da aprovação.
+
+Para publicar de novo na mesma prévia (pede login na conta Cloudflare na primeira vez):
+
+```bash
+npm run publicar:previa
+```
+
+O `build:previa` é o build normal mais `scripts/previa.mjs`, que troca o `robots.txt` e adiciona o `_headers` com `noindex`. Para o site oficial, use `npm run build` sem o passo de prévia.
+
 Na Vercel: importe o repositório e publique. O projeto já usa `output: "export"`, sem variáveis de ambiente.
 
 Antes de publicar, ajuste `site.url` em `src/content/red.ts` para o domínio final (com HTTPS). Esse valor alimenta URL canônica, sitemap, robots e JSON-LD.
