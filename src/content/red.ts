@@ -53,6 +53,9 @@ export const mensagens = {
   torneio: (e: { nome: string; tipo: string; dataCurta: string }) =>
     `Olá, Red! Vim pelo site e quero me inscrever no ${e.nome}, ${e.tipo.toLowerCase()} (${e.dataCurta.toLowerCase().replace("—", " a ")}). Como faço a inscrição?`,
   ranking: "Olá, Red! Vim pelo site e quero entrar no ranking interno. Como faço para começar?",
+  paredaoAula: "Olá, Red! Vim pelo site e quero agendar uma aula no paredão. Quais horários vocês têm?",
+  paredaoHora: "Olá, Red! Vim pelo site e quero alugar o paredão. Qual é o preço de lançamento e quais horários estão livres?",
+  paredaoRecorde: "Olá, Red! Vim pelo site e quero registrar meu recorde no paredão:",
   geral: "Olá, Red! Vim pelo site e tenho uma dúvida:",
 };
 
@@ -237,7 +240,7 @@ export const quadras: Quadra[] = [
 ];
 
 export const estrutura = [
-  { nome: "Paredão iluminado", texto: "Com orientação de exercícios. Livre para alunos, sem custo." },
+  { nome: "Paredão iluminado", texto: "Novo: aula com professor e aluguel por hora, como uma quadra. Sócio usa livre nos horários vagos." },
   { nome: "Squash", texto: "Uma quadra para quem quer variar a raquete." }, // CONFIRMAR com a Red: a quadra de squash está ativa?
   { nome: "Vestiários e armários", texto: "Para sair da quadra direto para o trabalho." },
   { nome: "Estacionamento", texto: "No local, na Av. Winston Churchill." },
@@ -549,9 +552,10 @@ export const historia = [
   { ano: "Hoje", titulo: "Clube Red", texto: "Planos mensais, ranking e torneio todo mês para quem joga na casa." },
 ];
 
-export const nav = [
+export const nav: { href: string; rotulo: string; novo?: boolean }[] = [
   { href: "/aulas/", rotulo: "Aulas" },
   { href: "/quadras/", rotulo: "Quadras" },
+  { href: "/paredao/", rotulo: "Paredão", novo: true },
   { href: "/clube-red/", rotulo: "Clube Red" },
   { href: "/torneios/", rotulo: "Torneios" },
   { href: "/sobre/", rotulo: "Sobre" },
@@ -575,7 +579,7 @@ export const semana = [
 export type QuadraPlanta = {
   id: string;
   nome: string;
-  piso: "saibro" | "rapida";
+  piso: "saibro" | "rapida" | "paredao";
   luz: string;
   /** índice em reservaMock para os horários livres de exemplo */
   agenda: number;
@@ -590,6 +594,7 @@ export const planta: QuadraPlanta[] = [
   { id: "q2", nome: "Quadra 2", piso: "saibro", luz: "6 refletores", agenda: 2 },
   { id: "q3", nome: "Quadra 3", piso: "saibro", luz: "6 refletores", agenda: 4 },
   { id: "q4", nome: "Quadra rápida", piso: "rapida", luz: "Iluminada", agenda: 1 },
+  { id: "paredao", nome: "Paredão", piso: "paredao", luz: "Iluminado", agenda: 5 },
 ];
 
 /** Indicação do Clube Red: os dois lados ganham. CONFIRMAR com a Red: benefícios. */
@@ -606,4 +611,83 @@ export const indicacao = {
   ],
   convite: (nome: string, url: string) =>
     `Bora jogar tênis comigo na Red Tennis, no Rudge Ramos? A aula experimental é em dupla: a gente bate bola junto, com professor. Marca por aqui: ${url}/aulas/?indicado=${encodeURIComponent(nome)}#experimental`,
+};
+
+/**
+ * Paredão: serviço novo da Red, com aula e aluguel por hora (como uma quadra).
+ * CONFIRMAR com a Red: preço de lançamento, formatos e duração da aula, uso livre do sócio e regras do desafio.
+ */
+export const paredao = {
+  chamada: "O parceiro que devolve todas as bolas",
+  intro:
+    "Pouca academia de tênis tem um. A Red tem um paredão de verdade, iluminado, com a faixa na altura da rede. Dá para fazer aula com professor ou alugar a hora, como uma quadra.",
+  porque: [
+    {
+      titulo: "Repetição de verdade",
+      texto: "A bola volta em dois ou três segundos. Numa hora você bate o mesmo golpe centenas de vezes, e é a repetição que grava o movimento.",
+    },
+    {
+      titulo: "Pés mais rápidos",
+      texto: "O paredão não espera você se arrumar. A bola chega antes do que numa troca na quadra, e os pés aprendem a chegar mais cedo.",
+    },
+    {
+      titulo: "Não depende de ninguém",
+      texto: "Sem parceiro, sem nível mínimo, sem catar bola do outro lado. Chegou, aqueceu, começou.",
+    },
+    {
+      titulo: "O erro aparece na hora",
+      texto: "O paredão nunca erra. Se a bola não voltou boa, foi o seu golpe, e você corrige na bola seguinte, não na semana que vem.",
+    },
+  ],
+  /** Estimativa de golpes seus em uma hora. Premissas na nota. */
+  ritmo: {
+    jogo: 180,
+    paredao: 1000,
+    nota:
+      "Estimativa para uma hora. Numa partida, a bola fica em jogo cerca de um quarto do tempo e volta para você a cada 5 segundos. No paredão, um golpe a cada 2 ou 3 segundos, contando as pausas.",
+  },
+  modos: [
+    {
+      id: "aula",
+      titulo: "Aula no paredão",
+      texto: "Professor ao seu lado, corrigindo golpe a golpe. É o caminho mais curto para consertar o golpe que mais falha.",
+      detalhe: "Individual ou em dupla, 30 ou 60 minutos", // CONFIRMAR com a Red
+      acao: "Agendar aula no paredão",
+    },
+    {
+      id: "hora",
+      titulo: "Paredão por hora",
+      texto: "Como uma quadra: reserve a hora avulsa ou fixe um horário toda semana. Sozinho ou em dupla, de dia ou com a luz acesa.",
+      detalhe: "Preço de lançamento no WhatsApp", // CONFIRMAR com a Red: preço
+      acao: "Reservar o paredão",
+    },
+    {
+      id: "clube",
+      titulo: "Livre para sócio",
+      texto: "Quem é do Clube Red usa o paredão nos horários vagos, antes ou depois da aula, sem pagar a hora.",
+      detalhe: "Incluído nos três planos", // CONFIRMAR com a Red
+      acao: "Conhecer o Clube Red",
+    },
+  ],
+  sessao: [
+    { tempo: "10 min", titulo: "Aquecer", texto: "Perto da parede, bola curta e devagar. Só controle." },
+    { tempo: "20 min", titulo: "Golpe do dia", texto: "Um golpe só, forehand ou backhand, até sair sem pensar." },
+    { tempo: "15 min", titulo: "Alternar", texto: "Forehand, backhand, forehand. Os pés decidem antes da raquete." },
+    { tempo: "10 min", titulo: "Voleio e saque", texto: "Um passo à frente para o voleio; depois, saque mirando acima da faixa." },
+    { tempo: "5 min", titulo: "Recorde", texto: "Quantas seguidas acima da faixa? Anote e tente bater na próxima." },
+  ],
+  desafio: {
+    titulo: "Recorde do paredão",
+    texto:
+      "Quantas bolas seguidas você faz acima da faixa sem deixar quicar duas vezes? Filme, mande para a Red e o seu número vai para o quadro do clube. O recorde de cada mês ganha uma hora de paredão.", // CONFIRMAR com a Red: prêmio
+    categorias: ["Red Kids", "Adulto iniciante", "Adulto"],
+  },
+  faq: [
+    { p: "Preciso saber jogar para usar o paredão?", r: "Não. Quem está começando aprende muito rápido ali, e a aula no paredão é um ótimo primeiro passo antes da turma." },
+    { p: "Posso ir sozinho?", r: "Pode. O paredão foi feito para isso. Em dupla também funciona: os dois alternam a bola." },
+    { p: "Preciso levar bola e raquete?", r: "Traga a sua raquete. Na aula, as bolas são da Red. No aluguel, traga um tubo ou peça na recepção." }, // CONFIRMAR com a Red
+    { p: "Tem luz à noite?", r: "Tem. O paredão é iluminado e funciona até o fechamento da Red." },
+    { p: "Quanto custa?", r: "O serviço é novo e tem preço de lançamento. Chame no WhatsApp e a Red passa o valor e os horários livres." },
+    { p: "Sócio do Clube paga?", r: "Nos horários vagos, não. Para garantir um horário fixo toda semana, a hora tem desconto de sócio." }, // CONFIRMAR com a Red
+  ],
 };

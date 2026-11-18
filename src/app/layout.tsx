@@ -65,6 +65,7 @@ const jsonLd = {
   description: site.descricao,
   url: `${site.url}/`,
   image: `${site.url}/og.jpg`,
+  logo: `${site.url}/marca/red-tennis-640.png`,
   hasMap: contato.mapa,
   telephone: contato.telefoneLink,
   email: contato.email,

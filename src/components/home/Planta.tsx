@@ -7,7 +7,7 @@ import { wa } from "@/lib/wa";
 import { Btn } from "../ui";
 
 /** Uma quadra de tênis em proporção real (23,77 x 10,97 m), vista de cima, em pé. */
-function Quadra({ x, y, w, piso, ativa }: { x: number; y: number; w: number; piso: "saibro" | "rapida"; ativa: boolean }) {
+function Quadra({ x, y, w, piso, ativa }: { x: number; y: number; w: number; piso: "saibro" | "rapida" | "paredao"; ativa: boolean }) {
   const h = w * (23.77 / 10.97);
   const k = w / 10.97;
   const al = 1.37 * k; // corredor de duplas
@@ -49,6 +49,7 @@ export function Planta() {
   }, []);
   const q = useMemo(() => planta.find((p) => p.id === sel) ?? planta[0], [sel]);
   const quando = prox[q.id];
+  const artigo = q.piso === "paredao" ? "o" : "a";
   const W = 110;
 
   return (
@@ -65,15 +66,38 @@ export function Planta() {
         </g>
         <g className="pl-area-txt" fontFamily="var(--f-display)" fontSize="13" fontWeight="650" fill="var(--papel)" style={{ fontVariationSettings: '"wdth" 110' }}>
           <text x="82" y="362">Vestiários, armários e Wi-Fi</text>
-          <text x="500" y="362">Paredão e squash</text>
+          <text x="500" y="362">Squash</text>
           <text x="32" y="414">Entrada pela Av. Winston Churchill</text>
         </g>
-        {/* paredão */}
-        <rect x="646" y="70" width="14" height="240" fill="var(--bordo)" stroke="var(--papel)" strokeWidth="1" />
-        <text className="pl-area-txt" x="638" y="190" textAnchor="middle" transform="rotate(-90 638 190)" fontFamily="var(--f-display)" fontSize="13" fontWeight="650" fill="var(--papel)" style={{ fontVariationSettings: '"wdth" 110' }}>
-          Paredão
-        </text>
         {planta.map((p) => {
+          const ativa = sel === p.id;
+          const alvo = {
+            role: "button",
+            tabIndex: 0,
+            "aria-pressed": ativa,
+            className: "pl-alvo",
+            onClick: () => setSel(p.id),
+            onPointerEnter: (e: React.PointerEvent) => e.pointerType === "mouse" && setSel(p.id),
+            onFocus: () => setSel(p.id),
+            onKeyDown: (e: React.KeyboardEvent) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), setSel(p.id)),
+          } as const;
+          if (p.piso === "paredao") {
+            // o paredão: a parede (bordô, com a faixa na altura da rede) e a área de batida na frente dela
+            return (
+              <g key={p.id} {...alvo} aria-label="Paredão">
+                <rect x="618" y="60" width="50" height="262" fill="transparent" />
+                <rect className="pl-borda" x="626" y="70" width="20" height="240" fill={ativa ? "var(--saibro-fundo)" : "transparent"} stroke="var(--papel)" strokeWidth={ativa ? 2.2 : 1.2} strokeDasharray={ativa ? undefined : "3 3"} />
+                <rect x="646" y="70" width="14" height="240" fill="var(--bordo)" stroke="var(--papel)" strokeWidth={ativa ? 2.2 : 1} />
+                <path d="M653 70v240" stroke="var(--papel)" strokeWidth="1.6" strokeDasharray="1 5" />
+                <text className="pl-longo" x="636" y="190" textAnchor="middle" transform="rotate(-90 636 190)" fontFamily="var(--f-display)" fontSize="14" fontWeight="700" fill="var(--papel)" style={{ fontVariationSettings: '"wdth" 112' }}>
+                  Paredão
+                </text>
+                <text className="pl-curto" x="643" y="56" textAnchor="middle" fontFamily="var(--f-display)" fontSize="30" fontWeight="700" fill="var(--papel)" style={{ fontVariationSettings: '"wdth" 112' }}>
+                  P
+                </text>
+              </g>
+            );
+          }
           const pos = LAYOUT[p.id];
           return (
             <g
@@ -88,7 +112,7 @@ export function Planta() {
               onFocus={() => setSel(p.id)}
               onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), setSel(p.id))}
             >
-              <Quadra x={pos.x} y={pos.y} w={W} piso={p.piso} ativa={sel === p.id} />
+              <Quadra x={pos.x} y={pos.y} w={W} piso={p.piso} ativa={ativa} />
               <text x={pos.x + W / 2} y={pos.y - 14} textAnchor="middle" fontFamily="var(--f-display)" fontWeight="700" fill="var(--papel)" style={{ fontVariationSettings: '"wdth" 112' }}>
                 <tspan className="pl-longo" fontSize="14">
                   {p.nome}
@@ -106,7 +130,7 @@ export function Planta() {
         <dl className="ficha-dados ui" aria-live="polite">
           <div>
             <dt>Piso</dt>
-            <dd>{q.piso === "saibro" ? "Saibro (pó de tijolo)" : "Rápida, base asfáltica"}</dd>
+            <dd>{q.piso === "saibro" ? "Saibro (pó de tijolo)" : q.piso === "paredao" ? "Parede de treino, faixa na altura da rede" : "Rápida, base asfáltica"}</dd>
           </div>
           <div>
             <dt>Luz</dt>
@@ -118,11 +142,11 @@ export function Planta() {
           </div>
         </dl>
         <Btn
-          href={wa(`Olá, Red! Vim pelo site e quero reservar a ${q.nome.toLowerCase()}${quando ? ` ${quando.replace(", ", ", às ")}` : ""}. Está livre?`)}
+          href={wa(`Olá, Red! Vim pelo site e quero reservar ${artigo} ${q.nome.toLowerCase()}${quando ? ` ${quando.replace(", ", ", às ")}` : ""}. Está livre?`)}
           tom="claro"
           className="btn-largo"
         >
-          Reservar {q.nome.toLowerCase()}
+          Reservar {artigo} {q.nome.toLowerCase()}
         </Btn>
         <p className="ui planta-nota">Planta ilustrativa. Horários de exemplo.</p>
       </div>

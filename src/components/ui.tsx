@@ -59,11 +59,31 @@ export function BtnLinha({ href, children, className = "" }: { href: string; chi
 }
 
 /** Logotipo: RED · bola · TENNIS, largo e oblíquo. */
-export function Logo({ onClick }: { onClick?: () => void }) {
+const ADESIVO = [160, 320, 640];
+
+/** A marca da Red (arte original, sem fundo), recortada como adesivo: lê bem sobre o saibro, o bordô e o papel. */
+export function Marca({ sizes = "96px", className = "", prioridade }: { sizes?: string; className?: string; prioridade?: boolean }) {
   return (
-    <Link href="/" className="logo" onClick={onClick}>
-      <span>Red</span> <Bola /> <span>Tennis</span>
-      <span className="sr-only">, página inicial</span>
+    <picture className={`marca ${className}`}>
+      <source type="image/webp" srcSet={ADESIVO.map((w) => `/marca/red-tennis-adesivo-${w}.webp ${w}w`).join(", ")} sizes={sizes} />
+      <img
+        src="/marca/red-tennis-adesivo-320.png"
+        srcSet={ADESIVO.map((w) => `/marca/red-tennis-adesivo-${w}.png ${w}w`).join(", ")}
+        sizes={sizes}
+        width={779}
+        height={553}
+        alt="Red Tennis"
+        decoding="async"
+        fetchPriority={prioridade ? "high" : undefined}
+      />
+    </picture>
+  );
+}
+
+export function Logo({ onClick, className = "" }: { onClick?: () => void; className?: string }) {
+  return (
+    <Link href="/" className={`logo ${className}`} onClick={onClick} aria-label="Red Tennis, página inicial">
+      <Marca sizes="(min-width: 64rem) 104px, 82px" prioridade />
     </Link>
   );
 }
@@ -72,7 +92,19 @@ export function Logo({ onClick }: { onClick?: () => void }) {
  * Selo do clube: carimbo redondo com o nome correndo na borda.
  * Herda a cor do texto (currentColor). `id` precisa ser único na página (o texto corre num caminho).
  */
-export function Selo({ id, ano, className = "" }: { id: string; ano: number | string; className?: string }) {
+export function Selo({
+  id,
+  ano,
+  anel = "RED TENNIS · CLUBE DE TÊNIS · RUDGE RAMOS ·",
+  rotulo = "DESDE",
+  className = "",
+}: {
+  id: string;
+  ano: number | string;
+  anel?: string;
+  rotulo?: string;
+  className?: string;
+}) {
   return (
     <svg viewBox="0 0 120 120" className={`selo ${className}`} aria-hidden="true">
       <defs>
@@ -82,11 +114,11 @@ export function Selo({ id, ano, className = "" }: { id: string; ano: number | st
       <circle cx="60" cy="60" r="34.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
       <text className="selo-anel">
         <textPath href={`#${id}`} textLength="266" lengthAdjust="spacing">
-          RED TENNIS · CLUBE DE TÊNIS · RUDGE RAMOS ·
+          {anel}
         </textPath>
       </text>
       <text x="60" y="53" textAnchor="middle" className="selo-rot">
-        DESDE
+        {rotulo}
       </text>
       <text x="60" y="76" textAnchor="middle" className="selo-ano">
         {ano}

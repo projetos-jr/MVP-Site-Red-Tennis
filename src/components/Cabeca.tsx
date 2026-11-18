@@ -11,8 +11,8 @@ type Props = {
   tom?: "saibro" | "bordo" | "vinho";
   /** Mostra a foto em retícula de duas tintas (fotos reais da Red em baixa resolução). */
   ret?: boolean;
-  /** Carimba o selo do clube no canto. */
-  selo?: boolean;
+  /** Carimba o selo do clube no canto (true) ou um selo com texto próprio. */
+  selo?: boolean | { anel: string; rotulo: string; ano: number | string };
   children?: ReactNode;
 };
 
@@ -22,7 +22,8 @@ export function Cabeca({ titulo, intro, foto, tom = "saibro", ret, selo, childre
     <header className={`cabeca sup-${tom} ${foto ? "" : "com-grao"}`}>
       {foto && <PhotoSlot name={foto} alt="" sizes="100vw" prioridade className={`cabeca-foto ${ret ? "cabeca-ret" : "com-grao-foto"}`} ret={ret} />}
       <div className="wrap cabeca-corpo">
-        {selo && <Selo id="selo-cabeca" ano={site.fundacao} className="cabeca-selo" />}
+        {selo === true && <Selo id="selo-cabeca" ano={site.fundacao} className="cabeca-selo" />}
+        {selo && selo !== true && <Selo id="selo-cabeca" {...selo} className="cabeca-selo" />}
         <h1 className="display cabeca-titulo">{titulo}</h1>
         <div className="cabeca-pe">
           <p className="lead">{intro}</p>

@@ -364,3 +364,84 @@
     }
   }
 }
+
+/* ------------------------------------------------ paredão */
+@layer components {
+  /* corte animado */
+  .corte { border-top: var(--linha) solid var(--risco); border-bottom: var(--linha) solid var(--risco); padding-block: 1rem 0.5rem; }
+  .corte-topo { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.75rem 1.5rem; }
+  .corte-placar { display: grid; gap: 0.1rem; }
+  .corte-placar .placar { font-size: clamp(2.6rem, 6vw, 4.5rem); line-height: 0.9; color: var(--saibro); font-variant-numeric: tabular-nums; }
+  .corte-botao { min-height: 44px; padding: 0; text-decoration: underline; text-underline-offset: 0.3em; text-decoration-thickness: 2px; }
+  .corte-svg { display: block; width: 100%; max-width: 1040px; height: auto; margin: 0.5rem auto 0; overflow: visible; }
+  .corte-parede { fill: var(--bordo); }
+  .corte-rot { font-family: var(--f-display); font-size: 9.5px; font-weight: 650; font-variation-settings: "wdth" 108; fill: currentColor; }
+  .corte-fundo-rot { fill: var(--papel); }
+  .corte-raquete { stroke: currentColor; fill: none; }
+  .corte-sombra { fill: currentColor; }
+  @media (max-width: 47.99rem) {
+    .corte-rot { font-size: 19px; }
+    .corte-cota { font-size: 16px; }
+    .corte .so-largo { display: none; }
+  }
+
+  /* "novo" */
+  .novo-marca { display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.9rem; color: var(--saibro); }
+  .novo-marca::before { content: ""; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--bola); box-shadow: 0 0 0 1px rgb(58 14 18 / 0.35); }
+  .nav-novo {
+    margin-left: 0.4em; padding: 0.12em 0.4em 0.16em; font-size: 0.68em; line-height: 1; letter-spacing: 0.04em; text-transform: uppercase;
+    background: var(--saibro); color: var(--papel); align-self: center;
+  }
+  .menu .nav-novo { font-size: 0.22em; vertical-align: super; margin-left: 0.5em; font-family: var(--f-display); font-style: normal; }
+
+  /* ritmo: uma hora de jogo x uma hora de paredão */
+  .ritmo { display: grid; gap: 1.5rem; }
+  .ritmo-linha { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.6rem 1.25rem; align-items: end; padding-bottom: 1.25rem; border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent); }
+  .ritmo-rot { grid-column: 1 / -1; color: var(--fg-2); }
+  .ritmo-bolas { display: flex; flex-wrap: wrap; gap: 5px; align-content: flex-end; min-height: 1px; }
+  .ritmo-bolas i, .ritmo-legenda i {
+    display: block; width: 13px; height: 13px; border-radius: 50%; background: var(--bola);
+    box-shadow: inset -2px -2px 0 rgb(58 14 18 / 0.18);
+  }
+  .ritmo-total { font-size: clamp(2.2rem, 4.5vw, 3.4rem); line-height: 0.85; }
+  .ritmo-legenda { display: flex; align-items: center; gap: 0.5rem; color: var(--fg-2); }
+  .ritmo-nota { font-size: 0.95rem; max-width: 52ch; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ritmo .ritmo-bolas i { transform: scale(0); opacity: 0; }
+    .ritmo[data-visto="true"] .ritmo-bolas i { animation: ritmo-entra 260ms var(--sai) var(--d) both; }
+    @keyframes ritmo-entra { from { transform: scale(0); opacity: 0; } to { transform: none; opacity: 1; } }
+  }
+
+  /* motivos */
+  .motivos { border-top: var(--linha) solid var(--risco); }
+  .motivos > li { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); gap: 1rem; padding-block: 1.4rem; border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent); }
+  .motivos .placar { font-size: 2.2rem; line-height: 0.9; color: var(--saibro); }
+  .motivos .sub { font-size: 1.3rem; text-transform: uppercase; margin-bottom: 0.35rem; }
+
+  /* três jeitos de usar */
+  .modos { display: grid; gap: 0; border-top: var(--linha) solid var(--risco); }
+  .modo { display: grid; gap: 0.85rem; align-content: start; padding-block: 1.75rem; border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent); }
+  .modo .sub { text-transform: uppercase; }
+  .modo-detalhe { color: var(--saibro); }
+  .modo .btn, .modo .btn-linha { justify-self: start; margin-top: 0.35rem; }
+  @media (min-width: 64rem) {
+    .modos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .modo { padding: 2rem 2rem 2.25rem 0; border-bottom: 0; }
+    .modo + .modo { padding-left: 2rem; border-left: 1px solid color-mix(in srgb, currentColor 20%, transparent); }
+    .modo[data-modo="aula"] .btn { justify-self: stretch; }
+  }
+
+  /* uma hora no paredão */
+  .sessao { border-top: var(--linha) solid var(--risco); }
+  .sessao > li { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); gap: 1rem; padding-block: 1.1rem; border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent); }
+  .sessao-tempo { display: grid; justify-items: start; align-content: start; color: var(--saibro); }
+  .sessao .placar { font-size: 2.1rem; line-height: 0.95; }
+  .sessao .sub { font-size: 1.2rem; text-transform: uppercase; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; margin-bottom: 0.25rem; }
+  .sessao .sub .ui { text-transform: none; font-size: var(--t-mini); }
+
+  /* quadro de recordes */
+  .recordes caption { text-align: left; padding-bottom: 0.75rem; color: var(--fg-2); }
+  .recordes td.num { white-space: nowrap; }
+  .recorde-vazio { font-size: 2.4rem; line-height: 1; opacity: 0.45; }
+  .recorde-nota { color: var(--fg-2); margin-left: 0.75rem; }
+}

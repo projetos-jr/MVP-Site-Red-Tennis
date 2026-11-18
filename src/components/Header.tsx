@@ -88,6 +88,7 @@ export function Header() {
             {nav.map((item) => (
               <Link key={item.href} href={item.href} aria-current={caminho.startsWith(item.href.slice(0, -1)) ? "page" : undefined}>
                 {item.rotulo}
+                {item.novo && <span className="nav-novo">novo</span>}
               </Link>
             ))}
           </nav>
@@ -114,6 +115,7 @@ export function Header() {
               <li key={item.href} style={{ ["--i" as string]: i }}>
                 <Link href={item.href} className="display" onClick={() => setAberto(false)}>
                   {item.rotulo}
+                  {item.novo && <span className="nav-novo">novo</span>}
                 </Link>
               </li>
             ))}

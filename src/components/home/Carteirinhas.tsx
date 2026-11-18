@@ -4,7 +4,7 @@ import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTran
 import { useEffect, useRef, useState } from "react";
 import { mensagens, planos, regraClube, semMulta, type Plano } from "@/content/red";
 import { wa } from "@/lib/wa";
-import { Bola, Btn } from "../ui";
+import { Bola, Btn, Marca } from "../ui";
 
 const TOM: Record<string, string> = { saibro: "cart-saibro", pro: "cart-papel", familia: "cart-vinho" };
 
@@ -45,9 +45,7 @@ function Cartao({ p }: { p: Plano }) {
       aria-label={`Carteirinha do plano ${p.nome}`}
     >
       <div className="cart-topo">
-        <span className="cart-logo">
-          Red <Bola /> Tennis
-        </span>
+        <Marca className="cart-marca" sizes="80px" />
         <span className="ui">Sócio do clube</span>
       </div>
       <p className="cart-nome">{p.nome}</p>

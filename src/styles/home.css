@@ -500,3 +500,14 @@
   }
   @media (max-width: 47.99rem) { .casa-selo { right: 0.75rem; bottom: auto; top: 0.75rem; } }
 }
+
+@layer components {
+  .cart-marca { height: clamp(40px, 3.6vw, 52px); rotate: -5deg; transform-origin: left center; filter: drop-shadow(0 2px 4px rgb(40 8 8 / 0.25)); }
+}
+
+@layer components {
+  .impressa-quadro .prancha-quadro { border: var(--linha) solid var(--vinho); }
+  .impressa-quadro .prancha-legenda { padding-top: 0.85rem; }
+  @media (min-width: 48rem) { .impressa-quadro .prancha-legenda { grid-template-columns: auto minmax(0, 1fr); } .impressa-quadro .prancha-botao { grid-column: 2; } }
+  .impressa-quadro .prancha-quadro img { animation: none !important; object-position: 50% 50%; }
+}

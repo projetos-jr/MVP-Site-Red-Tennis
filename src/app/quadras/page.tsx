@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { pagina } from "@/lib/seo";
 import { Cabeca, TituloSecao } from "@/components/Cabeca";
@@ -22,7 +23,7 @@ export default function Quadras() {
       <Cabeca
         titulo="Três de saibro, uma rápida"
         foto="vassourada"
-        intro="Quadras isoladas por alambrados altos, cada uma com entrada própria, iluminadas por 18 refletores em seis postes."
+        intro="Quadras isoladas por alambrados altos, cada uma com entrada própria, iluminadas por 18 refletores em seis postes. E agora o paredão, que também se aluga por hora."
       >
         <Btn href="#reserva" tom="claro">
           Reservar quadra
@@ -73,6 +74,13 @@ export default function Quadras() {
             <TituloSecao lado id="preco-titulo">Preço da quadra</TituloSecao>
             <p className="sec mt-6">{locacao.nota}</p>
             <p className="sec mt-3">Sócio do Clube Red paga de 10% a 20% menos na quadra.</p>
+            <p className="mt-6 ui novo-marca">Novo: paredão por hora</p>
+            <p className="sec">
+              O paredão também se aluga por hora, avulso ou mensalista, com preço de lançamento.{" "}
+              <Link href="/paredao/" className="link">
+                Ver o paredão
+              </Link>
+            </p>
           </div>
           <div className="col-span-full lg:col-span-8">
             <table className="tabela">

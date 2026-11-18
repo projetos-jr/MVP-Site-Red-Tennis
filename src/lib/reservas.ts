@@ -12,7 +12,7 @@ export type DiaAgenda = { data: Date; horarios: Horario[] };
  * e mantenha o formato.
  */
 export function agendaDaSemana(quadra: string, inicio: Date, deslocamento?: number): DiaAgenda[] {
-  const desloca = deslocamento ?? (quadra === "rapida" ? 3 : 0);
+  const desloca = deslocamento ?? (quadra === "rapida" ? 3 : quadra === "paredao" ? 5 : 0);
   const agora = emSP(inicio);
   return reservaMock.ocupados.map((_, i) => {
     const data = new Date(inicio.getTime() + i * 86_400_000);

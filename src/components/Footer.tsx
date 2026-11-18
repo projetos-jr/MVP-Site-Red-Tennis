@@ -7,6 +7,7 @@ import { wa } from "@/lib/wa";
 import { HorariosSemana } from "./Aberto";
 import { FooterMarca } from "./FooterMarca";
 import { BtnAula } from "./Agendar";
+import { Marca } from "./ui";
 
 export function Footer() {
   const e = contato.endereco;
@@ -20,6 +21,7 @@ export function Footer() {
       <div className="wrap" style={{ paddingTop: "clamp(3.5rem, 7vw, 6rem)" }}>
         <div className="g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full md:col-span-6 lg:col-span-5">
+            <Marca className="rodape-logo" sizes="150px" />
             <h2 className="sub t-h3">{semEndereco ? "Sua próxima aula começa aqui" : "Venha jogar"}</h2>
             {!semEndereco && (
               <address className="lead not-italic mt-4">

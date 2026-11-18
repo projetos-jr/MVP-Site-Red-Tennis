@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { pagina } from "@/lib/seo";
 import { Cabeca, TituloSecao } from "@/components/Cabeca";
@@ -41,8 +42,12 @@ export default function Sobre() {
               rápida e um paredão iluminado, na Av. Winston Churchill.
             </p>
             <p className="sec">
-              As quadras são isoladas por alambrados altos, com entradas independentes. O paredão é livre para alunos e vem com orientação:
-              define a empunhadura, cria a memória do golpe e treina a reação. Quem quer evoluir rápido, evolui, sem custo a mais.
+              As quadras são isoladas por alambrados altos, com entradas independentes. O paredão define a empunhadura, cria a memória do
+              golpe e treina a reação. Agora ele também tem aula com professor e aluguel por hora, como uma quadra:{" "}
+              <Link href="/paredao/" className="link">
+                conheça o paredão
+              </Link>
+              .
             </p>
             <p className="sec">
               Para as crianças, criamos o Red Kids, um método para alunos de 4 a 8 anos. Para quem compete, mantemos um ranking em quatro

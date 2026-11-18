@@ -225,5 +225,19 @@
     ],
     "ret": true,
     "fonte": "red"
+  },
+  "paredao-foto": {
+    "width": 330,
+    "height": 220,
+    "widths": [
+      330
+    ],
+    "retWidths": [
+      640,
+      960,
+      1280
+    ],
+    "ret": true,
+    "fonte": "red"
   }
 }

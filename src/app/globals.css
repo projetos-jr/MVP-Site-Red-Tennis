@@ -382,21 +382,25 @@
   .logo {
     display: inline-flex;
     align-items: center;
-    gap: 0.32em;
     min-height: 44px;
-    font-family: var(--f-display);
-    font-variation-settings: "wdth" 150;
-    font-weight: 900;
-    font-style: italic;
-    font-family: var(--f-display-it);
-    font-size: 1.125rem;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
-    line-height: 1;
+    line-height: 0;
     text-decoration: none;
     color: inherit;
+    flex: none;
   }
-  .logo svg { width: 0.78em; height: 0.78em; flex: none; }
+  .marca, .marca img { display: block; }
+  .marca { width: fit-content; }
+  .marca img { width: auto; height: 100%; }
+  .logo .marca {
+    height: 58px;
+    filter: drop-shadow(0 3px 8px rgb(40 8 8 / 0.28));
+    transition: height 300ms var(--sai), transform 300ms var(--sai);
+  }
+  .logo:hover .marca { transform: rotate(-3deg) scale(1.03); }
+  @media (min-width: 64rem) { .logo .marca { height: 74px; } }
+  .header[data-fixo="true"] .logo .marca { height: 52px; filter: none; }
+  @media (min-width: 64rem) { .header[data-fixo="true"] .logo .marca { height: 58px; } }
+  @media (prefers-reduced-motion: reduce) { .logo:hover .marca { transform: none; } }
   .nav {
     display: none;
     gap: clamp(1.1rem, 2vw, 2rem);
@@ -446,8 +450,15 @@
     .header .btn { display: inline-flex; }
     .menu-btn { display: none; }
   }
-  @media (min-width: 80rem) {
+  /* sete itens no menu: o status "aberto agora" só aparece quando sobra espaço */
+  @media (min-width: 90rem) {
     .header .status { display: inline-flex; }
+  }
+  .nav a, .header .btn { white-space: nowrap; }
+  @media (min-width: 64rem) and (max-width: 79.99rem) {
+    .nav { gap: 1rem; font-size: 0.875rem; }
+    .header-in { gap: 1rem; }
+    .header .btn { padding-inline: 1rem; }
   }
 
   .status {
@@ -889,4 +900,8 @@
     @starting-style { .folha[open] { transform: translateX(100%); } }
     .folha-corpo { padding: 1.5rem 2rem 2rem; border-top: 0; border-left: var(--linha) solid var(--saibro); min-height: 100%; align-content: start; }
   }
+}
+
+@layer components {
+  .rodape-logo { height: clamp(92px, 9vw, 124px); margin-bottom: 1.75rem; rotate: -4deg; transform-origin: left center; }
 }

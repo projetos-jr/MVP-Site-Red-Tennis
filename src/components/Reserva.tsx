@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { quadras } from "@/content/red";
 import { agendaDaSemana, type DiaAgenda } from "@/lib/reservas";
 import { wa } from "@/lib/wa";
 import { Bola } from "./ui";
@@ -10,13 +9,19 @@ const fmtDia = new Intl.DateTimeFormat("pt-BR", { weekday: "short", timeZone: "A
 const fmtData = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", timeZone: "America/Sao_Paulo" });
 const fmtLongo = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "2-digit", month: "2-digit", timeZone: "America/Sao_Paulo" });
 
+const OPCOES = [
+  { id: "saibro", rotulo: "Saibro", nome: "Quadra de saibro", frase: "a quadra de saibro" },
+  { id: "rapida", rotulo: "Quadra rápida", nome: "Quadra rápida", frase: "a quadra rápida" },
+  { id: "paredao", rotulo: "Paredão", nome: "Paredão", frase: "o paredão" },
+];
+
 /**
  * Mock de reserva: grade da semana com horários livres e ocupados.
  * Os dados vêm de agendaDaSemana() (src/lib/reservas.ts), que é o ponto
  * de troca para um sistema de reservas real.
  */
-export function Reserva() {
-  const [quadra, setQuadra] = useState(quadras[0].id);
+export function Reserva({ inicial = "saibro" }: { inicial?: string }) {
+  const [quadra, setQuadra] = useState(inicial);
   const [agenda, setAgenda] = useState<DiaAgenda[]>([]);
   const [escolha, setEscolha] = useState<{ dia: Date; hora: string } | null>(null);
   const [diaSel, setDiaSel] = useState(0);
@@ -37,19 +42,19 @@ export function Reserva() {
     requestAnimationFrame(() => confirma.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }));
   };
 
-  const nome = quadras.find((q) => q.id === quadra)?.nome.toLowerCase() ?? "";
+  const op = OPCOES.find((o) => o.id === quadra) ?? OPCOES[0];
   const link = escolha
-    ? wa(`Olá, Red! Vim pelo site e quero reservar a quadra ${nome === "saibro" ? "de saibro" : "rápida"} para ${fmtLongo.format(escolha.dia)}, às ${escolha.hora.replace(":00", "h")}. Está livre?`)
+    ? wa(`Olá, Red! Vim pelo site e quero reservar ${op.frase} para ${fmtLongo.format(escolha.dia)}, às ${escolha.hora.replace(":00", "h")}. Está livre?`)
     : undefined;
 
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <div className="chips" role="radiogroup" aria-label="Piso">
-          {quadras.map((q) => (
+        <div className="chips" role="radiogroup" aria-label="O que reservar">
+          {OPCOES.map((q) => (
             <label key={q.id}>
               <input type="radio" name="piso" checked={quadra === q.id} onChange={() => setQuadra(q.id)} />
-              <span>{q.nome === "Rápida" ? "Quadra rápida" : "Saibro"}</span>
+              <span>{q.rotulo}</span>
             </label>
           ))}
         </div>
@@ -100,7 +105,7 @@ export function Reserva() {
         <p className="lead">
           {escolha ? (
             <>
-              Quadra {nome === "saibro" ? "de saibro" : "rápida"}, {fmtLongo.format(escolha.dia)}, às {escolha.hora.replace(":00", "h")}, por uma hora.
+              {op.nome}, {fmtLongo.format(escolha.dia)}, às {escolha.hora.replace(":00", "h")}, por uma hora.
             </>
           ) : (
             <span className="sec">Escolha um horário livre.</span>

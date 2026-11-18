@@ -35,6 +35,8 @@ const slots = [
   { name: "rapida-linhas", src: RAPIDA, crop: [190, 290, 760, 420], ret: true },
   // prancha da home: panorama de largura total, retícula grossa (110 colunas de pontos) até 2560px
   { name: "prancha-quadras", src: SAIBRO, crop: [0, 150, 1283, 806], ret: true, duasTintas: true, colunas: 170, retLarguras: [640, 960, 1440, 1920, 2560] },
+  // o paredão, no fundo da quadra rápida, impresso em duas tintas
+  { name: "paredao-foto", src: RAPIDA, crop: [930, 196, 330, 220], ret: true, duasTintas: true, colunas: 96, retLarguras: [640, 960, 1280] },
   // material renderizado (ilustração)
   { name: "hero-saibro", src: estudio("hero-saibro") },
   { name: "deslize", src: estudio("deslize") },

@@ -94,6 +94,25 @@ export default function Aulas() {
         </div>
       </section>
 
+      <section className="secao sup-papel" aria-labelledby="paredao-aula-titulo">
+        <div className="wrap g12 items-end" style={{ rowGap: "1.5rem" }}>
+          <div className="col-span-full lg:col-span-7">
+            <p className="ui novo-marca">Novo na Red</p>
+            <TituloSecao id="paredao-aula-titulo">Aula no paredão</TituloSecao>
+          </div>
+          <div className="col-span-full lg:col-span-5 grid gap-5 justify-items-start">
+            <p className="lead">
+              Professor ao seu lado e a bola voltando a cada dois segundos. É o treino extra para consertar o golpe que mais falha, entre
+              uma aula de turma e outra.
+            </p>
+            <div className="flex flex-wrap gap-x-6 gap-y-3 items-center">
+              <Btn href={wa(mensagens.paredaoAula)}>Agendar aula no paredão</Btn>
+              <BtnLinha href="/paredao/">Como funciona</BtnLinha>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section id="experimental" className="secao sup-vinho" aria-labelledby="exp-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full lg:col-span-5">
