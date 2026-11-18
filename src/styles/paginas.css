@@ -350,3 +350,17 @@
     .convite-form { grid-template-columns: minmax(0, 1fr) auto; gap: 2rem; }
   }
 }
+
+@layer components {
+  .cabeca-corpo { position: relative; }
+  .cabeca-selo {
+    position: absolute; right: var(--margem); top: clamp(96px, 12vw, 150px); width: clamp(5.25rem, 11vw, 10rem);
+    color: var(--saibro); rotate: 12deg;
+  }
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .cabeca-selo { animation: selo-gira-cabeca linear both; animation-timeline: scroll(root); animation-range: 0 60vh; }
+      @keyframes selo-gira-cabeca { from { rotate: 12deg; } to { rotate: 64deg; } }
+    }
+  }
+}

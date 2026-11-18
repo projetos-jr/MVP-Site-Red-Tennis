@@ -6,6 +6,7 @@ import { Catalogo } from "@/components/home/Catalogo";
 import { Equipe } from "@/components/home/Equipe";
 import { Hero } from "@/components/home/Hero";
 import { Numeros } from "@/components/home/Numeros";
+import { Prancha } from "@/components/home/Prancha";
 import { Planta } from "@/components/home/Planta";
 import { Semana } from "@/components/home/Semana";
 import { Cartaz, Contagem } from "@/components/home/Torneio";
@@ -35,6 +36,7 @@ export default function Home() {
       <Semana />
       <Casa />
       <Numeros />
+      <Prancha />
 
       {/* Aulas */}
       <section className="secao sup-papel aulas" aria-labelledby="aulas-titulo">

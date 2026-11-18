@@ -20,7 +20,8 @@ const estudio = (n) => path.join(root, "fotos/estudio", n + ".jpg");
 const WIDTHS = [480, 640, 800, 1280, 1800, 2560];
 
 const TINTA = { r: 0x6b, g: 0x1d, b: 0x21 };
-const PAPEL = "#fcfaf6";
+const SAIBRO_TINTA = { r: 0xb9, g: 0x51, b: 0x28 };
+const PAPEL = "#ffffff";
 
 // left, top, width, height em px do original
 const slots = [
@@ -32,6 +33,8 @@ const slots = [
   { name: "saibro-linha", src: SAIBRO, crop: [520, 520, 760, 435], ret: true },
   { name: "saibro-refletores", src: SAIBRO, crop: [330, 0, 560, 700], ret: true },
   { name: "rapida-linhas", src: RAPIDA, crop: [190, 290, 760, 420], ret: true },
+  // prancha da home: panorama de largura total, retícula grossa (110 colunas de pontos) até 2560px
+  { name: "prancha-quadras", src: SAIBRO, crop: [0, 150, 1283, 806], ret: true, duasTintas: true, colunas: 170, retLarguras: [640, 960, 1440, 1920, 2560] },
   // material renderizado (ilustração)
   { name: "hero-saibro", src: estudio("hero-saibro") },
   { name: "deslize", src: estudio("deslize") },
@@ -55,7 +58,7 @@ const slots = [
 ];
 
 /** Retícula de meio-tom: pontos de tinta numa grade a 45°, raio pelo tom da foto. */
-async function reticula(buffer, largura) {
+async function reticula(buffer, largura, colunas = 150, curva = 1) {
   const { data, info } = await sharp(buffer)
     .resize({ width: largura })
     .greyscale()
@@ -68,7 +71,7 @@ async function reticula(buffer, largura) {
     const yi = Math.min(H - 1, Math.max(0, Math.round(y)));
     return data[yi * W + xi] / 255;
   };
-  const cel = Math.max(5, Math.round(largura / 150));
+  const cel = colunas === 150 ? Math.max(5, Math.round(largura / 150)) : largura / colunas;
   const ang = Math.PI / 4;
   const c = Math.cos(ang);
   const s = Math.sin(ang);
@@ -81,13 +84,71 @@ async function reticula(buffer, largura) {
       if (x < -cel || y < -cel || x > W + cel || y > H + cel) continue;
       // média de 5 amostras na célula
       const t = (lum(x, y) * 2 + lum(x - cel / 3, y) + lum(x + cel / 3, y) + lum(x, y - cel / 3) + lum(x, y + cel / 3)) / 6;
-      const escuro = Math.pow(1 - t, 1.12);
+      // curva < 1 clareia os meios-tons (o saibro laranja não vira massa de tinta)
+      const escuro = Math.pow(1 - Math.pow(t, curva), 1.12);
       const r = (cel / 2) * 1.42 * Math.sqrt(escuro);
       if (r < 0.35) continue;
       pontos.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}"/>`);
     }
   }
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><rect width="100%" height="100%" fill="${PAPEL}"/><g fill="rgb(${TINTA.r},${TINTA.g},${TINTA.b})">${pontos.join("")}</g></svg>`;
+  return sharp(Buffer.from(svg)).png().toBuffer();
+}
+
+/**
+ * Impressão em duas tintas, como num jornal de clube: uma retícula de saibro (a 15°)
+ * para o que é barro e telha, outra de bordô (a 45°) para sombra e estrutura. Céu e linhas ficam no papel.
+ */
+async function reticulaDupla(buffer, largura, colunas) {
+  const { data, info } = await sharp(buffer).resize({ width: largura }).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const { width: W, height: H } = info;
+  const px = (x, y) => {
+    const xi = Math.min(W - 1, Math.max(0, Math.round(x)));
+    const yi = Math.min(H - 1, Math.max(0, Math.round(y)));
+    const i = (yi * W + xi) * 3;
+    return [data[i] / 255, data[i + 1] / 255, data[i + 2] / 255];
+  };
+  const amostras = (x, y, cel) => [px(x, y), px(x - cel / 3, y), px(x + cel / 3, y), px(x, y - cel / 3), px(x, y + cel / 3)];
+  const media = (x, y, cel) => {
+    const a = [px(x, y), ...amostras(x, y, cel)];
+    return [0, 1, 2].map((k) => a.reduce((s, c) => s + c[k], 0) / a.length);
+  };
+  const liso = (a, b, t) => {
+    const u = Math.min(1, Math.max(0, (t - a) / (b - a)));
+    return u * u * (3 - 2 * u);
+  };
+  const cel = largura / colunas;
+  const tela = (graus, valor, cor) => {
+    const ang = (graus * Math.PI) / 180;
+    const c = Math.cos(ang);
+    const s = Math.sin(ang);
+    const alcance = Math.ceil((W + H) / cel);
+    const pontos = [];
+    for (let i = -alcance; i <= alcance; i++) {
+      for (let j = -alcance; j <= alcance; j++) {
+        const x = W / 2 + (i * c - j * s) * cel;
+        const y = H / 2 + (i * s + j * c) * cel;
+        if (x < -cel || y < -cel || x > W + cel || y > H + cel) continue;
+        // média e mínimo das amostras: uma linha branca fina ainda abre o ponto
+        const v = valor(media(x, y, cel)) * 0.55 + Math.min(...amostras(x, y, cel).map(valor)) * 0.45;
+        const r = (cel / 2) * 1.38 * Math.sqrt(v);
+        if (r < 0.4) continue;
+        pontos.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}"/>`);
+      }
+    }
+    return `<g fill="rgb(${cor.r},${cor.g},${cor.b})">${pontos.join("")}</g>`;
+  };
+  // saibro: quanto o pixel puxa para o laranja (vermelho acima do azul), mais forte nos meios-tons
+  const barro = ([r, g, b]) => {
+    const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return Math.min(1, Math.max(0, (r - b) * 1.25)) * liso(0.06, 0.4, lum) * 0.5;
+  };
+  // bordô: só o que é escuro de verdade
+  const sombra = ([r, g, b]) => {
+    const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return Math.pow(liso(0.38, 0.04, lum), 1.1) * 0.95;
+  };
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><rect width="100%" height="100%" fill="${PAPEL}"/>${tela(15, barro, SAIBRO_TINTA)}${tela(45, sombra, TINTA)}</svg>`;
   return sharp(Buffer.from(svg)).png().toBuffer();
 }
 
@@ -124,6 +185,12 @@ for (const slot of slots) {
   const widths = WIDTHS.filter((w) => w < width * 0.9).concat(Math.min(width, 2560));
   const comRet = Boolean(slot.ret && !nova);
 
+  const retWidths = comRet ? (slot.retLarguras ?? widths) : [];
+  for (const w of retWidths) {
+    // duas tintas: PNG de paleta comprime pontos de meio-tom muito melhor que formatos com perdas
+    const ret = slot.duasTintas ? await reticulaDupla(base.data, w, slot.colunas) : await reticula(base.data, w, slot.colunas, slot.curva);
+    await sharp(ret).png({ palette: true, colors: slot.duasTintas ? 12 : 4, compressionLevel: 9, effort: 10 }).toFile(path.join(out, `${slot.name}-ret-${w}.png`));
+  }
   for (const w of widths) {
     const r = sharp(base.data).resize({ width: w });
     // texturas renderizadas aguentam mais compressão que fotografia
@@ -131,13 +198,8 @@ for (const slot of slots) {
     // texturas: qualidade suficiente para não borrar; o grão fino vem de uma camada em CSS no site
     await r.clone().avif({ quality: material ? 58 : 52, chromaSubsampling: material ? "4:4:4" : "4:2:0" }).toFile(path.join(out, `${slot.name}-${w}.avif`));
     await r.clone().webp({ quality: material ? 72 : 74 }).toFile(path.join(out, `${slot.name}-${w}.webp`));
-    if (comRet) {
-      // duas tintas: PNG de paleta comprime pontos de meio-tom muito melhor que formatos com perdas
-      const ret = await reticula(base.data, w);
-      await sharp(ret).png({ palette: true, colors: 4, compressionLevel: 9, effort: 10 }).toFile(path.join(out, `${slot.name}-ret-${w}.png`));
-    }
   }
-  manifest[slot.name] = { width, height, widths, ret: comRet, fonte: nova ? "nova" : slot.crop ? "red" : "estudio" };
+  manifest[slot.name] = { width, height, widths, ...(slot.retLarguras ? { retWidths } : {}), ret: comRet, fonte: nova ? "nova" : slot.crop ? "red" : "estudio" };
   console.log(`${slot.name}: ${width}x${height} -> ${widths.join(", ")}${comRet ? " + retícula" : ""}`);
 }
 

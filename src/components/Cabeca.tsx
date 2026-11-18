@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
+import { site } from "@/content/red";
 import { PhotoSlot } from "./PhotoSlot";
+import { Selo } from "./ui";
 
 type Props = {
   titulo: string;
@@ -9,15 +11,18 @@ type Props = {
   tom?: "saibro" | "bordo" | "vinho";
   /** Mostra a foto em retícula de duas tintas (fotos reais da Red em baixa resolução). */
   ret?: boolean;
+  /** Carimba o selo do clube no canto. */
+  selo?: boolean;
   children?: ReactNode;
 };
 
 /** Cabeça das páginas internas: título grande sobre a imagem de material, uma frase e a ação. */
-export function Cabeca({ titulo, intro, foto, tom = "saibro", ret, children }: Props) {
+export function Cabeca({ titulo, intro, foto, tom = "saibro", ret, selo, children }: Props) {
   return (
     <header className={`cabeca sup-${tom} ${foto ? "" : "com-grao"}`}>
       {foto && <PhotoSlot name={foto} alt="" sizes="100vw" prioridade className={`cabeca-foto ${ret ? "cabeca-ret" : "com-grao-foto"}`} ret={ret} />}
       <div className="wrap cabeca-corpo">
+        {selo && <Selo id="selo-cabeca" ano={site.fundacao} className="cabeca-selo" />}
         <h1 className="display cabeca-titulo">{titulo}</h1>
         <div className="cabeca-pe">
           <p className="lead">{intro}</p>

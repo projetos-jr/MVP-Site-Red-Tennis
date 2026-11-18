@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { site } from "@/content/red";
 import { PhotoSlot } from "../PhotoSlot";
+import { Selo } from "../ui";
 
 /** Miniatura impressa no meio da frase: decorativa, o texto já diz o que ela mostra. */
 function Chip({ name }: { name: string }) {
@@ -45,6 +46,7 @@ export function Casa() {
             className="aspect-[4/5]"
             ret
           />
+          <Selo id="selo-casa" ano={site.fundacao} className="casa-selo" />
           <figcaption>Fig. 1. As quadras de saibro vistas da rede, numa tarde de sol.</figcaption>
         </figure>
       </div>

@@ -67,3 +67,30 @@ export function Logo({ onClick }: { onClick?: () => void }) {
     </Link>
   );
 }
+
+/**
+ * Selo do clube: carimbo redondo com o nome correndo na borda.
+ * Herda a cor do texto (currentColor). `id` precisa ser único na página (o texto corre num caminho).
+ */
+export function Selo({ id, ano, className = "" }: { id: string; ano: number | string; className?: string }) {
+  return (
+    <svg viewBox="0 0 120 120" className={`selo ${className}`} aria-hidden="true">
+      <defs>
+        <path id={id} d="M60 60m-43 0a43 43 0 1 1 86 0a43 43 0 1 1-86 0" />
+      </defs>
+      <circle cx="60" cy="60" r="56.5" fill="none" stroke="currentColor" strokeWidth="2.4" />
+      <circle cx="60" cy="60" r="34.5" fill="none" stroke="currentColor" strokeWidth="1.3" />
+      <text className="selo-anel">
+        <textPath href={`#${id}`} textLength="266" lengthAdjust="spacing">
+          RED TENNIS · CLUBE DE TÊNIS · RUDGE RAMOS ·
+        </textPath>
+      </text>
+      <text x="60" y="53" textAnchor="middle" className="selo-rot">
+        DESDE
+      </text>
+      <text x="60" y="76" textAnchor="middle" className="selo-ano">
+        {ano}
+      </text>
+    </svg>
+  );
+}

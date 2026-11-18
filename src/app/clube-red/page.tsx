@@ -23,6 +23,7 @@ export default function ClubeRed() {
       <Cabeca
         titulo="O clube de quem joga toda semana"
         tom="vinho"
+        selo
         intro="Aluno de turma já é sócio. Uma mensalidade, horário garantido e motivo para voltar: ranking, torneio do mês e desconto na quadra."
       >
         <Btn href={wa(mensagens.clube)} tom="claro">

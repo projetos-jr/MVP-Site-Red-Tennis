@@ -333,7 +333,7 @@ export const planos: Plano[] = [
 export const beneficios = [
   { titulo: "Prioridade de horário", texto: "Sócio renova a turma e a quadra antes de abrir para o público." },
   { titulo: "Ranking interno", texto: "Quatro categorias, de A a D, com classificação nova todo fim de mês." },
-  { titulo: "Torneio do mês", texto: "Um domingo por mês, com chave por categoria. Sócio paga menos na inscrição; no Pro, não paga." },
+  { titulo: "Torneio do mês", texto: "Um domingo por mês, com chave por categoria. Sócio paga menos na inscrição; no Pro, não\u00a0paga." },
   { titulo: "Encordoamento", texto: "15% de desconto para deixar a raquete na tensão certa." },
   { titulo: "Indicação", texto: "Trouxe um amigo e ele entrou no Clube? Você ganha uma aula particular, e ele ganha 10% no primeiro mês." },
 ];
@@ -455,7 +455,7 @@ export const eventos: Evento[] = [
     tipo: "Novembro",
     inicio: "2026-11-29",
     dataCurta: "29 NOV",
-    detalhe: "Domingo de manhã, chave rápida por categoria, jogos de um set. Sócio Pro não paga inscrição.",
+    detalhe: "Domingo de manhã, chave rápida por categoria, jogos de um set. Sócio Pro não paga\u00a0inscrição.",
   },
   {
     id: "torneio-mes-jan",
