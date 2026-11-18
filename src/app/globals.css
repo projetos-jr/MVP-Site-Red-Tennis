@@ -229,19 +229,23 @@
     flex: none;
     width: 20px;
     height: 20px;
-    transition: transform 520ms var(--sai);
+    transition: transform 360ms var(--sai);
   }
   @media (hover: hover) {
-    .btn:hover .btn-bola { transform: translateX(6px) rotate(150deg); }
+    .btn:hover .btn-bola { transform: translateX(8px) rotate(46deg); }
   }
   .btn-claro { --btn-bg: var(--papel); --btn-fg: var(--vinho); }
-  .btn-claro:hover { background: var(--po); }
+  @media (hover: hover) {
+    .btn-claro:hover { background: var(--po); }
+  }
   .btn-escuro { --btn-bg: var(--vinho); --btn-fg: var(--papel); }
-  .sup-papel .btn:not(.btn-claro):hover,
-  .sup-po .btn:not(.btn-claro):hover { background: var(--vinho); }
-  .sup-saibro .btn:not(.btn-claro):hover { background: var(--bordo); }
-  .sup-bordo .btn:hover,
-  .sup-vinho .btn:hover { background: var(--po); }
+  @media (hover: hover) {
+    .sup-papel .btn:not(.btn-claro):hover,
+    .sup-po .btn:not(.btn-claro):hover { background: var(--vinho); }
+    .sup-saibro .btn:not(.btn-claro):hover { background: var(--bordo); }
+    .sup-bordo .btn:hover,
+    .sup-vinho .btn:hover { background: var(--po); }
+  }
   .btn-largo { width: 100%; justify-content: space-between; }
 
   /* Secundário: texto com a linha de quadra embaixo, que se desenha no hover */
@@ -269,7 +273,7 @@
     height: var(--linha);
     background: var(--risco);
     transform-origin: left;
-    transition: transform 420ms var(--sai);
+    transition: transform 240ms var(--sai);
   }
   .btn-linha::before {
     content: "";
@@ -281,7 +285,7 @@
     background: currentColor;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 420ms var(--sai);
+    transition: transform 240ms var(--sai);
     z-index: 1;
   }
   @media (hover: hover) {
@@ -296,7 +300,9 @@
     text-decoration-thickness: 2px;
     transition: text-decoration-color var(--rapido) var(--sai);
   }
-  .link:hover { text-decoration-color: currentColor; }
+  @media (hover: hover) {
+    .link:hover { text-decoration-color: currentColor; }
+  }
 
   /* ---------------------------------------------------------- textura */
   .grao {
@@ -345,7 +351,7 @@
     inset: 0 0 auto 0;
     z-index: 50;
     color: var(--papel);
-    transition: background-color 360ms var(--sai), color 360ms var(--sai), transform 360ms var(--sai);
+    transition: background-color 200ms var(--sai), color 200ms var(--sai), transform 300ms var(--sai);
   }
   .header-in {
     height: 76px;
@@ -353,14 +359,13 @@
     align-items: center;
     justify-content: space-between;
     gap: 1.5rem;
-    transition: height 360ms var(--sai);
   }
   .header[data-fixo="true"] {
     background: var(--papel);
     color: var(--vinho);
   }
   .header[data-fixo="true"] .header-in { height: var(--header); }
-  .header[data-fixo="true"]::after {
+  .header::after {
     content: "";
     position: absolute;
     inset: auto 0 -11px 0;
@@ -368,7 +373,11 @@
     border-top: var(--linha) solid var(--saibro);
     border-bottom: var(--linha) solid var(--saibro);
     background: var(--papel);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms var(--sai);
   }
+  .header[data-fixo="true"]::after { opacity: 1; }
   .header[data-escondido="true"] { transform: translateY(-110%); }
   .logo {
     display: inline-flex;
@@ -410,7 +419,7 @@
     background: currentColor;
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 320ms var(--sai);
+    transition: transform 200ms var(--sai);
   }
   .nav a:hover::after,
   .nav a[aria-current="page"]::after { transform: scaleX(1); }
@@ -456,7 +465,15 @@
     flex: none;
     box-shadow: 0 0 0 1.5px color-mix(in srgb, var(--vinho) 45%, transparent);
   }
-  .ponto-vivo[data-pulsa="true"] { animation: pulsa 2s var(--sai) infinite; }
+  .ponto-vivo { position: relative; }
+  .ponto-vivo[data-pulsa="true"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: var(--bola);
+    animation: pulsa 3s var(--sai) infinite;
+  }
   .ponto-vivo[data-fechado="true"] { background: transparent; box-shadow: inset 0 0 0 1.5px currentColor; }
 
   /* menu em tela cheia */
@@ -471,15 +488,13 @@
     overflow-y: auto;
     clip-path: inset(0 0 100% 0);
     visibility: hidden;
-    transition: clip-path 500ms var(--sai), visibility 0s linear 500ms;
+    transition: clip-path 240ms var(--sai), visibility 0s linear 240ms;
   }
   .menu[data-aberto="true"] {
     clip-path: inset(0 0 0% 0);
     visibility: visible;
-    transition: clip-path 500ms var(--sai), visibility 0s;
+    transition: clip-path 360ms var(--sai), visibility 0s;
   }
-  .menu li a { transform: translateY(18px); opacity: 0; transition: transform 500ms var(--sai), opacity 300ms var(--sai); }
-  .menu[data-aberto="true"] li a { transform: none; opacity: 1; transition-delay: calc(120ms + var(--i) * 40ms); }
   @media (min-width: 64rem) { .menu { display: none; } }
   .menu-topo {
     height: 76px;
@@ -518,9 +533,9 @@
     border-top: var(--linha) solid var(--saibro);
     padding-bottom: env(safe-area-inset-bottom);
     transform: translateY(101%);
-    transition: transform 420ms var(--sai);
+    transition: transform 200ms var(--sai);
   }
-  .barra[data-visivel="true"] { transform: none; }
+  .barra[data-visivel="true"] { transform: none; transition-duration: 300ms; }
   .barra a {
     display: flex;
     align-items: center;
@@ -561,7 +576,7 @@
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity 500ms var(--sai);
+    transition: opacity 240ms var(--sai);
   }
   .hero-fundo[data-gl="pronto"] canvas { opacity: 1; }
   .hero-fundo[data-gl="pronto"] .hero-css { opacity: 0; }
@@ -583,7 +598,7 @@
   }
   .hero-fundo[data-gl="falhou"] .hero-css .l,
   .hero-fundo[data-gl="falhou"] .hero-css .b { opacity: 1; }
-  .hero-css .b { position: absolute; opacity: 0; }
+  .hero-css .b { position: absolute; opacity: 0; transition: opacity 400ms var(--sai); }
 
   .hero-corpo {
     position: relative;
@@ -604,7 +619,17 @@
     text-shadow: var(--sombra-texto, 0 0 0 transparent);
   }
   .hero-titulo .mask { padding: 0.08em 0.3em 0.26em 0; margin: -0.08em -0.3em -0.26em 0; }
-  .hero-titulo .sobe { display: block; animation: sobe 1000ms var(--sai) backwards; animation-delay: calc(var(--i) * 90ms + 120ms); }
+  .hero-titulo .sobe { display: block; animation: sobe 800ms var(--sai) backwards; animation-delay: calc(var(--i) * 70ms + 120ms); }
+  .hero-titulo { transition: text-shadow 600ms var(--sai); }
+  .hero-luz p { opacity: 0; transition: opacity 200ms var(--sai); }
+  .hero-luz p[data-pronto="true"] { opacity: 1; }
+  /* noite antes da hidratação (script no <head>): a imagem parada já entra escura */
+  :root[data-luz="noite"] .hero-fundo:not([data-gl="pronto"])::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(70% 60% at 28% 18%, rgb(40 8 6 / 0.25), rgb(24 4 6 / 0.82));
+  }
   .hero-titulo .ponto { color: transparent; text-shadow: none; }
   .hero-titulo .ancora { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
   .hero-baixo {
@@ -769,14 +794,15 @@
   from { transform: translateY(105%); }
 }
 @keyframes pulsa {
-  0% { box-shadow: 0 0 0 0 rgb(215 240 74 / 0.7); }
-  100% { box-shadow: 0 0 0 10px rgb(215 240 74 / 0); }
+  0% { transform: scale(1); opacity: 0.7; }
+  40%, 100% { transform: scale(2.6); opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* sem deslocamento; cor e opacidade continuam suaves */
   *, *::before, *::after {
     animation: none !important;
-    transition: none !important;
+    transition-property: color, background-color, border-color, text-decoration-color, opacity !important;
     scroll-behavior: auto !important;
   }
 }
@@ -804,4 +830,21 @@
   .mapa { width: 100%; height: auto; display: block; }
   .mapa text { font-size: 17px; }
   @media (max-width: 47.99rem) { .mapa text { font-size: 21px; } }
+}
+
+/* ------------------------------------------------ estados de toque e acordeão */
+@layer components {
+  .menu-btn, .hero-luz button, .chips label { transition: transform 160ms var(--sai); -webkit-tap-highlight-color: transparent; }
+  .menu-btn:active, .hero-luz button:active, .chips label:active { transform: scale(0.97); }
+  .barra a { -webkit-tap-highlight-color: transparent; transition: background-color 120ms var(--sai); }
+  .barra a:first-child:active { background: var(--po); }
+  .barra a:last-child:active { background: var(--bordo); }
+  .header[data-fixo="true"] ~ .menu .menu-topo { height: var(--header); }
+  .faq details { interpolate-size: allow-keywords; }
+  .faq details::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition: block-size 220ms var(--sai), content-visibility 220ms allow-discrete;
+  }
+  .faq details[open]::details-content { block-size: auto; }
 }

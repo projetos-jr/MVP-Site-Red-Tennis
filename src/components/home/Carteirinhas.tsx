@@ -16,6 +16,8 @@ function Cartao({ p }: { p: Plano }) {
   const gy = useMotionValue(30);
   const srx = useSpring(rx, { stiffness: 180, damping: 18 });
   const sry = useSpring(ry, { stiffness: 180, damping: 18 });
+  const reduzCartao = useReducedMotion();
+  const luz = useSpring(0, { stiffness: 200, damping: 26 });
   const brilho = useTransform([gx, gy] as MotionValue[], ([x, y]: number[]) => `radial-gradient(60% 70% at ${x}% ${y}%, rgb(255 255 255 / 0.28), transparent 70%)`);
   return (
     <motion.article
@@ -23,6 +25,8 @@ function Cartao({ p }: { p: Plano }) {
       style={{ rotateX: srx, rotateY: sry }}
       onPointerMove={(e) => {
         if (e.pointerType !== "mouse") return;
+        luz.set(1);
+        if (reduzCartao) return;
         const r = e.currentTarget.getBoundingClientRect();
         const px = (e.clientX - r.left) / r.width;
         const py = (e.clientY - r.top) / r.height;
@@ -34,6 +38,9 @@ function Cartao({ p }: { p: Plano }) {
       onPointerLeave={() => {
         rx.set(0);
         ry.set(0);
+        luz.set(0);
+        gx.set(50);
+        gy.set(30);
       }}
       aria-label={`Carteirinha do plano ${p.nome}`}
     >
@@ -56,7 +63,7 @@ function Cartao({ p }: { p: Plano }) {
         </span>
         <Bola className="cart-chip" />
       </div>
-      <motion.span className="cart-brilho" style={{ backgroundImage: brilho }} aria-hidden="true" />
+      <motion.span className="cart-brilho" style={{ backgroundImage: brilho, opacity: luz }} aria-hidden="true" />
     </motion.article>
   );
 }

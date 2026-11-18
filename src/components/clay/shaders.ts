@@ -344,7 +344,7 @@ void main() {
   vec3 light = uAmb + uSunCol * flatDiff * pow(relief, 1.35) * sh * sunVis;
 
   // ------------------------------------------------ refletores
-  if (uNight > 0.0) {
+  if (uL0.w + uL1.w + uL2.w + uL3.w > 0.0005) {
     vec3 acc = vec3(0.0);
     vec4 Ls[4];
     Ls[0] = uL0; Ls[1] = uL1; Ls[2] = uL2; Ls[3] = uL3;
@@ -361,7 +361,7 @@ void main() {
       acc += vec3(1.0, 0.94, 0.84) * pool * mix(1.0, pow(dd, 1.4), 0.9) * s;
     }
     float ns = 1.0 - netShadow(normalize(uL0.xyz - vec3(p, 0.0)), p, 0.03) * 0.5;
-    light += acc * uNight * ns;
+    light += acc * ns;
   }
 
   vec3 col = alb * light;

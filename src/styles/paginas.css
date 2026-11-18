@@ -187,13 +187,20 @@
   /* ------------------------------------------------ 404 */
   .fora { position: relative; isolation: isolate; overflow: hidden; min-height: 100svh; display: flex; align-items: flex-end; }
   .fora .cabeca-foto img { object-position: 50% 15%; }
-  .fora-bola { position: absolute; width: clamp(48px, 6vw, 84px); height: auto; z-index: 1; animation: fora 1.6s cubic-bezier(0.3, 0.6, 0.5, 1) 0.3s both; }
-  @keyframes fora {
-    0% { transform: translate(-30vw, -60vh) rotate(-200deg); }
-    55% { transform: translate(0, 0) rotate(0deg); }
-    70% { transform: translate(4vw, -8vh) rotate(60deg); }
-    100% { transform: translate(9vw, 0) rotate(130deg); }
+  .fora-bola { position: absolute; z-index: 1; width: clamp(48px, 6vw, 84px); animation: fora-x 1.5s linear 0.3s both; }
+  .fora-y { display: block; width: 100%; height: auto; animation: fora-y 1.5s 0.3s both; }
+  @keyframes fora-x {
+    0% { transform: translateX(-30vw) rotate(-200deg); }
+    80% { transform: translateX(6vw) rotate(60deg); animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1); }
+    100% { transform: translateX(9vw) rotate(130deg); }
   }
+  @keyframes fora-y {
+    0% { transform: translateY(-60vh); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+    55% { transform: none; animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1); }
+    68% { transform: translateY(-8vh); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+    80%, 100% { transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .fora-bola { transform: translateX(9vw); } }
 
   /* ------------------------------------------------ styleguide */
   .amostras { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); border-top: var(--linha) solid var(--vinho); }
@@ -209,11 +216,10 @@
     z-index: 80;
     background: var(--saibro);
     pointer-events: none;
-    animation: cortina 750ms var(--move) 80ms both;
+    animation: cortina 500ms cubic-bezier(0.32, 0.72, 0, 1) both;
   }
   @keyframes cortina {
-    from { clip-path: inset(0 0 0% 0); }
-    to { clip-path: inset(0 0 100% 0); }
+    to { transform: translateY(-100%); }
   }
   .cortina-faixa {
     position: absolute;

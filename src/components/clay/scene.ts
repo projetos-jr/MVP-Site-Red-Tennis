@@ -107,6 +107,13 @@ export class ClayScene {
   private bola = { z: 0, vz: 0, spin: [0.4, 0.2, 0.9] as [number, number, number], vs: 0 };
   private onda = { x: 0, y: 0, t: 99, a: 0 };
   private intro = 1;
+  private emVoo = false;
+  private alvoZ = 0;
+  private espera = 0;
+  // refletores: noite = quanto o sol já apagou; acesa[i] = cada poste; tLuz = segundos desde o clique
+  private noite = 0;
+  private acesa = [0, 0, 0, 0];
+  private tLuz = 0;
   private desenho = 1;
   private grain = 0.035;
 
@@ -252,18 +259,32 @@ export class ClayScene {
     this.pede();
   }
 
-  setLuz(l: Luz) {
+  /** Troca a luz. Ao acender, os refletores entram poste a poste; `imediato` pula a animação. */
+  setLuz(l: Luz, imediato = false) {
+    if (l.modo !== this.luz.modo) this.tLuz = 0;
     this.luz = l;
+    if (imediato) {
+      const n = l.modo === "noite" ? 1 : 0;
+      this.noite = n;
+      this.acesa = [n, n, n, n];
+      this.tLuz = 9;
+    }
     this.pede();
   }
 
-  /** Entrada: a luz chega, as linhas se desenham, a bola cai e quica. */
-  entrada() {
-    this.intro = 0;
+  /**
+   * Entrada: as linhas se desenham e a bola cai e quica. A imagem parada por baixo
+   * já é a quadra iluminada, então a luz não "apaga e volta". `espera` (s) segura a
+   * queda para a bola tocar o chão quando "Resultado" termina de subir.
+   */
+  entrada(espera = 0) {
+    this.intro = 1;
     this.desenho = 0;
+    this.espera = espera;
     this.bola.z = 620;
     this.bola.vz = 0;
     this.bola.vs = 6;
+    this.emVoo = true;
     this.pede();
   }
 
@@ -273,6 +294,13 @@ export class ClayScene {
     this.desenho = 1;
     this.bola.z = 0;
     this.bola.vz = 0;
+    this.emVoo = false;
+    this.pede();
+  }
+
+  /** Mouse sobre a bola: ela sobe um pouco, pedindo para ser jogada. */
+  paira(sim: boolean) {
+    this.alvoZ = sim ? 10 : 0;
     this.pede();
   }
 
@@ -303,9 +331,10 @@ export class ClayScene {
   }
 
   /** Clique na bola: ela sobe e quica. */
-  quica() {
-    this.bola.vz = Math.max(this.bola.vz, 0) + 1500;
+  quica(forca = 1) {
+    this.bola.vz = Math.max(this.bola.vz, 0) + 1100 + 700 * Math.min(1, forca);
     this.bola.vs = 9;
+    this.emVoo = true;
     this.pede();
   }
 
@@ -364,9 +393,41 @@ export class ClayScene {
         this.marcas = 0;
       }
     }
+    // refletores
+    if (this.luz.modo === "noite") {
+      this.tLuz += dt;
+      const atrasos = [0, 0.09, 0.17, 0.23];
+      for (let i = 0; i < 4; i++) {
+        const t = this.tLuz - atrasos[i];
+        // vapor metálico: duas piscadas antes de firmar
+        const alvo = t < 0 ? 0 : t < 0.14 ? (Math.sin(t * 90) > 0 ? 1 : 0.22) : 1;
+        if (this.acesa[i] !== alvo) {
+          this.acesa[i] = t < 0.14 ? alvo : Math.min(1, this.acesa[i] + dt / 0.12);
+          vivo = true;
+        }
+      }
+      if (this.noite < 1) {
+        this.noite = Math.min(1, this.noite + dt / 0.4);
+        vivo = true;
+      }
+    } else {
+      for (let i = 0; i < 4; i++) {
+        if (this.acesa[i] > 0) {
+          this.acesa[i] = Math.max(0, this.acesa[i] - dt / 0.3);
+          vivo = true;
+        }
+      }
+      if (this.noite > 0) {
+        this.noite = Math.max(0, this.noite - dt / 0.3);
+        vivo = true;
+      }
+    }
     // física da bola
     const b = this.bola;
-    if (b.z > 0 || b.vz !== 0) {
+    if (this.espera > 0) {
+      this.espera -= dt;
+      vivo = true;
+    } else if (this.emVoo) {
       b.vz -= 3400 * dt;
       b.z += b.vz * dt;
       if (b.z <= 0) {
@@ -376,8 +437,16 @@ export class ClayScene {
           b.vz = forca * 0.56;
           this.onda = { x: this.layout.t.x, y: this.layout.t.y, t: 0, a: Math.min(1.2, forca / 1600) };
           this.onQuique?.(forca);
-        } else b.vz = 0;
+        } else {
+          b.vz = 0;
+          this.emVoo = false;
+        }
       }
+      vivo = true;
+    } else if (Math.abs(b.z - this.alvoZ) > 0.05 || Math.abs(b.vz) > 0.5) {
+      // mola crítica até a altura de "pairar"
+      b.vz += ((this.alvoZ - b.z) * 260 - b.vz * 32) * dt;
+      b.z = Math.max(0, b.z + b.vz * dt);
       vivo = true;
     }
     if (b.vs > 0.01) {
@@ -450,24 +519,26 @@ export class ClayScene {
     gl.uniform1f(m.u.uNetH, 0.95 * L.k);
     gl.uniform1f(m.u.uMesh, 0.075 * L.k);
 
-    const noite = this.luz.modo === "noite";
-    const hs = noite ? 17.5 : this.luz.hora;
+    const noite = this.noite;
+    const hs = this.luz.hora;
     const s = sol(hs);
     gl.uniform3f(m.u.uSun, s[0], s[1], s[2]);
     const c = corDoSol(hs);
     gl.uniform3f(m.u.uSunCol, c[0] * 1.15, c[1] * 1.15, c[2] * 1.15);
-    gl.uniform1f(m.u.uNight, noite ? 1 : 0);
-    if (noite) gl.uniform3f(m.u.uAmb, 0.012, 0.012, 0.02);
-    else gl.uniform3f(m.u.uAmb, 0.22 * c[2] + 0.06, 0.21, 0.24);
+    gl.uniform1f(m.u.uNight, noite);
+    const mixv = (a: number, b: number) => a + (b - a) * noite;
+    gl.uniform3f(m.u.uAmb, mixv(0.22 * c[2] + 0.06, 0.012), mixv(0.21, 0.012), mixv(0.24, 0.02));
     // refletores: perto do quadro e mais baixos que na vida real, para desenhar as poças de luz
     const W = this.w;
     const Hh = this.h;
-    gl.uniform4f(m.u.uL0, W * 0.24, Hh * 0.12, 2.2 * L.k, 0.62);
-    gl.uniform4f(m.u.uL1, W * 0.84, Hh * 0.02, 2.4 * L.k, 0.52);
-    gl.uniform4f(m.u.uL2, W * 0.06, Hh * 1.1, 2.4 * L.k, 0.2);
-    gl.uniform4f(m.u.uL3, W * 1.0, Hh * 1.0, 2.6 * L.k, 0.26);
+    const ac = this.acesa;
+    gl.uniform4f(m.u.uL0, W * 0.24, Hh * 0.12, 2.2 * L.k, 0.62 * ac[0]);
+    gl.uniform4f(m.u.uL1, W * 0.84, Hh * 0.02, 2.4 * L.k, 0.52 * ac[1]);
+    gl.uniform4f(m.u.uL2, W * 0.06, Hh * 1.1, 2.4 * L.k, 0.2 * ac[2]);
+    gl.uniform4f(m.u.uL3, W * 1.0, Hh * 1.0, 2.6 * L.k, 0.26 * ac[3]);
 
-    gl.uniform4f(m.u.uBall, L.t.x, L.t.y, this.bola.z, L.ballR);
+    // durante a espera da entrada a bola ainda não está em cena
+    gl.uniform4f(m.u.uBall, L.t.x, L.t.y, this.bola.z, this.espera > 0 ? 0 : L.ballR);
     gl.uniform3f(m.u.uSpin, this.bola.spin[0], this.bola.spin[1], this.bola.spin[2]);
     gl.uniform3f(m.u.uMouse, this.mouse.x, this.mouse.y, this.mouse.e);
     if (this.mouse.ativo) {

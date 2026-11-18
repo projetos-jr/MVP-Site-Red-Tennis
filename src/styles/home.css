@@ -125,7 +125,7 @@
     color: inherit;
     text-decoration: none;
     isolation: isolate;
-    transition: color 260ms var(--sai), padding 360ms var(--sai);
+    transition: color 200ms var(--sai);
   }
   .cat-linha::before {
     content: "";
@@ -134,7 +134,7 @@
     background: var(--saibro);
     transform: scaleY(0);
     transform-origin: bottom;
-    transition: transform 380ms var(--sai);
+    transition: transform 240ms var(--sai);
     z-index: -1;
   }
   .cat-nome { grid-column: 1; font-size: clamp(1.6rem, 2.6vw, 2.4rem); text-transform: uppercase; }
@@ -161,7 +161,9 @@
     aspect-ratio: 4 / 5;
     pointer-events: none;
   }
-  .segue-foto { position: absolute; inset: 0; transition: opacity 200ms var(--sai); box-shadow: 0 14px 30px -10px rgb(30 6 8 / 0.45); }
+  .segue { box-shadow: 0 14px 30px -10px rgb(30 6 8 / 0.45); }
+  .segue-foto { position: absolute; inset: 0; opacity: 0; transition: opacity 0s linear 200ms; }
+  .segue-foto[data-ativo="true"] { opacity: 1; z-index: 1; transition: opacity 200ms var(--sai); }
   .segue-foto .foto { width: 100%; height: 100%; }
 
   /* ------------------------------------------------ quadras: planta */
@@ -399,3 +401,23 @@
     .apoio { grid-template-columns: auto minmax(0, 1.4fr) minmax(0, 1fr); }
   }
 }
+
+@layer components {
+  @media (hover: none) {
+    .cat-linha:active::before { transform: scaleY(1); transition-duration: 120ms; }
+    .cat-linha:active { color: var(--papel); }
+  }
+}
+
+@layer components {
+  /* a chave se desenha rodada por rodada e a bola chega ao campeão */
+  .cartaz-chave path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .cartaz-chave .chave-bola { opacity: 0; transform: scale(0.6); transform-origin: 490px 109px; transform-box: view-box; }
+  .cartaz[data-visto="true"] .cartaz-chave path { animation: traco 260ms var(--sai) forwards; animation-delay: calc(var(--r) * 180ms); }
+  .cartaz[data-visto="true"] .chave-bola { opacity: 1; transform: none; transition: opacity 300ms var(--sai) 720ms, transform 400ms cubic-bezier(0.3, 1.5, 0.5, 1) 720ms; }
+  @media (prefers-reduced-motion: reduce) {
+    .cartaz-chave path { stroke-dashoffset: 0; }
+    .cartaz-chave .chave-bola { opacity: 1; transform: none; }
+  }
+}
+@keyframes traco { to { stroke-dashoffset: 0; } }

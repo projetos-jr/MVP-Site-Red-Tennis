@@ -67,6 +67,11 @@ export function Hero() {
   const [medida, setMedida] = useState<Medida | null>(null);
   const [gl, setGl] = useState<"carregando" | "pronto" | "falhou">("carregando");
   const [hora, setHora] = useState(17.2);
+  // a legenda só aparece com a hora real (no HTML estático ela seria a de quem gerou o site)
+  const [horaPronta, setHoraPronta] = useState(false);
+  const primeiraLuz = useRef(true);
+  const reduzRef = useRef(false);
+  const aperto = useRef(0);
   const [real, setReal] = useState<Modo>("dia");
   const [modo, setModo] = useState<Modo>("dia");
   const [fs, setFs] = useState(160);
@@ -111,6 +116,8 @@ export function Hero() {
     setHora(h);
     setReal(m);
     setModo(m);
+    setHoraPronta(true);
+    reduzRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let vivo = true;
     document.fonts.ready.then(() => vivo && medir());
     medir();
@@ -152,8 +159,11 @@ export function Hero() {
         };
         cena.current = sc;
         setGl("pronto");
-        if (!reduz) sc.entrada();
-        else sc.repouso();
+        if (!reduz) {
+          // a bola toca o chão quando "Resultado" termina de subir (~1,3 s depois da primeira pintura)
+          const fcp = performance.getEntriesByName("first-contentful-paint")[0]?.startTime ?? 0;
+          sc.entrada(Math.max(0, (fcp + 700 - performance.now()) / 1000));
+        } else sc.repouso();
       } catch {
         setGl("falhou");
       }
@@ -192,7 +202,10 @@ export function Hero() {
     sc.setLayout(medida);
   }, [medida, gl]);
   useEffect(() => {
-    if (gl === "pronto") cena.current?.setLuz({ modo, hora: modo === real ? hora : 17.1 });
+    if (gl !== "pronto" || !cena.current) return;
+    // na primeira vez a luz já entra no estado certo; depois, os refletores acendem poste a poste
+    cena.current.setLuz({ modo, hora: modo === real ? hora : 17.1 }, primeiraLuz.current || reduzRef.current);
+    primeiraLuz.current = false;
   }, [modo, real, hora, gl]);
 
   const sombra = sombras(modo, modo === real ? hora : 17.1, fs);
@@ -223,7 +236,15 @@ export function Hero() {
           type="button"
           className="hero-bola-btn"
           aria-label="Quicar a bola"
-          onClick={() => cena.current?.quica()}
+          onPointerEnter={(e) => e.pointerType === "mouse" && !reduzRef.current && cena.current?.paira(true)}
+          onPointerLeave={() => cena.current?.paira(false)}
+          onPointerDown={() => (aperto.current = performance.now())}
+          onClick={() => {
+            if (reduzRef.current) return;
+            // segurar um pouco antes de soltar dá mais força ao quique
+            const t = aperto.current ? Math.min(300, performance.now() - aperto.current) / 300 : 0.5;
+            cena.current?.quica(0.4 + 0.6 * t);
+          }}
           style={{
             left: medida.t.x - medida.ballR * 1.6,
             top: medida.t.y - medida.ballR * 1.6,
@@ -235,7 +256,7 @@ export function Hero() {
 
       <div className="wrap hero-corpo">
         <div className="hero-luz ui">
-          <p>{legenda(modo, real, hora)}</p>
+          <p data-pronto={horaPronta}>{legenda(modo, real, hora)}</p>
           <p className="sr-only" aria-live="polite">
             {anuncio}
           </p>

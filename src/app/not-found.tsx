@@ -8,7 +8,9 @@ export default function NotFound() {
   return (
     <section className="fora sup-saibro">
       <PhotoSlot name="rede-manha" alt="" sizes="100vw" className="cabeca-foto" />
-      <Bola className="fora-bola" />
+      <span className="fora-bola" aria-hidden="true">
+        <Bola className="fora-y" />
+      </span>
       <style>{`.fora-bola{right:22%;bottom:36%}`}</style>
       <div className="wrap cabeca-corpo">
         <p className="ui">Erro 404</p>

@@ -88,7 +88,15 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${anybody.variable} ${anybodyItalico.variable} ${newsreader.variable}`}>
+    <html lang="pt-BR" className={`${anybody.variable} ${anybodyItalico.variable} ${newsreader.variable}`} suppressHydrationWarning>
+      <head>
+        {/* noite em São Bernardo: o hero já pinta escuro, antes do JavaScript */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var p=new Intl.DateTimeFormat("en-US",{timeZone:"America/Sao_Paulo",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());var h=+p.find(function(x){return x.type==="hour"}).value+(+p.find(function(x){return x.type==="minute"}).value)/60;if(h<6.3||h>=18.6)document.documentElement.dataset.luz="noite"}catch(e){}`,
+          }}
+        />
+      </head>
       <body>
         <SmoothScroll>
           <a href="#conteudo" className="ui sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[70] focus:bg-bola focus:text-vinho focus:p-3">

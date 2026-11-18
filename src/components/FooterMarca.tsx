@@ -15,10 +15,10 @@ export function FooterMarca() {
     let raf = 0;
     const atualiza = () => {
       raf = 0;
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      // 0 quando o topo entra pela base da tela; 1 quando a base da marca chega à base da tela
-      const p = Math.min(1, Math.max(0, (vh - r.top) / Math.max(1, r.height + 120)));
+      // chega a 1 exatamente no fim da rolagem
+      const fim = document.documentElement.scrollHeight - window.innerHeight;
+      const curso = Math.min(fim, Math.max(360, window.innerHeight * 0.6));
+      const p = Math.min(1, Math.max(0, 1 - (fim - window.scrollY) / curso));
       el.style.fontVariationSettings = `"wdth" ${(62 + (150 - 62) * p).toFixed(1)}`;
     };
     const pede = () => {
