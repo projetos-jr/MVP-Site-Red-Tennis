@@ -51,7 +51,7 @@ O WebGL só liga com GPU. Sem GPU (ou com WebGL por software), o hero mostra uma
 
 `scripts/photos.mjs` gera todas as imagens em AVIF e WebP, em vários tamanhos:
 
-1. **Fotos atuais da Red** (`referencias/site-atual`): recortadas, tratadas e também impressas em retícula de meio-tom (PNG de duas tintas). No site, a retícula aparece por cima e a foto em cor surge ao passar o mouse.
+1. **Fotos atuais da Red** (`referencias/site-atual`): recortadas, tratadas e também impressas em retícula de meio-tom (PNG de duas tintas). No site, a retícula aparece por cima e a foto em cor surge ao passar o mouse. A prancha da home (`prancha-quadras`) usa uma impressão em duas tintas, saibro e bordô, em telas de ângulos diferentes, gerada até 2560 px.
 2. **Imagens de material** (`fotos/estudio/*.jpg`): o mesmo shader do hero renderizado em cenas fixas (bola na linha, rede de manhã, quadra à noite, linha de fim de tarde). São ilustrações do material, não fotos da Red. Para gerar de novo, com o site rodando em `npm run dev`:
 
    ```bash

@@ -158,3 +158,39 @@ Mesmo sistema. Cabeça com imagem de material, título grande, uma frase. Compar
 | TypeScript e ESLint | Limpos |
 
 Aulas e Sobre ficam abaixo de 95 por causa da foto de abertura na simulação de 4G lento do Lighthouse (a pintura real acontece em cerca de 170 ms).
+
+## 7. Rodada de revisão (agentes) e o que mudou
+
+Cinco revisões independentes olharam o site: celular, conversão, código, direção de arte e conteúdo. O que entrou:
+
+**Conversão**
+- **Folha de agendamento.** Todo botão "Agendar aula experimental" abre uma folha (painel lateral no computador, gaveta de baixo no celular) com três toques: para quem é, a história da pessoa com o tênis e o melhor horário. A folha mostra a turma provável, com frequência e preço, e manda uma mensagem completa no WhatsApp. Sem JavaScript, o botão abre o WhatsApp direto.
+- **Convite de indicação** no Clube Red: o sócio escreve o nome e o convite sai pronto no WhatsApp, com o link `/aulas/?indicado=Nome`. O formulário de aula reconhece o convite e oferece a experimental em dupla.
+- Mensagens de plano e de torneio saem preenchidas (nome, preço, data), sem lacunas.
+- A barra fixa do celular some sobre formulários, reserva e rodapé, e quando o teclado abre.
+
+**Conteúdo**
+- Agenda em ordem de data, torneio do mês em novembro e janeiro, planos com o que cada um inclui, FAQ do clube ("Já faço aula na Red. Pago o clube à parte?"), faixas de horário da locação corrigidas.
+- Promessas ainda não confirmadas com a Red estão marcadas com `CONFIRMAR` em `src/content/red.ts`.
+
+**Imagem e movimento**
+- **Prancha (Fig. 2)**: a foto real das quadras impressa em duas tintas, de ponta a ponta. O cursor vira um conta-fios que mostra a foto em cor; no toque, um botão troca a impressão pela foto.
+- **Selo do clube**: carimbo com "Red Tennis · Clube de tênis · Rudge Ramos · desde 1996" na figura da home e na cabeça do Clube Red. Gira um pouco com a rolagem.
+- Chave do torneio desenhada (oito nomes do ranking), que se traça quando entra na tela.
+- Hero: sombra de raquete, arcos do vassourão, marcas com borda de barro, bola que paira e quica ao clique, refletores acendendo poste a poste.
+- Cenas novas do estúdio para as cabeças das páginas (deslize, vassourada, raquete ao fim da tarde, bola fora).
+
+**Código e acessibilidade**
+- SEO por página (título, descrição, canônico, Open Graph), JSON-LD `TennisComplex`.
+- Menu com `inert` no resto da página, reserva com escolha de dia no celular, horários sempre no fuso de São Paulo.
+
+### Verificação da rodada (build de produção, 18/11/2026)
+
+| Checagem | Resultado |
+|---|---|
+| Detector do `impeccable`, 1440 e 390 px, 7 páginas | Nenhum achado |
+| axe-core (WCAG 2.1 AA e boas práticas), 1440 e 390 px, 8 páginas e a folha aberta | Nenhuma violação |
+| Rolagem horizontal em 360, 390, 768, 1024, 1280, 1440 e 1920 px | Nenhuma |
+| Lighthouse mobile | Home 91, Aulas 93, Clube Red 99 em desempenho; 100 em acessibilidade, boas práticas e SEO |
+
+Prévia publicada em https://red-tennis-site.pages.dev (fora dos buscadores: `robots.txt` e `X-Robots-Tag: noindex`).
