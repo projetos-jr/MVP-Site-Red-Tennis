@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { planta, reservaMock } from "@/content/red";
+import { planta } from "@/content/red";
+import { proximoLivre } from "@/lib/reservas";
 import { wa } from "@/lib/wa";
 import { Btn } from "../ui";
 
@@ -32,21 +33,13 @@ const LAYOUT: Record<string, { x: number; y: number }> = {
   q4: { x: 506, y: 70 },
 };
 
-function proximoLivre(agenda: number): string | null {
-  const agora = new Date();
-  const h = agora.getHours();
-  const livres = reservaMock.horas.filter((hh) => !reservaMock.ocupados[agenda % reservaMock.ocupados.length].includes(hh));
-  const hoje = livres.find((hh) => Number(hh.slice(0, 2)) > h);
-  return hoje ? `hoje, ${Number(hoje.slice(0, 2))}h` : livres[0] ? `amanhã, ${Number(livres[0].slice(0, 2))}h` : null;
-}
-
 /** Planta ilustrativa da Red: toque numa quadra para ver o próximo horário livre e reservar. */
 export function Planta() {
   const [sel, setSel] = useState(planta[0].id);
   const [prox, setProx] = useState<Record<string, string | null>>({});
   useEffect(() => {
     const m: Record<string, string | null> = {};
-    for (const q of planta) m[q.id] = proximoLivre(q.agenda);
+    for (const q of planta) m[q.id] = proximoLivre(q.id, q.agenda);
     setProx(m);
   }, []);
   const q = useMemo(() => planta.find((p) => p.id === sel) ?? planta[0], [sel]);
@@ -117,7 +110,7 @@ export function Planta() {
           </div>
         </dl>
         <Btn
-          href={wa(`Olá, Red! Vim pelo site e quero reservar a ${q.nome.toLowerCase()}${quando ? `, ${quando}` : ""}.`)}
+          href={wa(`Olá, Red! Vim pelo site e quero reservar a ${q.nome.toLowerCase()}${quando ? ` ${quando.replace(", ", ", às ")}` : ""}. Está livre?`)}
           tom="claro"
           className="btn-largo"
         >

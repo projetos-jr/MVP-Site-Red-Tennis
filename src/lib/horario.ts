@@ -16,7 +16,20 @@ export function hora(hhmm: string): string {
   return m === "00" ? `${Number(h)}h` : `${Number(h)}h${m}`;
 }
 
-const minutos = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3));
+export const minutos = (hhmm: string) => Number(hhmm.slice(0, 2)) * 60 + Number(hhmm.slice(3));
+
+/** Dia da semana (0 = domingo) e minuto do dia em São Paulo, para uma data. */
+export function emSP(d: Date = new Date()): { dia: number; min: number } {
+  const partes = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Sao_Paulo",
+    weekday: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(d);
+  const pega = (t: string) => partes.find((p) => p.type === t)?.value ?? "";
+  return { dia: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(pega("weekday")), min: Number(pega("hour")) * 60 + Number(pega("minute")) };
+}
 
 /** Status de funcionamento no fuso America/Sao_Paulo. */
 export function statusAgora(agora: Date = new Date()): Status {

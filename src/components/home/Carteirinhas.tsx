@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform, type MotionValue } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import { mensagens, planos, type Plano } from "@/content/red";
+import { mensagens, planos, regraClube, semMulta, type Plano } from "@/content/red";
 import { wa } from "@/lib/wa";
 import { Bola, Btn } from "../ui";
 
@@ -110,13 +110,16 @@ export function Carteirinhas() {
                   <li key={it}>{it}</li>
                 ))}
               </ul>
-              <Btn href={wa(`${mensagens.clube} Tenho interesse no plano ${plano.nome}.`)} tom={plano.destaque ? "claro" : "padrao"} className="btn-largo">
+              <Btn href={wa(mensagens.plano(plano.nome, plano.preco))} tom={plano.destaque ? "claro" : "padrao"} className="btn-largo">
                 Quero o plano {plano.nome}
               </Btn>
             </div>
           </div>
         );
       })}
+      <p className="ui sec carteirinhas-nota">
+        {regraClube} {semMulta}
+      </p>
     </div>
   );
 }

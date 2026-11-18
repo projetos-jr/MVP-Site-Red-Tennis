@@ -4,7 +4,9 @@ import { PhotoSlot } from "./PhotoSlot";
 import { Btn, BtnLinha } from "./ui";
 
 /** Chamada final das páginas: a quadra em luz de fim de tarde. */
-export function Fecho({ titulo = "A quadra está pronta", foto = "linha-tarde" }: { titulo?: string; foto?: string }) {
+type Acao = { rotulo: string; href: string };
+
+export function Fecho({ titulo = "A quadra está pronta", foto = "linha-tarde", acao }: { titulo?: string; foto?: string; acao?: Acao }) {
   return (
     <section className="fecho" aria-labelledby="fecho-titulo">
       <PhotoSlot name={foto} alt="" sizes="100vw" className="fecho-foto" />
@@ -13,10 +15,14 @@ export function Fecho({ titulo = "A quadra está pronta", foto = "linha-tarde" }
           {titulo}
         </h2>
         <div className="hero-acoes">
-          <Btn href={wa(mensagens.aula)} tom="claro">
-            Agendar aula experimental
+          <Btn href={acao?.href ?? wa(mensagens.aula)} tom="claro">
+            {acao?.rotulo ?? "Agendar aula experimental"}
           </Btn>
-          <BtnLinha href={wa(mensagens.quadra)}>Reservar quadra</BtnLinha>
+          {acao ? (
+            <BtnLinha href={wa(mensagens.aula)}>Agendar aula experimental</BtnLinha>
+          ) : (
+            <BtnLinha href={wa(mensagens.quadra)}>Reservar quadra</BtnLinha>
+          )}
         </div>
       </div>
     </section>

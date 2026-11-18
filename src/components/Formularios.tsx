@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { wa } from "@/lib/wa";
 import { Bola } from "./ui";
 
@@ -29,32 +29,75 @@ function Opcoes({ nome, legenda, opcoes, valor, muda }: { nome: string; legenda:
   );
 }
 
-const NIVEIS = ["Nunca joguei", "Iniciante", "Intermediário", "Avançado"];
+const PARA_QUEM = ["Para mim", "Para meu filho", "Para minha filha"];
+const NIVEIS = ["Nunca joguei", "Parei faz tempo", "Já troco bola", "Jogo torneio ou ranking"];
+const FRASE: Record<string, string> = {
+  "Nunca joguei": "nunca joguei tênis",
+  "Parei faz tempo": "já joguei, mas parei faz tempo",
+  "Já troco bola": "já troco bola",
+  "Jogo torneio ou ranking": "jogo torneio ou ranking",
+};
 const PERIODOS = ["Manhã", "Tarde", "Noite", "Fim de semana"];
 
+/** Lê ?indicado=Nome da URL (convite de um sócio) e devolve o nome limpo. */
+function useIndicado() {
+  const [indicado, setIndicado] = useState("");
+  useEffect(() => {
+    const bruto = new URLSearchParams(window.location.search).get("indicado") ?? "";
+    setIndicado(bruto.replace(/[^\p{L}\s'-]/gu, "").trim().slice(0, 40));
+  }, []);
+  return indicado;
+}
+
 /** Aula experimental: monta a mensagem e abre o WhatsApp. */
-export function FormAula() {
-  const [nivel, setNivel] = useState(NIVEIS[0]);
+export function FormAula({ nivelInicial }: { nivelInicial?: string }) {
+  const [paraQuem, setParaQuem] = useState(PARA_QUEM[0]);
+  const [nivel, setNivel] = useState(nivelInicial && NIVEIS.includes(nivelInicial) ? nivelInicial : NIVEIS[0]);
   const [periodo, setPeriodo] = useState(PERIODOS[2]);
+  const indicado = useIndicado();
+  const crianca = paraQuem !== "Para mim";
+
+  useEffect(() => {
+    const ouve = (e: Event) => {
+      const n = (e as CustomEvent<string>).detail;
+      if (NIVEIS.includes(n)) setNivel(n);
+      if (n === "kids") setParaQuem(PARA_QUEM[1]);
+    };
+    window.addEventListener("red:nivel", ouve);
+    return () => window.removeEventListener("red:nivel", ouve);
+  }, []);
+
   const enviar = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const d = new FormData(e.currentTarget);
-    const msg = `Olá, Red! Vim pelo site e quero agendar uma aula experimental. Meu nome é ${d.get("nome")}, tenho ${d.get("idade")} anos e meu nível é ${nivel.toLowerCase()}. Melhor horário: ${periodo.toLowerCase()}.`;
+    const nome = String(d.get("nome")).trim();
+    const idade = String(d.get("idade")).trim();
+    const quando = `Melhor horário: ${periodo.toLowerCase()}.`;
+    let msg = crianca
+      ? `Olá, Red! Vim pelo site e quero agendar uma aula experimental do Red Kids ${paraQuem === "Para meu filho" ? "para meu filho" : "para minha filha"} de ${idade} anos. Meu nome é ${nome}. ${quando}`
+      : `Olá, Red! Vim pelo site e quero agendar uma aula experimental. Meu nome é ${nome}, tenho ${idade} anos e ${FRASE[nivel]}. ${quando}`;
+    if (indicado) msg += ` Fui indicado por ${indicado} e quero a experimental em dupla.`;
     window.open(wa(msg), "_blank", "noopener");
   };
   return (
     <form onSubmit={enviar} className="grid gap-7">
+      {indicado && (
+        <p className="convite-aviso ui">
+          {indicado} te chamou para jogar. A sua aula experimental pode ser em dupla.
+        </p>
+      )}
+      <Opcoes nome="para-quem" legenda="Para quem é a aula?" opcoes={PARA_QUEM} valor={paraQuem} muda={setParaQuem} />
       <div className="grid gap-7 md:grid-cols-[2fr_1fr]">
         <div className="campo">
-          <label htmlFor="aula-nome">Nome</label>
-          <input id="aula-nome" name="nome" required autoComplete="name" placeholder="Como a gente te chama" />
+          <label htmlFor="aula-nome">Seu nome</label>
+          <input id="aula-nome" name="nome" required autoComplete="given-name" placeholder="Como a gente te chama" />
         </div>
         <div className="campo">
-          <label htmlFor="aula-idade">Idade</label>
-          <input id="aula-idade" name="idade" required inputMode="numeric" pattern="[0-9]{1,2}" placeholder="Anos" />
+          <label htmlFor="aula-idade">{crianca ? "Idade da criança" : "Sua idade"}</label>
+          <input id="aula-idade" name="idade" required inputMode="numeric" pattern="[0-9]{1,2}" maxLength={2} placeholder="Anos" />
         </div>
       </div>
-      <Opcoes nome="nivel" legenda="Nível" opcoes={NIVEIS} valor={nivel} muda={setNivel} />
+      {!crianca && <Opcoes nome="nivel" legenda="Sua história com o tênis" opcoes={NIVEIS} valor={nivel} muda={setNivel} />}
       <Opcoes nome="periodo" legenda="Melhor horário" opcoes={PERIODOS} valor={periodo} muda={setPeriodo} />
       <Enviar>Enviar pelo WhatsApp</Enviar>
     </form>

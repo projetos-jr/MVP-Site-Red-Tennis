@@ -27,7 +27,7 @@ export function Reserva() {
 
   const nome = quadras.find((q) => q.id === quadra)?.nome.toLowerCase() ?? "";
   const link = escolha
-    ? wa(`Olá, Red! Vim pelo site e quero reservar a quadra ${nome === "saibro" ? "de saibro" : "rápida"} para ${fmtLongo.format(escolha.dia)}, às ${escolha.hora}.`)
+    ? wa(`Olá, Red! Vim pelo site e quero reservar a quadra ${nome === "saibro" ? "de saibro" : "rápida"} para ${fmtLongo.format(escolha.dia)}, às ${escolha.hora.replace(":00", "h")}. Está livre?`)
     : undefined;
 
   return (
@@ -77,7 +77,7 @@ export function Reserva() {
         <p className="lead">
           {escolha ? (
             <>
-              Quadra {nome === "saibro" ? "de saibro" : "rápida"}, {fmtLongo.format(escolha.dia)}, às {escolha.hora}.
+              Quadra {nome === "saibro" ? "de saibro" : "rápida"}, {fmtLongo.format(escolha.dia)}, às {escolha.hora.replace(":00", "h")}, por uma hora.
             </>
           ) : (
             <span className="sec">Escolha um horário livre.</span>

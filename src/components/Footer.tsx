@@ -23,7 +23,7 @@ export function Footer() {
             </address>
             <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
               <Btn href={wa(mensagens.aula)} tom="claro">
-                Agendar aula
+                Agendar aula experimental
               </Btn>
             </div>
           </div>

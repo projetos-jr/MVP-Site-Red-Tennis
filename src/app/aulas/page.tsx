@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pagina } from "@/lib/seo";
 import { Cabeca, TituloSecao } from "@/components/Cabeca";
 import { Faq } from "@/components/Faq";
 import { Fecho } from "@/components/Fecho";
@@ -8,12 +9,12 @@ import { Btn, BtnLinha } from "@/components/ui";
 import { faqAulas, mensagens, metodologia, programas } from "@/content/red";
 import { wa } from "@/lib/wa";
 
-export const metadata: Metadata = {
-  title: "Aulas de tênis em São Bernardo do Campo",
-  description:
-    "Aulas de tênis para crianças a partir de 4 anos, adultos iniciantes, intermediários e competição. Quadras de saibro no Rudge Ramos. Agende sua aula experimental.",
-  alternates: { canonical: "/aulas/" },
-};
+export const metadata: Metadata = pagina({
+  titulo: "Aulas de tênis em São Bernardo: adultos e Red Kids",
+  descricao: "Aula de tênis no saibro em São Bernardo do Campo: Red Kids a partir de 4 anos, adulto iniciante, intermediário e competição. Agende a experimental.",
+  caminho: "/aulas/",
+  compartilhar: { titulo: "Aulas de tênis no saibro · Red Tennis", descricao: "Do Red Kids, aos 4 anos, ao treino de quem joga torneio. Turmas de até quatro no Rudge Ramos." },
+});
 
 export default function Aulas() {
   return (
@@ -24,7 +25,7 @@ export default function Aulas() {
         intro="Aulas individuais, em dupla ou em grupos de até quatro. Do Red Kids, aos quatro anos, ao treino de quem disputa ranking."
       >
         <Btn href="#experimental" tom="claro">
-          Aula experimental
+          Agendar aula experimental
         </Btn>
       </Cabeca>
 
@@ -65,6 +66,9 @@ export default function Aulas() {
                     <span className="placar">{preco.replace("R$ ", "R$")}</span>
                     <span className="ui sec">/{periodo}</span>
                   </p>
+                  {["iniciante", "intermediario", "competicao"].includes(p.id) && (
+                    <p className="ui sec mt-2">Já é Clube Red: ranking, paredão livre e 10% na quadra.</p>
+                  )}
                 </div>
               </article>
             );
@@ -94,7 +98,7 @@ export default function Aulas() {
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full lg:col-span-5">
             <TituloSecao id="exp-titulo">Venha bater bola</TituloSecao>
-            <p className="sec mt-6">Preencha e a mensagem já sai pronta no WhatsApp da Red. A gente responde com os horários disponíveis.</p>
+            <p className="sec mt-6">Preencha e a mensagem sai pronta no WhatsApp da Red. A gente responde com os horários da sua turma.</p>
           </div>
           <div className="col-span-full lg:col-span-6 lg:col-start-7">
             <FormAula />

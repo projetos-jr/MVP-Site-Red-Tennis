@@ -357,3 +357,9 @@
     .fecho-titulo { font-size: calc((min(100vw, var(--max)) - 2 * var(--margem)) / 11); }
   }
 }
+
+@layer components {
+  .carteirinhas-nota { grid-column: 1 / -1; margin-top: -1rem; }
+  .depo-nota { margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .convite-aviso { padding: 0.9rem 1rem; background: var(--bola); color: var(--vinho); }
+}

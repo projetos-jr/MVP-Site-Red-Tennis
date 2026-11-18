@@ -1,4 +1,6 @@
-/** Os números da estrutura, desenhados: o desenho é a informação. */
+import { numeros } from "@/content/red";
+
+/** Os números da estrutura, desenhados: o desenho é a informação. Valores e rótulos vêm de red.ts. */
 
 function QuadraMini({ cor, linha = "var(--papel)" }: { cor: string; linha?: string }) {
   // proporção real: 23,77 x 10,97 m (vista de cima, em pé)
@@ -22,9 +24,9 @@ export function Numeros() {
         </h2>
         <dl className="numeros">
           <div>
-            <dt className="ui">quadras de saibro</dt>
+            <dt className="ui">{numeros[0].rotulo}</dt>
             <dd>
-              <span className="placar">3</span>
+              <span className="placar">{numeros[0].valor}</span>
               <span className="num-arte">
                 <QuadraMini cor="var(--saibro)" />
                 <QuadraMini cor="var(--saibro)" />
@@ -33,18 +35,18 @@ export function Numeros() {
             </dd>
           </div>
           <div>
-            <dt className="ui">quadra rápida</dt>
+            <dt className="ui">{numeros[1].rotulo}</dt>
             <dd>
-              <span className="placar">1</span>
+              <span className="placar">{numeros[1].valor}</span>
               <span className="num-arte">
                 <QuadraMini cor="var(--bordo)" />
               </span>
             </dd>
           </div>
           <div>
-            <dt className="ui">refletores em seis postes</dt>
+            <dt className="ui">{numeros[2].rotulo}</dt>
             <dd>
-              <span className="placar">18</span>
+              <span className="placar">{numeros[2].valor}</span>
               <span className="num-arte num-postes" aria-hidden="true">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <svg key={i} viewBox="0 0 14 60">
@@ -59,9 +61,9 @@ export function Numeros() {
             </dd>
           </div>
           <div>
-            <dt className="ui">categorias no ranking</dt>
+            <dt className="ui">{numeros[3].rotulo}</dt>
             <dd>
-              <span className="placar">4</span>
+              <span className="placar">{numeros[3].valor}</span>
               <span className="num-arte num-degraus" aria-hidden="true">
                 {["A", "B", "C", "D"].map((c, i) => (
                   <span key={c} style={{ height: `${100 - i * 22}%` }}>

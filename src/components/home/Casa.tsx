@@ -31,7 +31,7 @@ export function Casa() {
             adversário no ranking. Cada quadra tem entrada própria, e a luz acende quando o sol vai embora.
           </p>
           <Link href="/sobre/" className="btn-linha">
-            A história da Red
+            Conhecer a história da Red
           </Link>
         </div>
       </div>

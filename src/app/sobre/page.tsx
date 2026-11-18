@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pagina } from "@/lib/seo";
 import { Cabeca, TituloSecao } from "@/components/Cabeca";
 import { Fecho } from "@/components/Fecho";
 import { Equipe } from "@/components/home/Equipe";
@@ -6,12 +7,11 @@ import { Numeros } from "@/components/home/Numeros";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { estrutura, historia, site } from "@/content/red";
 
-export const metadata: Metadata = {
-  title: "Sobre a Red Tennis, academia de tênis no Rudge Ramos",
-  description:
-    "Conheça a Red Tennis: academia de tênis em São Bernardo do Campo com três quadras de saibro, quadra rápida, paredão iluminado, Red Kids e ranking interno.",
-  alternates: { canonical: "/sobre/" },
-};
+export const metadata: Metadata = pagina({
+  titulo: "Sobre a Red, academia de tênis no Rudge Ramos",
+  descricao: "Conheça a Red Tennis: academia de tênis em São Bernardo do Campo com três quadras de saibro, quadra rápida, paredão iluminado, Red Kids e ranking.",
+  caminho: "/sobre/",
+});
 
 export default function Sobre() {
   return (
@@ -36,12 +36,12 @@ export default function Sobre() {
           <div className="col-span-full md:col-span-6 lg:col-span-6 lg:col-start-7 grid gap-5 content-center">
             <TituloSecao id="casa-titulo">Um clube de bairro com saibro de verdade</TituloSecao>
             <p className="lead mt-2">
-              A Red nasceu para que o ABC tivesse onde jogar tênis no saibro sem atravessar a cidade. Três quadras de pó de tijolo, uma quadra
+              A Red é onde o ABC joga tênis no saibro sem atravessar a cidade. Três quadras de pó de tijolo, uma quadra
               rápida e um paredão iluminado, na Av. Winston Churchill.
             </p>
             <p className="sec">
               As quadras são isoladas por alambrados altos, com entradas independentes. O paredão é livre para alunos e vem com orientação:
-              define a empunhadura, forma os músculos do golpe e treina a reação. Quem quer evoluir rápido, evolui, sem custo a mais.
+              define a empunhadura, cria a memória do golpe e treina a reação. Quem quer evoluir rápido, evolui, sem custo a mais.
             </p>
             <p className="sec">
               Para as crianças, criamos o Red Kids, um método para alunos de 4 a 8 anos. Para quem compete, mantemos um ranking em quatro

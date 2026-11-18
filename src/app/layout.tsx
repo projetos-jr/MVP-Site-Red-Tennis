@@ -36,8 +36,8 @@ const newsreader = Newsreader({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Red Tennis | Aulas de tênis e quadras de saibro em São Bernardo do Campo",
-    template: "%s | Red Tennis Rudge Ramos",
+    default: "Aulas de tênis e quadras de saibro em São Bernardo | Red Tennis",
+    template: "%s | Red Tennis",
   },
   description: site.descricao,
   alternates: { canonical: "/" },
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pt_BR",
     siteName: site.nome,
-    title: "Red Tennis · Feito no saibro",
+    title: "Red Tennis · Aulas de tênis e quadras de saibro no Rudge Ramos",
     description: site.descricao,
     images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "Red Tennis. Feito no saibro. Rudge Ramos, São Bernardo do Campo." }],
   },

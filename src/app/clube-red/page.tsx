@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pagina } from "@/lib/seo";
 import { Cabeca, TituloSecao } from "@/components/Cabeca";
 import { Faq } from "@/components/Faq";
 import { Fecho } from "@/components/Fecho";
@@ -7,12 +8,12 @@ import { Btn } from "@/components/ui";
 import { beneficios, comparativo, faqClube, mensagens, planos, regrasRanking } from "@/content/red";
 import { wa } from "@/lib/wa";
 
-export const metadata: Metadata = {
-  title: "Clube Red: planos mensais de tênis em São Bernardo do Campo",
-  description:
-    "Planos mensais da Red Tennis com aulas em grupo, ranking interno, torneio do mês e desconto em locação de quadra. Conheça o Clube Red, no Rudge Ramos.",
-  alternates: { canonical: "/clube-red/" },
-};
+export const metadata: Metadata = pagina({
+  titulo: "Clube Red: planos mensais de tênis no ABC",
+  descricao: "Planos mensais com aula em grupo, ranking interno, torneio do mês e desconto na quadra. O clube de tênis de saibro do Rudge Ramos, em São Bernardo.",
+  caminho: "/clube-red/",
+  compartilhar: { titulo: "Clube Red · O clube de quem joga toda semana", descricao: "Aula em grupo, ranking, torneio do mês e desconto na quadra. Planos mensais da Red Tennis, no Rudge Ramos." },
+});
 
 const INDICACAO = [
   { t: "Você indica", d: "Chame um amigo para uma aula experimental na Red." },
@@ -26,7 +27,7 @@ export default function ClubeRed() {
       <Cabeca
         titulo="O clube de quem joga toda semana"
         tom="bordo"
-        intro="Uma mensalidade, horário garantido e motivo para voltar: ranking, torneio do mês e desconto para quem é da casa."
+        intro="Aluno de turma já é sócio. Uma mensalidade, horário garantido e motivo para voltar: ranking, torneio do mês e desconto na quadra."
       >
         <Btn href={wa(mensagens.clube)} tom="claro">
           Quero ser sócio
@@ -117,7 +118,7 @@ export default function ClubeRed() {
             </ul>
           </div>
           <div className="col-span-full lg:col-span-6 lg:col-start-7">
-            <TituloSecao>Regras do ranking</TituloSecao>
+            <TituloSecao id="regras">Regras do ranking</TituloSecao>
             <ol className="lista-fio mt-8">
               {regrasRanking.map((r, i) => (
                 <li key={r} style={{ gridTemplateColumns: "3rem 1fr", gap: "0.75rem" }}>
@@ -146,7 +147,7 @@ export default function ClubeRed() {
         </div>
       </section>
 
-      <Fecho />
+      <Fecho titulo="Temporada 2027 aberta" acao={{ rotulo: "Quero ser sócio", href: wa(mensagens.clube) }} />
     </>
   );
 }

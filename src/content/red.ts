@@ -15,7 +15,7 @@ export const site = {
   url: "https://redtennis.com.br", // CONFIRMAR com a Red: domínio final e HTTPS
   slogan: "Feito no saibro.",
   descricao:
-    "Aulas de tênis, locação de quadras e torneios em três quadras de saibro iluminadas e uma quadra rápida no Rudge Ramos, São Bernardo do Campo.",
+    "Aulas de tênis, aluguel de quadra e torneios no Rudge Ramos, São Bernardo do Campo (ABC). Três quadras de saibro iluminadas, uma rápida e paredão.",
   fundacao: 1996, // CONFIRMAR com a Red: ano de fundação
 };
 
@@ -40,14 +40,20 @@ export const contato = {
   totalpass: true, // aceita TotalPass, planos TP5 a TP7. CONFIRMAR com a Red: planos aceitos
 };
 
-/** Mensagens prontas de WhatsApp. */
+/**
+ * Mensagens prontas de WhatsApp. Frases completas, sem lacunas para preencher:
+ * no celular ninguém edita o meio do texto antes de enviar.
+ */
 export const mensagens = {
-  aula: "Olá, Red! Vim pelo site e quero agendar uma aula experimental. Meu nome é ___ e meu nível é ___.",
-  quadra: "Olá, Red! Vim pelo site e quero reservar uma quadra. Dia e horário que prefiro: ___.",
-  clube: "Olá, Red! Vim pelo site e quero saber mais sobre o Clube Red.",
-  torneio: "Olá, Red! Vim pelo site e quero me inscrever no próximo torneio.",
-  ranking: "Olá, Red! Vim pelo site e quero entrar no ranking interno.",
-  geral: "Olá, Red! Vim pelo site e gostaria de uma informação.",
+  aula: "Olá, Red! Vim pelo site e quero agendar uma aula experimental. Quais horários vocês têm esta semana?",
+  quadra: "Olá, Red! Vim pelo site e quero reservar uma quadra. Quais horários estão livres esta semana?",
+  clube: "Olá, Red! Vim pelo site e quero ser sócio do Clube Red. Qual plano combina comigo?",
+  plano: (nome: string, preco: string) =>
+    `Olá, Red! Vim pelo site e quero entrar no Clube Red no plano ${nome} (${preco} por mês). Quais turmas têm vaga?`,
+  torneio: (e: { nome: string; tipo: string; dataCurta: string }) =>
+    `Olá, Red! Vim pelo site e quero me inscrever no ${e.nome}, ${e.tipo.toLowerCase()} (${e.dataCurta.toLowerCase().replace("—", " a ")}). Como faço a inscrição?`,
+  ranking: "Olá, Red! Vim pelo site e quero entrar no ranking interno. Como faço para começar?",
+  geral: "Olá, Red! Vim pelo site e tenho uma dúvida:",
 };
 
 /**
@@ -69,8 +75,8 @@ export const horarios: { dia: string; curto: string; abre: string; fecha: string
 export const numeros = [
   { valor: "3", rotulo: "quadras de saibro" },
   { valor: "1", rotulo: "quadra rápida" },
-  { valor: "18", rotulo: "refletores em 6 postes" },
-  { valor: "4", rotulo: "categorias de ranking" },
+  { valor: "18", rotulo: "refletores em seis postes" },
+  { valor: "4", rotulo: "categorias no ranking" },
 ];
 
 export type Programa = {
@@ -150,7 +156,7 @@ export const programas: Programa[] = [
     preco: "R$ 140/aula", // CONFIRMAR com a Red
     foto: "rapida-paredao",
     detalhe:
-      "Aula individual focada no que você precisa: corrigir o backhand, ganhar primeiro saque, voltar de lesão. Também em dupla, dividindo a quadra com um parceiro.",
+      "Aula individual focada no que você precisa: acertar o backhand, colocar mais primeiro saque em quadra, voltar de lesão. Também em dupla, dividindo a quadra com um parceiro.",
     pontos: ["Individual ou em dupla", "Horário fixo ou avulso", "Pacotes de 4 e 8 aulas"],
   },
 ];
@@ -165,19 +171,19 @@ export const metodologia = [
 export const faqAulas = [
   {
     p: "Nunca peguei numa raquete. Posso começar?",
-    r: "Pode, e deve. A turma de iniciantes começa do zero e a Red empresta a raquete no primeiro mês.",
+    r: "Pode, e deve. A turma de iniciantes começa do zero e a Red empresta a raquete no primeiro mês.", // CONFIRMAR com a Red: empréstimo de raquete
   },
   {
     p: "Como funciona a aula experimental?",
-    r: "Você agenda pelo WhatsApp, vem com roupa de treino e tênis de sola lisa, bate bola com um professor por cerca de 30 minutos e sai sabendo seu nível e as turmas disponíveis.", // CONFIRMAR com a Red: duração e se é gratuita
+    r: "Você marca pelo WhatsApp e vem com roupa de treino e tênis de quadra. São cerca de 30 minutos batendo bola com um professor, e você sai sabendo seu nível e as turmas com vaga.", // CONFIRMAR com a Red: duração e se é gratuita
   },
   {
     p: "E se chover?",
-    r: "Saibro molhado não se joga. A aula é reposta em outro horário combinado com o professor.",
+    r: "Saibro molhado não se joga. A aula é reposta em outro horário combinado com o professor.", // CONFIRMAR com a Red: regra de reposição
   },
   {
     p: "Preciso de tênis especial para o saibro?",
-    r: "O ideal é solado espinha de peixe, que segura na hora de deslizar e não marca a quadra. Na dúvida, pergunte na recepção.",
+    r: "O ideal é tênis de quadra com solado espinha de peixe, que segura na hora de deslizar e não estraga o saibro. Tênis de corrida, com garras fundas, não serve. Na dúvida, pergunte na recepção.",
   },
   {
     p: "A partir de que idade as crianças podem começar?",
@@ -209,7 +215,7 @@ export const quadras: Quadra[] = [
     dados: [
       { rotulo: "Quadras", valor: "03" },
       { rotulo: "Iluminação", valor: "Refletores de vapor metálico" },
-      { rotulo: "Horário", valor: "7h às 22h" }, // CONFIRMAR com a Red
+      { rotulo: "Horário", valor: "7h às 22h, seg a qui" }, // CONFIRMAR com a Red
     ],
     texto:
       "Três quadras isoladas por alambrados altos, cada uma com entrada própria. A bola quica alta, o ponto dura mais e o joelho agradece.",
@@ -223,7 +229,7 @@ export const quadras: Quadra[] = [
     dados: [
       { rotulo: "Quadra", valor: "01" },
       { rotulo: "Iluminação", valor: "Refletores de vapor metálico" },
-      { rotulo: "Horário", valor: "7h às 22h" }, // CONFIRMAR com a Red
+      { rotulo: "Horário", valor: "7h às 22h, seg a qui" }, // CONFIRMAR com a Red
     ],
     texto:
       "Piso bordô, quique baixo e bola que anda. É onde acontece o Red Kids e onde você treina saque e voleio. Seca rápido depois da chuva.",
@@ -233,20 +239,20 @@ export const quadras: Quadra[] = [
 export const estrutura = [
   { nome: "Paredão iluminado", texto: "Com orientação de exercícios. Livre para alunos, sem custo." },
   { nome: "Squash", texto: "Uma quadra para quem quer variar a raquete." }, // CONFIRMAR com a Red: a quadra de squash está ativa?
-  { nome: "Vestiários e armários", texto: "Banho quente antes de voltar ao trabalho." },
+  { nome: "Vestiários e armários", texto: "Para sair da quadra direto para o trabalho." },
   { nome: "Estacionamento", texto: "No local, na Av. Winston Churchill." },
-  { nome: "Wi-Fi e bebedouro", texto: "Na área de convivência, ao lado das quadras." },
+  { nome: "Wi-Fi e bebedouro", texto: "Ao lado das quadras." },
   { nome: "Rebatedores", texto: "Para treinar sem depender de parceiro." },
 ];
 
 // CONFIRMAR com a Red: todos os preços e faixas de horário da locação.
 export const locacao = {
-  nota: "Valores por hora, por quadra. Planos mensais têm horário fixo e reposição em caso de chuva.",
-  colunas: ["Avulso", "Plano mensal"],
+  nota: "Avulso: uma hora, por quadra. Mensalista: uma hora por semana, sempre no mesmo dia e horário, com reposição em caso de chuva. O valor do mensalista é do mês.",
+  colunas: ["Avulso (1 hora)", "Mensalista (mês)"],
   linhas: [
-    { faixa: "Seg a sex · 7h às 17h", saibro: ["R$ 90", "R$ 320"], rapida: ["R$ 80", "R$ 280"] },
-    { faixa: "Seg a sex · 17h às 22h", saibro: ["R$ 120", "R$ 420"], rapida: ["R$ 100", "R$ 360"] },
-    { faixa: "Sáb e dom", saibro: ["R$ 110", "R$ 400"], rapida: ["R$ 95", "R$ 340"] },
+    { faixa: "Seg a sex, 7h às 17h", saibro: ["R$ 90", "R$ 320"], rapida: ["R$ 80", "R$ 280"] },
+    { faixa: "Seg a qui, 17h às 22h; sex até 20h30", saibro: ["R$ 120", "R$ 420"], rapida: ["R$ 100", "R$ 360"] },
+    { faixa: "Sáb 7h às 17h; dom 7h às 12h30", saibro: ["R$ 110", "R$ 400"], rapida: ["R$ 95", "R$ 340"] },
   ],
 };
 
@@ -279,16 +285,23 @@ export type Plano = {
   destaque?: boolean;
 };
 
-// CONFIRMAR com a Red: nomes, composição e preços dos planos do Clube Red.
+/**
+ * Regra do Clube (proposta, a confirmar com a Red): quem tem turma já é sócio Saibro.
+ * O Pro e o Família somam aula particular, torneios e a criança na mesma mensalidade.
+ * CONFIRMAR com a Red: nomes, composição e preços dos planos do Clube Red.
+ */
+export const regraClube = "Aluno de turma já é sócio do Clube Red.";
+export const semMulta = "Mensal, sem multa para sair."; // CONFIRMAR com a Red
+
 export const planos: Plano[] = [
   {
     id: "saibro",
     numero: "001",
     nome: "Saibro",
-    chamada: "Para quem quer rotina de quadra.",
-    preco: "R$ 390", // CONFIRMAR com a Red
+    chamada: "Sua turma, já como sócio.",
+    preco: "R$ 380", // CONFIRMAR com a Red
     periodo: "por mês",
-    inclui: ["Aulas em grupo 2x por semana", "Paredão livre", "Ranking interno"],
+    inclui: ["Turma 2x por semana no seu nível", "Paredão livre", "Ranking interno", "10% na locação de quadra"],
   },
   {
     id: "pro",
@@ -298,10 +311,10 @@ export const planos: Plano[] = [
     preco: "R$ 540", // CONFIRMAR com a Red
     periodo: "por mês",
     inclui: [
-      "Aulas em grupo 2x por semana",
+      "Turma 2x por semana no seu nível",
       "1 aula particular por mês",
-      "20% de desconto em locação",
-      "Inscrição nos torneios do Circuito",
+      "20% na locação de quadra",
+      "Torneio do mês e Circuito sem pagar inscrição",
     ],
     destaque: true,
   },
@@ -309,8 +322,8 @@ export const planos: Plano[] = [
     id: "familia",
     numero: "003",
     nome: "Família",
-    chamada: "Um adulto e uma criança na mesma mensalidade.",
-    preco: "R$ 620", // CONFIRMAR com a Red
+    chamada: "Um adulto e uma criança, uma mensalidade só.",
+    preco: "R$ 560", // CONFIRMAR com a Red
     periodo: "por mês",
     inclui: ["1 adulto em grupo 2x por semana", "1 criança no Red Kids", "1 hora de quadra em família por mês"],
   },
@@ -320,19 +333,19 @@ export const planos: Plano[] = [
 export const beneficios = [
   { titulo: "Prioridade de horário", texto: "Sócio renova a turma e a quadra antes de abrir para o público." },
   { titulo: "Ranking interno", texto: "Quatro categorias, de A a D, com classificação nova todo fim de mês." },
-  { titulo: "Torneio do mês", texto: "Um evento interno por mês, com inscrição incluída no plano Pro." },
+  { titulo: "Torneio do mês", texto: "Um domingo por mês, com chave por categoria. Sócio paga menos na inscrição; no Pro, não paga." },
   { titulo: "Encordoamento", texto: "15% de desconto para deixar a raquete na tensão certa." },
-  { titulo: "Indicação", texto: "Trouxe um amigo e ele fechou plano? Você ganha uma aula particular." },
+  { titulo: "Indicação", texto: "Trouxe um amigo e ele entrou no Clube? Você ganha uma aula particular, e ele ganha 10% no primeiro mês." },
 ];
 
 export const comparativo = {
   linhas: [
-    { item: "Aulas em grupo por semana", valores: ["2", "2", "2 + Red Kids"] },
+    { item: "Turma por semana", valores: ["2 aulas", "2 aulas", "2 aulas + Red Kids"] },
     { item: "Aula particular por mês", valores: ["—", "1", "—"] },
     { item: "Paredão livre", valores: ["Sim", "Sim", "Sim"] },
     { item: "Ranking interno", valores: ["Sim", "Sim", "Sim"] },
     { item: "Desconto em locação", valores: ["10%", "20%", "10%"] },
-    { item: "Inscrição em torneios", valores: ["Com desconto", "Incluída", "Com desconto"] },
+    { item: "Torneio do mês e Circuito", valores: ["Inscrição com desconto", "Inscrição incluída", "Inscrição com desconto"] },
     { item: "Hora de quadra em família", valores: ["—", "—", "1 por mês"] },
   ],
 };
@@ -346,9 +359,10 @@ export const regrasRanking = [
 ];
 
 export const faqClube = [
-  { p: "Tem fidelidade?", r: "Os planos são mensais, sem multa. Quem fecha o semestre ganha um mês de paredão com rebatedor." }, // CONFIRMAR com a Red
+  { p: "Já faço aula na Red. Pago o clube à parte?", r: "Não. Quem tem turma já é sócio Saibro. O Pro e o Família somam aula particular, torneios e a criança na mesma mensalidade." }, // CONFIRMAR com a Red
+  { p: "Tem fidelidade?", r: "Não. O plano é mensal e você sai quando quiser, sem multa. Quem fica seis meses seguidos ganha uma aula particular por nossa conta." }, // CONFIRMAR com a Red
   { p: "Posso trocar de plano?", r: "Pode, na virada do mês. Basta avisar a recepção." },
-  { p: "Como funciona a indicação?", r: "Seu amigo informa seu nome ao fechar o plano. A aula particular entra no seu cadastro no mês seguinte." },
+  { p: "Como funciona a indicação?", r: "Mande o convite pelo site. Seu amigo faz a experimental em dupla com você e, se entrar no Clube, a aula particular entra no seu cadastro no mês seguinte." },
   { p: "Faltei à aula. Perco?", r: "Avisando com antecedência, você repõe em outra turma do mesmo nível dentro do mês." }, // CONFIRMAR com a Red
 ];
 
@@ -433,7 +447,23 @@ export const eventos: Evento[] = [
     inicio: "2026-12-12",
     fim: "2026-12-13",
     dataCurta: "12—13 DEZ",
-    detalhe: "Simples, categorias A a D. Chaves no saibro, finais no domingo de manhã.",
+    detalhe: "Simples, categorias A a D. Chaves no saibro, finais no domingo de manhã. Vale como torneio do mês de dezembro.",
+  },
+  {
+    id: "torneio-mes-nov",
+    nome: "Torneio do mês",
+    tipo: "Novembro",
+    inicio: "2026-11-29",
+    dataCurta: "29 NOV",
+    detalhe: "Domingo de manhã, chave rápida por categoria, jogos de um set. Sócio Pro não paga inscrição.",
+  },
+  {
+    id: "torneio-mes-jan",
+    nome: "Torneio do mês",
+    tipo: "Janeiro",
+    inicio: "2027-01-31",
+    dataCurta: "31 JAN",
+    detalhe: "Abre a temporada 2027 do ranking. Chave por categoria, jogos de um set.",
   },
   {
     id: "clinica-saque",
@@ -462,6 +492,9 @@ export const eventos: Evento[] = [
   },
 ];
 
+/** Agenda em ordem de data. O primeiro de `eventos` é o destaque do cartaz. */
+export const agenda = [...eventos].sort((a, b) => a.inicio.localeCompare(b.inicio));
+
 // CONFIRMAR com a Red: resultados e ranking são dados de exemplo.
 export const resultados = [
   { evento: "Circuito Red Tennis · Etapa de primavera", data: "OUT 2026", campeoes: [
@@ -482,7 +515,7 @@ export const ranking: { pos: number; nome: string; categoria: string; pontos: nu
   { pos: 7, nome: "Diego F.", categoria: "B", pontos: 1320, mov: 4 },
   { pos: 8, nome: "Helena V.", categoria: "B", pontos: 1275, mov: -1 },
   { pos: 9, nome: "Marcos L.", categoria: "B", pontos: 1210, mov: 1 },
-  { pos: 10, nome: "Marina S.", categoria: "B", pontos: 1185, mov: -3 },
+  { pos: 10, nome: "Marina S.", categoria: "C", pontos: 1185, mov: 2 },
 ];
 
 // CONFIRMAR: coletar depoimentos reais (nomes e textos abaixo são exemplos).
@@ -496,7 +529,7 @@ export const depoimentos = [
   {
     texto: "Meu filho entrou no Red Kids com cinco anos. Agora é ele quem me chama para o paredão.",
     nome: "Patrícia",
-    tempo: "Mãe de aluno, 2 anos de Red",
+    tempo: "mãe de aluno, 2 anos de Red",
     nivel: "Iniciante",
   },
   {
@@ -513,7 +546,7 @@ export const historia = [
   { ano: "2004", titulo: "Três de saibro", texto: "As quadras ganham alambrados altos, entradas independentes e iluminação completa." },
   { ano: "2012", titulo: "Nasce o Red Kids", texto: "A quadra rápida vira sala de aula para crianças de 4 a 8 anos." },
   { ano: "2018", titulo: "Ranking informatizado", texto: "Quatro categorias, de A a D, com classificação atualizada pelo sistema." },
-  { ano: "Hoje", titulo: "Clube Red", texto: "Planos mensais, torneio todo mês e um site à altura do saibro." },
+  { ano: "Hoje", titulo: "Clube Red", texto: "Planos mensais, ranking e torneio todo mês para quem joga na casa." },
 ];
 
 export const nav = [
@@ -535,7 +568,7 @@ export const semana = [
   { quando: "Qua 18h", oque: "Red Kids, quadra rápida" },
   { quando: "Qui 20h", oque: "Ranking, categoria C, quadra 3" },
   { quando: "Sex 7h", oque: "Paredão livre para alunos" },
-  { quando: "Sáb 9h", oque: "Clínica de saque, 12 vagas" },
+  { quando: "Sáb 9h", oque: "Treino de duplas do Clube, quadras 1 e 2" },
   { quando: "Dom 8h", oque: "Jogos amistosos do clube" },
 ];
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pagina } from "@/lib/seo";
 import { Cabeca, TituloSecao } from "@/components/Cabeca";
 import { Comparador } from "@/components/Comparador";
 import { Fecho } from "@/components/Fecho";
@@ -8,12 +9,12 @@ import { Btn, BtnLinha } from "@/components/ui";
 import { estrutura, locacao, mensagens, quadras } from "@/content/red";
 import { wa } from "@/lib/wa";
 
-export const metadata: Metadata = {
-  title: "Aluguel de quadra de tênis de saibro no Rudge Ramos, ABC",
-  description:
-    "Locação de quadras de tênis em São Bernardo do Campo: três quadras de saibro e uma quadra rápida, todas iluminadas. Avulso ou plano mensal com horário fixo.",
-  alternates: { canonical: "/quadras/" },
-};
+export const metadata: Metadata = pagina({
+  titulo: "Aluguel de quadra de saibro no Rudge Ramos, ABC",
+  descricao: "Aluguel de quadra de tênis no Rudge Ramos, São Bernardo: três quadras de saibro e uma rápida, iluminadas. Hora avulsa ou horário fixo de mensalista.",
+  caminho: "/quadras/",
+  compartilhar: { titulo: "Quadras de saibro · Red Tennis", descricao: "Três de saibro, uma rápida, todas iluminadas. Veja o próximo horário livre e reserve pelo WhatsApp." },
+});
 
 export default function Quadras() {
   return (
@@ -69,9 +70,9 @@ export default function Quadras() {
       <section className="secao sup-papel" aria-labelledby="preco-titulo">
         <div className="wrap g12" style={{ rowGap: "2rem" }}>
           <div className="col-span-full lg:col-span-4">
-            <TituloSecao id="preco-titulo">Preço por hora</TituloSecao>
+            <TituloSecao id="preco-titulo">Preço da quadra</TituloSecao>
             <p className="sec mt-6">{locacao.nota}</p>
-            <p className="sec mt-3">Sócios do Clube Red têm de 10% a 20% de desconto.</p>
+            <p className="sec mt-3">Sócio do Clube Red paga de 10% a 20% menos na quadra.</p>
           </div>
           <div className="col-span-full lg:col-span-8 rolagem" tabIndex={0} role="group" aria-label="Tabela de preços de locação">
             <table className="tabela" style={{ minWidth: 560 }}>
@@ -121,7 +122,7 @@ export default function Quadras() {
             <TituloSecao id="reserva-titulo" className="col-span-full lg:col-span-7">
               Escolha dia e hora
             </TituloSecao>
-            <p className="col-span-full lg:col-span-5 sec">Toque num horário livre e confirme pelo WhatsApp. Planos mensais têm horário fixo e reposição em caso de chuva.</p>
+            <p className="col-span-full lg:col-span-5 sec">Toque num horário livre e confirme pelo WhatsApp. Quer esse horário toda semana? Peça para ser mensalista.</p>
           </div>
           <Reserva />
           <BtnLinha href={wa(mensagens.quadra)} className="mt-8">

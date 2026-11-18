@@ -57,7 +57,9 @@ export function Contagem() {
     <p className="contagem">
       <span className="ui sec">Faltam</span>
       <span className="placar contagem-num">{d === null ? "—" : String(d).padStart(2, "0")}</span>
-      <span className="ui sec">dias para a etapa de encerramento</span>
+      <span className="ui sec">
+        {d === 1 ? "dia" : "dias"} para a {e.tipo.toLowerCase()} do {e.nome}
+      </span>
     </p>
   );
 }

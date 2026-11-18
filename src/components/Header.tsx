@@ -95,7 +95,7 @@ export function Header() {
 
       <div className="barra ui" data-visivel={barra && !aberto}>
         <a href={wa(mensagens.aula)} target="_blank" rel="noopener noreferrer">
-          <Bola /> Aula experimental
+          <Bola /> Agendar aula
         </a>
         <a href={wa(mensagens.quadra)} target="_blank" rel="noopener noreferrer">
           Reservar quadra

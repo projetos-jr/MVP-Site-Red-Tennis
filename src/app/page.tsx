@@ -31,7 +31,7 @@ export default function Home() {
               Do primeiro saque ao torneio
             </h2>
             <p className="sec mt-6">
-              Individuais, em dupla ou em grupos de até quatro. Do primeiro contato com a bola vermelha ao treino de quem joga torneio.
+              Individual, em dupla ou em turma de até quatro. Da bola vermelha, aos quatro anos, ao treino de quem joga o Circuito.
             </p>
             <div className="mt-8 grid gap-2 justify-items-start">
               <Btn href={wa(mensagens.aula)}>Agendar aula experimental</Btn>
@@ -67,7 +67,7 @@ export default function Home() {
               O clube de quem joga toda semana
             </h2>
             <p className="col-span-full lg:col-span-4 sec">
-              Uma mensalidade, horário garantido e motivo para voltar: ranking, torneio todo mês e desconto para quem é da casa.
+              Aluno de turma já é sócio. Uma mensalidade, horário garantido e motivo para voltar: ranking, torneio do mês e desconto na quadra.
             </p>
           </div>
           <Carteirinhas />
@@ -81,6 +81,9 @@ export default function Home() {
                 </li>
               ))}
             </ul>
+            <div className="col-span-full lg:col-span-8 lg:col-start-5">
+              <BtnLinha href="/clube-red/">Comparar os planos</BtnLinha>
+            </div>
           </div>
         </div>
       </section>
@@ -126,8 +129,8 @@ export default function Home() {
               ))}
             </ul>
             <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-2">
-              <Btn href={wa(mensagens.torneio)}>Inscrever-se no torneio</Btn>
-              <BtnLinha href="/torneios/">Agenda e ranking</BtnLinha>
+              <Btn href={wa(mensagens.torneio(eventos[0]))}>Inscrever-se no torneio</Btn>
+              <BtnLinha href="/torneios/">Ver agenda e ranking</BtnLinha>
             </div>
           </div>
         </div>
@@ -142,7 +145,7 @@ export default function Home() {
           <figure className="depo-grande">
             <blockquote>“{depoimentos[0].texto}”</blockquote>
             <figcaption className="ui sec">
-              {depoimentos[0].nome}, {depoimentos[0].tempo.toLowerCase()}, {depoimentos[0].nivel.toLowerCase()}
+              {depoimentos[0].nome}, {depoimentos[0].tempo}, {depoimentos[0].nivel.toLowerCase()}
             </figcaption>
           </figure>
           <div className="depo-par">
@@ -150,11 +153,12 @@ export default function Home() {
               <figure key={d.nome}>
                 <blockquote>“{d.texto}”</blockquote>
                 <figcaption className="ui sec">
-                  {d.nome}, {d.tempo.toLowerCase()}
+                  {d.nome}, {d.tempo}
                 </figcaption>
               </figure>
             ))}
           </div>
+          <p className="ui sec depo-nota">Depoimentos de exemplo. Na versão final, falas de alunos da Red.</p>
         </div>
       </section>
 
@@ -173,7 +177,7 @@ export default function Home() {
             </address>
             <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-2">
               <Btn href={contato.mapa}>Como chegar</Btn>
-              <BtnLinha href={wa(mensagens.geral)}>Falar no WhatsApp</BtnLinha>
+              <BtnLinha href={wa(mensagens.geral)}>Chamar no WhatsApp</BtnLinha>
             </div>
           </div>
           <div className="col-span-full lg:col-span-7 lg:col-start-6" style={{ ["--papel-mapa" as string]: "var(--vinho)" }}>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pagina } from "@/lib/seo";
 import { AbertoStatus, HorariosSemana } from "@/components/Aberto";
 import { Cabeca, TituloSecao } from "@/components/Cabeca";
 import { FormContato } from "@/components/Formularios";
@@ -7,12 +8,11 @@ import { Btn } from "@/components/ui";
 import { contato, mensagens } from "@/content/red";
 import { wa } from "@/lib/wa";
 
-export const metadata: Metadata = {
-  title: "Contato e como chegar: Av. Winston Churchill, 626",
-  description:
-    "Fale com a Red Tennis pelo WhatsApp (11) 98443-2672 ou telefone (11) 4365-2888. Av. Winston Churchill, 626, Rudge Ramos, São Bernardo do Campo. Veja horários e mapa.",
-  alternates: { canonical: "/contato/" },
-};
+export const metadata: Metadata = pagina({
+  titulo: "Contato e como chegar: Av. Winston Churchill, 626",
+  descricao: "WhatsApp (11) 98443-2672. Av. Winston Churchill, 626, Rudge Ramos, São Bernardo do Campo. Horários de funcionamento e como chegar à Red Tennis.",
+  caminho: "/contato/",
+});
 
 export default function Contato() {
   const e = contato.endereco;
@@ -27,10 +27,10 @@ export default function Contato() {
       <Cabeca
         titulo="Chame a Red"
         tom="saibro"
-        intro="A resposta mais rápida é pelo WhatsApp. Se preferir, ligue, escreva ou apareça: a recepção fica na entrada das quadras."
+        intro="A resposta mais rápida é pelo WhatsApp. Se preferir, ligue, escreva ou apareça na Av. Winston Churchill, 626."
       >
         <Btn href={wa(mensagens.geral)} tom="claro">
-          Abrir o WhatsApp
+          Chamar no WhatsApp
         </Btn>
       </Cabeca>
 
