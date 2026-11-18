@@ -194,3 +194,26 @@ Cinco revisões independentes olharam o site: celular, conversão, código, dire
 | Lighthouse mobile | Home 91, Aulas 93, Clube Red 99 em desempenho; 100 em acessibilidade, boas práticas e SEO |
 
 Prévia publicada em https://red-tennis-site.pages.dev (fora dos buscadores: `robots.txt` e `X-Robots-Tag: noindex`).
+
+## 8. Logo e paredão
+
+**Logo.** A arte original (191 x 133 px, JPEG) foi ampliada com super-resolução, limpa e recortada sem fundo. O site usa a versão adesivo (borda branca recortada) no cabeçalho, no menu, no rodapé, nas carteirinhas do Clube e na imagem de compartilhamento. O JSON-LD aponta o logo para os buscadores.
+
+**Paredão.** Serviço novo da Red: aula com professor e aluguel por hora, como uma quadra.
+- Página `/paredao` com:
+  - o corte técnico animado (a bola vai, bate acima da faixa, quica e volta, com placar de bolas devolvidas e botão de pausa);
+  - o gráfico "uma hora de jogo ≈ 180 golpes x uma hora de paredão ≈ 1.000", com as premissas escritas;
+  - quatro motivos, os três jeitos de usar (aula, hora, livre para sócio) e a foto real do paredão em duas tintas (Fig. 3), com conta-fios;
+  - um roteiro de uma hora, a reserva com o paredão já escolhido, o "Recorde do paredão" (desafio mensal para fidelizar) e o FAQ.
+- Home: seção "O paredão devolve todas" logo depois das quadras, com o corte animado.
+- Menu com "Paredão" e a marca "novo"; paredão clicável na planta; opção "Paredão" na reserva; menções em Aulas, Quadras e Sobre.
+- `CONFIRMAR` em `src/content/red.ts`: preço de lançamento, formatos da aula, uso livre do sócio, bolas no aluguel e prêmio do recorde.
+
+### Verificação (18/11/2026)
+
+| Checagem | Resultado |
+|---|---|
+| Detector do `impeccable`, 1440 e 390 px, 8 páginas | Nenhum achado |
+| axe-core, 1440 e 390 px, 9 páginas e a folha de agendamento | Nenhuma violação |
+| Rolagem horizontal de 360 a 1920 px | Nenhuma |
+| Lighthouse mobile | Home 93, Paredão 99, Quadras 95 em desempenho; 100 em acessibilidade, boas práticas e SEO |

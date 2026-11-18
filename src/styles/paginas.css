@@ -380,8 +380,7 @@
   .corte-raquete { stroke: currentColor; fill: none; }
   .corte-sombra { fill: currentColor; }
   @media (max-width: 47.99rem) {
-    .corte-rot { font-size: 19px; }
-    .corte-cota { font-size: 16px; }
+    .corte-rot { font-size: 21px; }
     .corte .so-largo { display: none; }
   }
 
@@ -389,7 +388,7 @@
   .novo-marca { display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.9rem; color: var(--saibro); }
   .novo-marca::before { content: ""; width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--bola); box-shadow: 0 0 0 1px rgb(58 14 18 / 0.35); }
   .nav-novo {
-    margin-left: 0.4em; padding: 0.12em 0.4em 0.16em; font-size: 0.68em; line-height: 1; letter-spacing: 0.04em; text-transform: uppercase;
+    margin-left: 0.4em; padding: 0.14em 0.4em 0.18em; font-size: max(11px, 0.72em); line-height: 1; letter-spacing: 0.04em; text-transform: uppercase;
     background: var(--saibro); color: var(--papel); align-self: center;
   }
   .menu .nav-novo { font-size: 0.22em; vertical-align: super; margin-left: 0.5em; font-family: var(--f-display); font-style: normal; }
@@ -415,7 +414,7 @@
   /* motivos */
   .motivos { border-top: var(--linha) solid var(--risco); }
   .motivos > li { display: grid; grid-template-columns: 3.4rem minmax(0, 1fr); gap: 1rem; padding-block: 1.4rem; border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent); }
-  .motivos .placar { font-size: 2.2rem; line-height: 0.9; color: var(--saibro); }
+  .motivos .placar { font-size: 2.2rem; line-height: 0.9; color: var(--po); }
   .motivos .sub { font-size: 1.3rem; text-transform: uppercase; margin-bottom: 0.35rem; }
 
   /* três jeitos de usar */
@@ -434,7 +433,7 @@
   /* uma hora no paredão */
   .sessao { border-top: var(--linha) solid var(--risco); }
   .sessao > li { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); gap: 1rem; padding-block: 1.1rem; border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent); }
-  .sessao-tempo { display: grid; justify-items: start; align-content: start; color: var(--saibro); }
+  .sessao-tempo { display: grid; justify-items: start; align-content: start; color: var(--bordo); }
   .sessao .placar { font-size: 2.1rem; line-height: 0.95; }
   .sessao .sub { font-size: 1.2rem; text-transform: uppercase; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.25rem 0.75rem; margin-bottom: 0.25rem; }
   .sessao .sub .ui { text-transform: none; font-size: var(--t-mini); }
@@ -442,6 +441,15 @@
   /* quadro de recordes */
   .recordes caption { text-align: left; padding-bottom: 0.75rem; color: var(--fg-2); }
   .recordes td.num { white-space: nowrap; }
-  .recorde-vazio { font-size: 2.4rem; line-height: 1; opacity: 0.45; }
+  .recorde-vazio { font-size: 2.4rem; line-height: 1; opacity: 0.75; }
   .recorde-nota { color: var(--fg-2); margin-left: 0.75rem; }
+}
+
+@layer components {
+  .sup-bordo .cabeca-selo { color: var(--po); }
+  .sup-po .prancha-fig { color: var(--bordo); }
+}
+@layer components {
+  /* saibro clareado: o selo continua cor de barro e lê sobre o vinho */
+  .sup-vinho .cabeca-selo { color: color-mix(in srgb, var(--saibro) 70%, var(--po)); }
 }

@@ -207,7 +207,7 @@ export default function Paredao() {
         </div>
       </section>
 
-      <Fecho titulo="A parede está esperando" acao={{ rotulo: "Agendar aula no paredão", href: wa(mensagens.paredaoAula) }} />
+      <Fecho titulo="A parede te espera" acao={{ rotulo: "Agendar aula no paredão", href: wa(mensagens.paredaoAula) }} />
     </>
   );
 }

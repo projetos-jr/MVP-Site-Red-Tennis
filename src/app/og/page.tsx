@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PhotoSlot } from "@/components/PhotoSlot";
-import { Bola } from "@/components/ui";
+import { Marca } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Imagem de compartilhamento", robots: { index: false } };
 
@@ -22,13 +22,10 @@ export default function Og() {
           Resultado.
         </p>
         <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: 116, background: "var(--vinho)", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 56px" }}>
-          <span className="logo" style={{ fontSize: 34 }}>
-            <span>Red</span>
-            <Bola />
-            <span>Tennis</span>
-          </span>
+          <Marca sizes="240px" className="og-marca" />
+          <style>{`#og .og-marca{height:142px;margin-top:-74px;rotate:-5deg;filter:drop-shadow(0 8px 16px rgb(40 8 8 / .35))}`}</style>
           <span className="ui" style={{ fontSize: 20, textAlign: "right", lineHeight: 1.3 }}>
-            Aulas, quadras e torneios
+            Aulas, quadras, paredão e torneios
             <br />
             Rudge Ramos, São Bernardo do Campo
           </span>

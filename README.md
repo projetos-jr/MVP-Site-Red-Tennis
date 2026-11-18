@@ -66,6 +66,16 @@ npm run photos
 
 Para processar só alguns slots: `node scripts/photos.mjs hero-saibro bola-na-linha`.
 
+## Logo
+
+A arte original da Red está em `fotos/marca/logo-original.png` (191 x 133 px). A partir dela:
+
+- `fotos/marca/red-tennis-logo-transparente.png`: ampliada 4x com super-resolução (EDSR) e sem o fundo branco. As linhas da quadra continuam brancas e opacas; o resto do branco virou transparência suave.
+- `fotos/marca/red-tennis-logo-adesivo.png`: a mesma arte recortada como adesivo, com borda branca. É a versão usada no site (cabeçalho, menu, rodapé, carteirinhas e imagem de compartilhamento), porque lê bem sobre o saibro, o bordô e o papel.
+- `public/marca/`: as duas versões em 160, 320 e 640 px (PNG e WebP).
+
+O script de recorte está em `scripts/logo-fundo.py`. Quando a Red tiver o arquivo vetorial do logo, ele substitui tudo isso.
+
 ## Estrutura
 
 | Caminho | O que é |

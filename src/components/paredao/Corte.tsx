@@ -159,14 +159,14 @@ export function Corte({ tom = "papel" }: { tom?: "papel" | "escuro" }) {
         <g stroke="currentColor" strokeWidth="1.2">
           <path d={`M${PAREDE + 44} ${CHAO}V${FAIXA}M${PAREDE + 38} ${CHAO}h12M${PAREDE + 38} ${FAIXA}h12`} />
         </g>
-        <text x={PAREDE + 52} y={(CHAO + FAIXA) / 2 + 4} className="corte-rot corte-cota">
+        <text x={PAREDE + 58} y={(CHAO + FAIXA) / 2} className="corte-rot corte-cota" textAnchor="middle" transform={`rotate(-90 ${PAREDE + 58} ${(CHAO + FAIXA) / 2})`}>
           91 cm
         </text>
         {/* cota: distância */}
         <g stroke="currentColor" strokeWidth="1.2">
           <path d={`M${RAQ.x} 298H${PAREDE}M${RAQ.x} 292v12M${PAREDE} 292v12`} />
         </g>
-        <rect x={(RAQ.x + PAREDE) / 2 - 92} y="286" width="184" height="24" className="corte-fundo-rot" />
+        <rect x={(RAQ.x + PAREDE) / 2 - 104} y="284" width="208" height="28" className="corte-fundo-rot" />
         <text x={(RAQ.x + PAREDE) / 2} y="302" textAnchor="middle" className="corte-rot">
           6 a 8 m da parede
         </text>
