@@ -1,288 +1,188 @@
-import Link from "next/link";
-import { AbertoStatus, HorariosSemana } from "@/components/Aberto";
-import { Comparador } from "@/components/Comparador";
-import { FaixaProfessores } from "@/components/FaixaProfessores";
+import { AbertoStatus } from "@/components/Aberto";
+import { Carteirinhas } from "@/components/home/Carteirinhas";
+import { Casa } from "@/components/home/Casa";
+import { Catalogo } from "@/components/home/Catalogo";
+import { Equipe } from "@/components/home/Equipe";
 import { Hero } from "@/components/home/Hero";
-import { Ingressos } from "@/components/Ingressos";
+import { Numeros } from "@/components/home/Numeros";
+import { Planta } from "@/components/home/Planta";
+import { Semana } from "@/components/home/Semana";
+import { Cartaz, Contagem } from "@/components/home/Torneio";
 import { Mapa } from "@/components/Mapa";
-import { Surge, Titulo, Traco } from "@/components/motion";
-import { PhotoSlot } from "@/components/PhotoSlot";
-import { Agenda, Poster } from "@/components/Poster";
-import { TabelaProgramas } from "@/components/TabelaProgramas";
 import { Fecho } from "@/components/Fecho";
-import { Btn, Rotulo, Seta } from "@/components/ui";
-import { beneficios, contato, depoimentos, mensagens, numeros, quadras, site } from "@/content/red";
+import { Btn, BtnLinha } from "@/components/ui";
+import { beneficios, contato, depoimentos, eventos, mensagens } from "@/content/red";
 import { wa } from "@/lib/wa";
-
-const FAIXA = ["Aulas", "Locação", "Torneios", "Clube Red", "TotalPass", "Ranking", "Red Kids", "Paredão"];
 
 export default function Home() {
   const e = contato.endereco;
   return (
     <>
       <Hero />
+      <Semana />
+      <Casa />
+      <Numeros />
 
-      {/* 02 · Faixa */}
-      <div className="marquee sup-grafite" aria-hidden="true">
-        <div className="marquee-faixa">
-          {[0, 1].map((k) => (
-            <div key={k}>
-              {FAIXA.map((t) => (
-                <span key={t} className="display flex items-center" style={{ gap: "clamp(2rem, 4vw, 4rem)" }}>
-                  {t} <i />
-                </span>
-              ))}
+      {/* Aulas */}
+      <section className="secao sup-papel aulas" aria-labelledby="aulas-titulo">
+        <div className="wrap g12" style={{ rowGap: "2.5rem" }}>
+          <div className="col-span-full lg:col-span-4 aulas-lado">
+            <h2 id="aulas-titulo" className="titulo">
+              Do primeiro saque ao torneio
+            </h2>
+            <p className="sec mt-6">
+              Individuais, em dupla ou em grupos de até quatro. Do primeiro contato com a bola vermelha ao treino de quem joga torneio.
+            </p>
+            <div className="mt-8 grid gap-2 justify-items-start">
+              <Btn href={wa(mensagens.aula)}>Agendar aula experimental</Btn>
+              <BtnLinha href="/aulas/">Ver os programas</BtnLinha>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* 03 · Manifesto */}
-      <section className="secao sup-cal">
-        <div className="wrap g12" style={{ rowGap: "3rem" }}>
-          <div className="col-span-full">
-            <Rotulo n="01">A casa</Rotulo>
-            <Titulo className="display t-h2 mt-6" linhas={["Três de saibro,", "uma rápida,", "um paredão e", "*gente que joga.*"]} />
           </div>
-          <Surge className="col-span-full lg:col-span-6 lg:col-start-2 grid gap-5 content-start">
-            <p className="lead">
-              A Red é a casa do tênis de saibro no ABC. Desde {site.fundacao}, no Rudge Ramos, a gente ensina a bater na bola, cuida do pó de
-              tijolo e junta quem gosta de jogar.
-            </p>
-            <p className="sec">
-              Aqui a criança começa com bola vermelha aos quatro anos, o adulto aprende do zero e quem já joga encontra adversário toda semana
-              no ranking. As quadras são isoladas, cada uma com sua entrada, e a luz acende quando o sol vai embora.
-            </p>
-            <Link href="/sobre/" className="link mono w-fit">
-              A história da Red <Seta size={12} />
-            </Link>
-          </Surge>
-          <Surge as="figure" className="col-span-full md:col-span-8 md:col-start-5 lg:col-span-4 lg:col-start-9 lg:-mt-[13vw] xl:-mt-[12rem]">
-            <PhotoSlot
-              name="saibro-vertical"
-              alt="Quadra de saibro da Red Tennis com a rede em primeiro plano, cobertura de descanso e refletores ao fundo"
-              sizes="(min-width: 64rem) 33vw, (min-width: 48rem) 66vw, 100vw"
-              className="aspect-[4/5]"
-            />
-            <figcaption className="mono sec mt-3 flex justify-between gap-4">
-              <span>Red Tennis · Saibro</span>
-              <span>Rudge Ramos, SBC</span>
-            </figcaption>
-          </Surge>
-          <dl className="numeros col-span-full mt-4 lg:mt-12">
-            {numeros.map((n) => (
-              <div key={n.rotulo}>
-                <dd>
-                  <strong className="display">{n.valor}</strong>
-                </dd>
-                <dt className="mono sec mt-2">{n.rotulo}</dt>
-              </div>
-            ))}
-          </dl>
+          <div className="col-span-full lg:col-span-8">
+            <Catalogo />
+          </div>
         </div>
       </section>
 
-      {/* 04 · Aulas */}
-      <section className="secao sup-cal" style={{ paddingTop: 0 }}>
+      {/* Quadras */}
+      <section className="secao sup-saibro com-grao quadras-sec" aria-labelledby="quadras-titulo">
+        <div className="wrap relative">
+          <div className="g12 items-end mb-10" style={{ rowGap: "1.25rem" }}>
+            <h2 id="quadras-titulo" className="titulo col-span-full lg:col-span-7">
+              Três de saibro, uma rápida
+            </h2>
+            <p className="col-span-full lg:col-span-5 lead">
+              Cada quadra tem alambrado alto e entrada própria. Toque numa delas para ver o próximo horário livre.
+            </p>
+          </div>
+          <Planta />
+        </div>
+      </section>
+
+      {/* Clube Red */}
+      <section className="secao sup-bordo clube" aria-labelledby="clube-titulo">
         <div className="wrap">
-          <div className="g12 items-end mb-10 lg:mb-16" style={{ rowGap: "1.5rem" }}>
-            <div className="col-span-full lg:col-span-8">
-              <Rotulo n="02">Aulas</Rotulo>
-              <Titulo className="display t-h2 mt-6" linhas={["Do primeiro", "forehand", "ao *tie-break.*"]} />
-            </div>
+          <div className="g12 items-end" style={{ rowGap: "1.25rem" }}>
+            <h2 id="clube-titulo" className="titulo col-span-full lg:col-span-8">
+              O clube de quem joga toda semana
+            </h2>
             <p className="col-span-full lg:col-span-4 sec">
-              Aulas individuais, em dupla ou em grupos de até quatro. Cinco programas, um para cada fase do seu jogo.
+              Uma mensalidade, horário garantido e motivo para voltar: ranking, torneio todo mês e desconto para quem é da casa.
             </p>
           </div>
-          <TabelaProgramas />
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Btn href="/aulas/" tom="grafite">
-              Ver todos os programas
-            </Btn>
-            <Btn href={wa(mensagens.aula)} tom="linha">
-              Agendar aula experimental
-            </Btn>
+          <Carteirinhas />
+          <div className="g12 vantagens" style={{ rowGap: "2rem" }}>
+            <h3 className="sub t-h3 col-span-full lg:col-span-4">O que o sócio tem a mais</h3>
+            <ul className="col-span-full lg:col-span-8 vantagens-lista">
+              {beneficios.map((b) => (
+                <li key={b.titulo}>
+                  <p className="sub">{b.titulo}</p>
+                  <p className="sec">{b.texto}</p>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
-      {/* 05 · Quadras */}
-      <section className="secao sup-grafite">
+      {/* Equipe */}
+      <section className="secao sup-papel equipe" aria-labelledby="equipe-titulo">
         <div className="wrap">
-          <div className="g12 items-end mb-10 lg:mb-14" style={{ rowGap: "1.5rem" }}>
-            <div className="col-span-full lg:col-span-8">
-              <Rotulo n="03">Quadras</Rotulo>
-              <Titulo className="display t-h2 mt-6" linhas={["Dois pisos,", "*dois jogos.*"]} />
-            </div>
-            <p className="col-span-full lg:col-span-4 sec">Arraste a linha central e compare. No saibro o ponto se constrói. Na rápida, se decide.</p>
+          <div className="g12 items-end mb-12" style={{ rowGap: "1.25rem" }}>
+            <h2 id="equipe-titulo" className="titulo col-span-full lg:col-span-8">
+              Quem está do outro lado da rede
+            </h2>
+            <p className="col-span-full lg:col-span-4 sec">Três professores e uma equipe de rebatedores para treinar sem depender de parceiro.</p>
           </div>
-        </div>
-        <div className="wrap">
-          <Comparador />
-          <div className="g12 relative" style={{ rowGap: "2.5rem" }}>
-            <span className="traco-v hidden md:block" style={{ left: "50%" }} aria-hidden="true" />
-            {quadras.map((q, i) => (
-              <div key={q.id} className={`col-span-full md:col-span-6 pt-8 ${i === 0 ? "md:pr-8" : "md:pl-8"}`}>
-                <h3 className="mono sec">
-                  0{i + 1} · {q.nome} · {q.piso}
-                </h3>
-                <p className="lead mt-3">{q.texto}</p>
-                <dl className="dados mono mt-6">
-                  {q.dados.map((d) => (
-                    <div key={d.rotulo}>
-                      <dt>{d.rotulo}</dt>
-                      <dd>{d.valor}</dd>
-                    </div>
-                  ))}
-                </dl>
-                <Btn href={wa(`${mensagens.quadra} Piso: ${q.nome.toLowerCase()}.`)} tom={i === 0 ? "cal" : "linha"} className="mt-6">
-                  Reservar {q.nome.toLowerCase()}
-                </Btn>
-              </div>
-            ))}
-          </div>
+          <Equipe />
         </div>
       </section>
 
-      {/* 06 · Clube Red */}
-      <section className="secao sup-bordo overflow-hidden">
-        <div className="wrap">
-          <div className="g12 items-end mb-12 lg:mb-20" style={{ rowGap: "1.5rem" }}>
-            <div className="col-span-full lg:col-span-9">
-              <Rotulo n="04">Clube Red</Rotulo>
-              <Titulo
-                className="display t-h2 mt-6"
-                linhas={["O clube", "*de quem joga*", "*toda semana.*"]}
-              />
-            </div>
-            <p className="col-span-full lg:col-span-3 sec">
-              Mensalidade única, horário garantido e motivo para voltar: ranking, torneio do mês e desconto para quem é da casa.
-            </p>
-          </div>
-          <Ingressos />
-          <div className="g12 mt-16 lg:mt-24" style={{ rowGap: "2rem" }}>
-            <h3 className="col-span-full lg:col-span-4 display t-h3">
-              Ser sócio
-              <br />
-              <span className="serif">vale mais.</span>
-            </h3>
-            <div className="col-span-full lg:col-span-8">
-              <ol className="lista-n">
-                {beneficios.map((b) => (
-                  <li key={b.titulo}>
-                    <h4 className="display t-h4">{b.titulo}</h4>
-                    <p className="sec">{b.texto}</p>
-                  </li>
-                ))}
-              </ol>
-              <Btn href="/clube-red/" tom="cal" className="mt-8">
-                Conhecer o Clube Red
-              </Btn>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 07 · Professores */}
-      <section className="secao sup-cal">
-        <div className="wrap mb-10 lg:mb-16">
-          <Rotulo n="05">Equipe</Rotulo>
-          <div className="g12 items-end mt-6" style={{ rowGap: "1.5rem" }}>
-            <Titulo className="col-span-full lg:col-span-8 display t-h2" linhas={["Quem está", "*do outro lado da rede.*"]} />
-            <p className="col-span-full lg:col-span-4 mono sec lg:text-right">Arraste para ver a equipe →</p>
-          </div>
-        </div>
-        <FaixaProfessores />
-      </section>
-
-      {/* 08 · Torneios */}
-      <section className="secao sup-grafite">
+      {/* Torneios */}
+      <section className="secao sup-po torneios" aria-labelledby="torneios-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
-          <div className="col-span-full lg:col-span-6">
-            <Poster />
+          <div className="col-span-full md:col-span-7 lg:col-span-6">
+            <Cartaz />
           </div>
-          <div className="col-span-full lg:col-span-5 lg:col-start-8 flex flex-col justify-between gap-10">
-            <div>
-              <Rotulo n="06">Torneios</Rotulo>
-              <Titulo className="display t-h2 mt-6" linhas={["Jogo", "*valendo.*"]} />
-              <p className="sec mt-6">
-                O Circuito Red Tennis acontece ao longo do ano, com chaves por categoria. Entre uma etapa e outra, o ranking interno não para.
-              </p>
-            </div>
-            <div>
-              <p className="mono sec mb-3">Na agenda</p>
-              <Agenda />
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Btn href={wa(mensagens.torneio)} tom="cal">
-                  Quero me inscrever
-                </Btn>
-                <Btn href="/torneios/" tom="linha">
-                  Agenda e ranking
-                </Btn>
-              </div>
+          <div className="col-span-full md:col-span-5 lg:col-span-5 lg:col-start-8 torneios-lado">
+            <h2 id="torneios-titulo" className="titulo">
+              Jogo valendo, o ano inteiro
+            </h2>
+            <p className="sec mt-5">
+              O Circuito Red Tennis tem etapas ao longo do ano, com chaves por categoria. Entre uma etapa e outra, o ranking interno não para.
+            </p>
+            <Contagem />
+            <ul className="agenda">
+              {eventos.slice(1, 4).map((ev) => (
+                <li key={ev.id}>
+                  <time dateTime={ev.inicio} className="placar">
+                    {ev.dataCurta.replace("—", "–")}
+                  </time>
+                  <div>
+                    <p className="sub">{ev.nome}</p>
+                    <p className="sec">{ev.detalhe}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-2">
+              <Btn href={wa(mensagens.torneio)}>Inscrever-se no torneio</Btn>
+              <BtnLinha href="/torneios/">Agenda e ranking</BtnLinha>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 09 · Depoimentos */}
-      <section className="secao sup-cal">
+      {/* Quem joga aqui */}
+      <section className="secao sup-papel depo" aria-labelledby="depo-titulo">
         <div className="wrap">
-          <Rotulo n="07">Quem joga aqui</Rotulo>
-          <div className="g12 mt-10" style={{ rowGap: "3.5rem" }}>
-            {depoimentos.map((d, i) => (
-              <Surge
-                as="figure"
-                key={d.nome}
-                className={
-                  ["col-span-full lg:col-span-10", "col-span-full md:col-span-6 lg:col-span-5 lg:col-start-2", "col-span-full md:col-span-6 lg:col-span-5 lg:col-start-8 lg:mt-20"][i]
-                }
-              >
-                <Traco />
-                <blockquote className="citacao mt-6" style={{ fontSize: i === 0 ? "clamp(2rem, 5.2vw, 4.75rem)" : "clamp(1.625rem, 2.8vw, 2.5rem)" }}>
-                  “{d.texto}”
-                </blockquote>
-                <figcaption className="mono sec mt-6">
-                  {d.nome} · {d.tempo} · {d.nivel}
+          <h2 id="depo-titulo" className="sr-only">
+            Quem joga na Red
+          </h2>
+          <figure className="depo-grande">
+            <blockquote>“{depoimentos[0].texto}”</blockquote>
+            <figcaption className="ui sec">
+              {depoimentos[0].nome}, {depoimentos[0].tempo.toLowerCase()}, {depoimentos[0].nivel.toLowerCase()}
+            </figcaption>
+          </figure>
+          <div className="depo-par">
+            {depoimentos.slice(1).map((d) => (
+              <figure key={d.nome}>
+                <blockquote>“{d.texto}”</blockquote>
+                <figcaption className="ui sec">
+                  {d.nome}, {d.tempo.toLowerCase()}
                 </figcaption>
-              </Surge>
+              </figure>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 10 · Visite */}
-      <section className="secao sup-grafite">
+      {/* Visite */}
+      <section className="secao sup-vinho visite" aria-labelledby="visite-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
-          <div className="col-span-full lg:col-span-5">
-            <Rotulo n="08">Visite a Red</Rotulo>
-            <Titulo className="display t-h2 mt-6" linhas={["Venha", "*bater bola.*"]} />
+          <div className="col-span-full lg:col-span-4">
+            <h2 id="visite-titulo" className="titulo">
+              Venha bater bola
+            </h2>
             <AbertoStatus className="mt-8" />
             <address className="lead not-italic mt-4">
               {e.rua}
               <br />
               {e.bairro}, {e.cidade}
             </address>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Btn href={contato.mapa} tom="cal">
-                Como chegar
-              </Btn>
-              <Btn href={wa(mensagens.geral)} tom="linha">
-                WhatsApp
-              </Btn>
+            <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-2">
+              <Btn href={contato.mapa}>Como chegar</Btn>
+              <BtnLinha href={wa(mensagens.geral)}>Falar no WhatsApp</BtnLinha>
             </div>
           </div>
-          <div className="col-span-full md:col-span-5 lg:col-span-3">
-            <p className="mono sec mb-3">Horários</p>
-            <HorariosSemana />
-          </div>
-          <div className="col-span-full md:col-span-7 lg:col-span-4">
+          <div className="col-span-full lg:col-span-7 lg:col-start-6" style={{ ["--papel-mapa" as string]: "var(--vinho)" }}>
             <Mapa />
           </div>
         </div>
       </section>
 
-      {/* 11 · CTA final */}
+      {/* Chamada final */}
       <Fecho />
     </>
   );

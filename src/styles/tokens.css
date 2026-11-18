@@ -1,47 +1,49 @@
-/* Red Tennis · tokens de design. Tudo no site sai daqui. */
+/*
+ * Red Tennis · tokens v2 · "Impresso do clube"
+ * Duas tintas (saibro e bordô) sobre papel branco, e uma cor especial só para a bola.
+ * Sem preto e sem cinza: o texto secundário é tingido da cor do fundo.
+ */
 :root {
-  /* Cor */
-  --saibro: #c2552b;
-  --saibro-escuro: #8e3a1c;
-  --bordo: #6e1f1f;
-  --grafite: #141210;
-  --cal: #f1ece3;
-  --areia: #d9cbb6;
-  --bola: #d4f03c;
+  /* Tintas */
+  --papel: #ffffff;
+  --saibro: #b95128;
+  --saibro-fundo: #9e4220;
+  --bordo: #6b1d21;
+  --vinho: #3a0e12;
+  --po: #f0dccd;
+  --bola: #d7f04a;
 
-  /* Linhas de quadra, por superfície */
-  --linha-clara: rgb(241 236 227 / 0.38);
-  --linha-escura: rgb(20 18 16 / 0.2);
+  /* Texto secundário, tingido */
+  --tinta-2: #7a4a44; /* sobre papel e pó: 7:1 */
+  --claro-2: #e9c9b8; /* sobre bordô e vinho: 7,4:1 */
 
-  /* Tipografia */
-  --f-display: var(--font-archivo), "Arial Black", sans-serif;
-  --f-serif: var(--font-instrument), "Times New Roman", serif;
-  --f-texto: var(--font-inter), system-ui, sans-serif;
-  --f-mono: var(--font-mono), ui-monospace, monospace;
+  /* Tipo */
+  --f-display: var(--font-anybody), "Arial", sans-serif;
+  --f-display-it: var(--font-anybody-it), var(--font-anybody), "Arial", sans-serif;
+  --f-texto: var(--font-newsreader), Georgia, serif;
 
-  --t-hero: clamp(3.5rem, 12.2vw, 11rem);
-  --t-h1: clamp(3rem, 9vw, 8.5rem);
-  --t-h2: clamp(2.5rem, 6.4vw, 6rem);
-  --t-h3: clamp(1.75rem, 3.2vw, 3rem);
-  --t-h4: clamp(1.25rem, 1.8vw, 1.625rem);
-  --t-lead: clamp(1.125rem, 1.5vw, 1.375rem);
-  --t-texto: clamp(1rem, 1.1vw, 1.125rem);
-  --t-mono: 0.75rem;
+  --t-hero: clamp(3.4rem, 11.2vw, 10.75rem);
+  --t-h1: clamp(2.9rem, 8.4vw, 7.5rem);
+  --t-h2: clamp(2.2rem, 5.2vw, 5.25rem);
+  --t-h3: clamp(1.5rem, 2.5vw, 2.25rem);
+  --t-h4: clamp(1.125rem, 1.4vw, 1.375rem);
+  --t-lead: clamp(1.3rem, 2vw, 1.75rem);
+  --t-texto: clamp(1.0625rem, 1.15vw, 1.1875rem);
+  --t-ui: 0.9375rem;
+  --t-mini: 0.8125rem;
 
-  /* Espaço (escala de 8) */
-  --s-1: 0.5rem;
-  --s-2: 1rem;
-  --s-3: 1.5rem;
-  --s-4: 2rem;
-  --s-6: 3rem;
-  --s-8: 4rem;
-  --s-12: 6rem;
-  --margem: clamp(1.5rem, 4vw, 4rem);
-  --secao: clamp(5rem, 11vw, 11rem);
+  /* Linha de quadra */
+  --linha: 3px;
+
+  /* Espaço */
+  --margem: clamp(1.25rem, 4vw, 4rem);
+  --secao: clamp(5rem, 10vw, 10rem);
   --max: 1440px;
-  --header: 64px;
+  --header: 68px;
 
   /* Movimento */
-  --curva: cubic-bezier(0.22, 1, 0.36, 1);
-  --dur: 800ms;
+  --sai: cubic-bezier(0.23, 1, 0.32, 1);
+  --move: cubic-bezier(0.77, 0, 0.175, 1);
+  --rapido: 180ms;
+  --medio: 280ms;
 }

@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { AbertoStatus, HorariosSemana } from "@/components/Aberto";
-import { Cabeca } from "@/components/Cabeca";
+import { Cabeca, TituloSecao } from "@/components/Cabeca";
 import { FormContato } from "@/components/Formularios";
 import { Mapa } from "@/components/Mapa";
-import { Titulo } from "@/components/motion";
-import { Btn, Rotulo, Seta } from "@/components/ui";
+import { Btn } from "@/components/ui";
 import { contato, mensagens } from "@/content/red";
 import { wa } from "@/lib/wa";
 
@@ -26,29 +25,26 @@ export default function Contato() {
   return (
     <>
       <Cabeca
-        tom="bordo"
-        rotulo="Contato"
-        linhas={["Chame", "*a Red.*"]}
+        titulo="Chame a Red"
+        tom="saibro"
         intro="A resposta mais rápida é pelo WhatsApp. Se preferir, ligue, escreva ou apareça: a recepção fica na entrada das quadras."
       >
-        <Btn href={wa(mensagens.geral)}>Abrir WhatsApp</Btn>
+        <Btn href={wa(mensagens.geral)} tom="claro">
+          Abrir o WhatsApp
+        </Btn>
       </Cabeca>
 
-      <section className="secao sup-cal">
+      <section className="secao sup-papel" aria-labelledby="canais-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full lg:col-span-5">
-            <Rotulo n="01">Canais</Rotulo>
-            <ul className="mt-6 b-t">
+            <TituloSecao id="canais-titulo">Canais</TituloSecao>
+            <ul className="canais mt-8">
               {canais.map((c) => (
-                <li key={c.rotulo} className="b-b">
-                  <a
-                    href={c.href}
-                    className="flex items-baseline justify-between gap-4 py-5 group"
-                    {...(c.externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                  >
-                    <span className="mono sec">{c.rotulo}</span>
-                    <span className="lead flex items-center gap-3 text-right break-all">
-                      {c.valor} <Seta size={12} />
+                <li key={c.rotulo}>
+                  <a href={c.href} {...(c.externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                    <span className="ui sec">{c.rotulo}</span>
+                    <span className="lead" style={{ overflowWrap: "anywhere", textAlign: "right" }}>
+                      {c.valor}
                     </span>
                   </a>
                 </li>
@@ -56,22 +52,18 @@ export default function Contato() {
             </ul>
           </div>
           <div className="col-span-full lg:col-span-6 lg:col-start-7">
-            <Rotulo n="02">Mensagem</Rotulo>
-            <h2 className="display t-h3 mt-6 mb-8">
-              Escreva
-              <br />
-              <span className="serif">para a gente.</span>
-            </h2>
-            <FormContato />
+            <TituloSecao>Escreva para a gente</TituloSecao>
+            <div className="mt-8">
+              <FormContato />
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="secao sup-grafite">
+      <section className="secao sup-vinho" aria-labelledby="chegar-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full lg:col-span-4">
-            <Rotulo n="03">Como chegar</Rotulo>
-            <Titulo className="display t-h2 mt-6" linhas={["Rudge", "*Ramos.*"]} />
+            <TituloSecao id="chegar-titulo">Como chegar</TituloSecao>
             <AbertoStatus className="mt-8" />
             <address className="lead not-italic mt-4">
               {e.rua}
@@ -80,15 +72,14 @@ export default function Contato() {
               <br />
               CEP {e.cep}
             </address>
-            <Btn href={contato.mapa} tom="cal" className="mt-8">
+            <Btn href={contato.mapa} tom="claro" className="mt-8">
               Abrir no Google Maps
             </Btn>
           </div>
-          <div className="col-span-full md:col-span-5 lg:col-span-3 lg:col-start-6">
-            <p className="mono sec mb-3">Horários</p>
+          <div className="col-span-full md:col-span-5 lg:col-span-3 lg:col-start-5">
             <HorariosSemana />
           </div>
-          <div className="col-span-full md:col-span-7 lg:col-span-4">
+          <div className="col-span-full md:col-span-7 lg:col-span-5 lg:col-start-8" style={{ ["--papel-mapa" as string]: "var(--vinho)" }}>
             <Mapa />
           </div>
         </div>

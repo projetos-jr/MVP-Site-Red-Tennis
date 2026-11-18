@@ -1,127 +1,118 @@
 import type { Metadata } from "next";
-import { Traco } from "@/components/motion";
+import { Pictograma } from "@/components/Pictograma";
 import { PhotoSlot } from "@/components/PhotoSlot";
-import { SombraRaquetes, SombraRede } from "@/components/Texturas";
-import { Bola, Btn, Rotulo } from "@/components/ui";
+import { Bola, Btn, BtnLinha } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Styleguide", robots: { index: false } };
 
 const CORES = [
-  { token: "--saibro", hex: "#C2552B", uso: "Campo de cor principal" },
-  { token: "--saibro-escuro", hex: "#8E3A1C", uso: "Sombras, faixas de base" },
-  { token: "--bordo", hex: "#6E1F1F", uso: "Cor institucional, Clube Red, rodapé" },
-  { token: "--grafite", hex: "#141210", uso: "Seções escuras" },
-  { token: "--cal", hex: "#F1ECE3", uso: "Fundo claro e linhas" },
-  { token: "--areia", hex: "#D9CBB6", uso: "Texto secundário sobre escuro" },
-  { token: "--bola", hex: "#D4F03C", uso: "Acento único" },
+  { token: "--papel", hex: "#FFFFFF", uso: "Fundo claro. Papel branco do impresso." },
+  { token: "--saibro", hex: "#B95128", uso: "Tinta 1. Campo de cor e linhas sobre papel." },
+  { token: "--bordo", hex: "#6B1D21", uso: "Tinta 2. Cor institucional, Clube Red." },
+  { token: "--vinho", hex: "#3A0E12", uso: "Texto, noite e rodapé." },
+  { token: "--po", hex: "#F0DCCD", uso: "Pó de saibro: superfícies secundárias." },
+  { token: "--bola", hex: "#D7F04A", uso: "Só a bola." },
 ];
 
 export default function Styleguide() {
   return (
-    <div className="sup-cal" style={{ paddingTop: 120 }}>
-      <div className="wrap pb-24 grid gap-20">
+    <div className="sup-papel" style={{ paddingTop: 130 }}>
+      <div className="wrap pb-24 grid grid-cols-1 gap-20">
         <header>
-          <Rotulo>Red Tennis · Design system</Rotulo>
-          <h1 className="display t-h1 mt-6">
-            Style
-            <br />
-            <span className="serif">guide.</span>
+          <p className="ui sec">Red Tennis, sistema visual v2: impresso do clube</p>
+          <h1 className="display t-h1 mt-4" style={{ fontStyle: "italic", fontFamily: "var(--f-display-it)" }}>
+            Styleguide
           </h1>
         </header>
 
         <section>
-          <Rotulo n="01">Cores</Rotulo>
-          <ul className="mt-6 grid grid-cols-2 md:grid-cols-7 b-t b-l">
+          <h2 className="titulo">Duas tintas e uma bola</h2>
+          <ul className="amostras mt-6">
             {CORES.map((c) => (
-              <li key={c.token} className="b-r b-b">
-                <div style={{ background: `var(${c.token})`, height: 140 }} />
-                <p className="mono p-3">
-                  {c.token}
+              <li key={c.token}>
+                <div className="cor" style={{ background: `var(${c.token})`, boxShadow: c.token === "--papel" ? "inset 0 0 0 1px var(--po)" : undefined }} />
+                <p className="ui">
+                  {c.token} {c.hex}
                   <br />
-                  <span className="sec">{c.hex}</span>
-                  <br />
-                  <span className="sec normal-case">{c.uso}</span>
+                  <span className="sec" style={{ fontWeight: 400 }}>
+                    {c.uso}
+                  </span>
                 </p>
               </li>
             ))}
           </ul>
         </section>
 
-        <section className="grid gap-8">
-          <Rotulo n="02">Tipografia</Rotulo>
-          <div className="b-t pt-6">
-            <p className="mono sec">Display · Archivo 900, largura 125</p>
-            <p className="display t-h1">Saibro. Técnica.</p>
-          </div>
-          <div className="b-t pt-6">
-            <p className="mono sec">Editorial · Instrument Serif itálico</p>
-            <p className="serif" style={{ fontSize: "var(--t-h1)", lineHeight: 1 }}>
-              Feito no saibro.
+        <section className="grid gap-10">
+          <h2 className="titulo">Tipo</h2>
+          <div className="risco pt-5">
+            <p className="ui sec">Anybody, largura 150, peso 850, itálico: display</p>
+            <p className="display t-h1" style={{ fontStyle: "italic", fontFamily: "var(--f-display-it)" }}>
+              Saibro. Técnica.
             </p>
           </div>
-          <div className="b-t pt-6">
-            <p className="mono sec">Texto · Inter Tight 400/500</p>
+          <div className="risco pt-5">
+            <p className="ui sec">Anybody, largura 132, peso 800: títulos de seção</p>
+            <p className="titulo">O clube de quem joga toda semana</p>
+          </div>
+          <div className="risco pt-5">
+            <p className="ui sec">Anybody, largura 56: números de placar</p>
+            <p className="placar" style={{ fontSize: "clamp(3.5rem, 12vw, 7rem)", color: "var(--saibro)" }}>
+              15 30 40 22h R$390
+            </p>
+          </div>
+          <div className="risco pt-5">
+            <p className="ui sec">Newsreader: texto e citações</p>
             <p className="lead">A Red é a casa do tênis de saibro no ABC.</p>
-            <p className="mt-2">Aqui a criança começa com bola vermelha aos quatro anos, o adulto aprende do zero e quem já joga encontra adversário toda semana no ranking.</p>
-          </div>
-          <div className="b-t pt-6">
-            <p className="mono sec">Dados · JetBrains Mono 500</p>
-            <p className="mono">01 / Aulas · Seg a qui 7h às 22h · R$ 380/mês</p>
+            <p className="mt-2">A criança começa com bola vermelha aos quatro anos, o adulto aprende do zero e quem já joga encontra adversário no ranking.</p>
           </div>
         </section>
 
         <section>
-          <Rotulo n="03">Botões</Rotulo>
-          <div className="mt-6 flex flex-wrap gap-4">
+          <h2 className="titulo">Botões</h2>
+          <div className="mt-6 flex flex-wrap items-center gap-6">
             <Btn href="/">Agendar aula</Btn>
-            <Btn href="/" tom="grafite">
-              Reservar quadra
-            </Btn>
-            <Btn href="/" tom="linha">
-              Ver programas
-            </Btn>
+            <BtnLinha href="/">Reservar quadra</BtnLinha>
           </div>
-          <div className="sup-grafite mt-4 p-6 flex flex-wrap gap-4">
+          <div className="sup-vinho mt-4 p-6 flex flex-wrap items-center gap-6">
             <Btn href="/">Agendar aula</Btn>
-            <Btn href="/" tom="cal">
-              Como chegar
+            <BtnLinha href="/">Como chegar</BtnLinha>
+          </div>
+          <div className="sup-saibro mt-4 p-6 flex flex-wrap items-center gap-6">
+            <Btn href="/" tom="claro">
+              Agendar aula experimental
             </Btn>
-            <Btn href="/" tom="linha">
-              WhatsApp
-            </Btn>
+            <BtnLinha href="/">Reservar quadra</BtnLinha>
           </div>
         </section>
 
         <section>
-          <Rotulo n="04">Linhas de quadra</Rotulo>
-          <div className="mt-6 relative h-48">
-            <Traco />
-            <span className="traco-v" style={{ left: "33%" }} />
-            <div className="absolute left-0 right-0 top-1/2">
-              <Traco atraso={0.2} />
-            </div>
-            <Bola className="absolute w-10" />
-            <style>{`.h-48 > svg:last-of-type { left: calc(33% + 12px); top: calc(50% - 52px); }`}</style>
+          <h2 className="titulo">Linha de quadra</h2>
+          <p className="sec mt-3">Linhas de 3 px. A faixa de corredor (duas linhas paralelas) é o divisor e a marca do site.</p>
+          <span className="corredor mt-6" style={{ ["--risco" as string]: "var(--saibro)" }} />
+          <div className="sup-saibro mt-4 p-6">
+            <span className="corredor" />
           </div>
         </section>
 
         <section>
-          <Rotulo n="05">Texturas e fotos</Rotulo>
+          <h2 className="titulo">Imagem</h2>
+          <p className="sec mt-3">Fotos da Red em retícula de meio-tom (passe o mouse para ver a foto) e material renderizado pelo shader do saibro.</p>
           <div className="mt-6 grid md:grid-cols-4 gap-4">
-            <div className="sup-saibro relative overflow-hidden h-72">
-              <span className="grao grao-saibro" />
-              <span className="grao grao-claro" />
-              <span className="luz" />
-            </div>
-            <div className="sup-saibro relative overflow-hidden h-72">
-              <span className="grao grao-saibro" />
-              <SombraRede />
-            </div>
-            <div className="sup-saibro relative overflow-hidden h-72">
-              <span className="grao grao-saibro" />
-              <SombraRaquetes className="absolute h-[120%] left-1/4 -top-[10%]" />
-            </div>
-            <PhotoSlot name="bola-na-linha" alt="Placeholder de foto" briefing="Bola na linha do saibro, sombra da rede, fim de tarde" className="h-72" />
+            <PhotoSlot name="saibro-vertical" alt="Quadra de saibro da Red" className="aspect-[4/5]" sizes="25vw" ret />
+            <PhotoSlot name="bola-na-linha" alt="Bola sobre a linha com a sombra da rede" className="aspect-[4/5]" sizes="25vw" />
+            <PhotoSlot name="quadra-noite" alt="Quadra à noite com refletores" className="aspect-[4/5]" sizes="25vw" />
+            <PhotoSlot name="rede-manha" alt="Sombra da rede de manhã" className="aspect-[4/5]" sizes="25vw" />
+          </div>
+        </section>
+
+        <section>
+          <h2 className="titulo">Pictogramas e bola</h2>
+          <div className="mt-6 flex flex-wrap items-end gap-6" style={{ color: "var(--saibro)" }}>
+            {(["saque", "direita", "voleio", "kids"] as const).map((p) => (
+              <Pictograma key={p} pose={p} className="w-28 h-28" />
+            ))}
+            <Bola className="w-16 h-16" />
           </div>
         </section>
       </div>

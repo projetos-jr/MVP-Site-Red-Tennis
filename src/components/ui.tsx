@@ -1,10 +1,13 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-export function Seta({ size = 14 }: { size?: number }) {
+/** A bola: feltro limão com a costura. Único lugar onde o limão aparece. */
+export function Bola({ className, titulo }: { className?: string; titulo?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 14 14" fill="none" aria-hidden="true">
-      <path d="M2 12 12 2M4.5 2H12v7.5" stroke="currentColor" strokeWidth="1.5" />
+    <svg viewBox="0 0 40 40" className={className} role={titulo ? "img" : undefined} aria-label={titulo} aria-hidden={titulo ? undefined : true}>
+      <circle cx="20" cy="20" r="19" fill="var(--bola)" />
+      <path d="M6.2 8.6c6.6 5.4 8.3 16 2.6 24.4M33.8 7.2c-6.4 5.8-7.6 16.6-1.6 25.2" fill="none" stroke="#f9fbe9" strokeWidth="2.2" strokeLinecap="round" />
+      <circle cx="20" cy="20" r="19" fill="none" stroke="rgb(58 14 18 / 0.28)" strokeWidth="1.2" />
     </svg>
   );
 }
@@ -12,19 +15,17 @@ export function Seta({ size = 14 }: { size?: number }) {
 type BtnProps = {
   href: string;
   children: ReactNode;
-  tom?: "bola" | "cal" | "grafite" | "linha";
+  tom?: "padrao" | "claro" | "escuro";
   className?: string;
 };
 
-/** Botão do site. Links externos (WhatsApp, mapa) abrem em nova aba. */
-export function Btn({ href, children, tom = "bola", className = "" }: BtnProps) {
-  const cls = `btn btn-${tom} ${className}`;
+/** Botão principal: bloco de tinta com a bola, que rola no hover. */
+export function Btn({ href, children, tom = "padrao", className = "" }: BtnProps) {
+  const cls = `btn ${tom === "claro" ? "btn-claro" : tom === "escuro" ? "btn-escuro" : ""} ${className}`;
   const conteudo = (
     <>
       <span>{children}</span>
-      <span className="seta">
-        <Seta />
-      </span>
+      <Bola className="btn-bola" />
     </>
   );
   if (href.startsWith("http")) {
@@ -41,29 +42,28 @@ export function Btn({ href, children, tom = "bola", className = "" }: BtnProps) 
   );
 }
 
-/** Numeração de seção em mono: "04 / AULAS". */
-export function Rotulo({ n, children }: { n?: string; children: ReactNode }) {
+/** Ação secundária: texto sobre a linha de quadra. */
+export function BtnLinha({ href, children, className = "" }: { href: string; children: ReactNode; className?: string }) {
+  if (href.startsWith("http")) {
+    return (
+      <a className={`btn-linha ${className}`} href={href} target="_blank" rel="noopener noreferrer">
+        {children}
+      </a>
+    );
+  }
   return (
-    <p className="mono rotulo">
-      {n && <b>{n} /</b>}
-      <span>{children}</span>
-    </p>
+    <Link className={`btn-linha ${className}`} href={href}>
+      {children}
+    </Link>
   );
 }
 
-/** A bola: círculo limão com a costura. */
-export function Bola({ className }: { className?: string }) {
+/** Logotipo: RED · bola · TENNIS, largo e oblíquo. */
+export function Logo({ onClick }: { onClick?: () => void }) {
   return (
-    <svg viewBox="0 0 100 100" className={className} aria-hidden="true">
-      <circle cx="50" cy="50" r="50" fill="var(--bola)" />
-      <path d="M14 16c20 14 26 46 8 70M86 16C66 30 60 62 78 86" fill="none" stroke="#f7fbe0" strokeWidth="3.5" strokeLinecap="round" opacity="0.85" />
-      <circle cx="50" cy="50" r="50" fill="url(#bola-sombra)" />
-      <defs>
-        <radialGradient id="bola-sombra" cx="0.68" cy="0.3" r="0.9">
-          <stop offset="0.45" stopColor="#141210" stopOpacity="0" />
-          <stop offset="1" stopColor="#141210" stopOpacity="0.38" />
-        </radialGradient>
-      </defs>
-    </svg>
+    <Link href="/" className="logo" onClick={onClick}>
+      <span>Red</span> <Bola /> <span>Tennis</span>
+      <span className="sr-only">, página inicial</span>
+    </Link>
   );
 }

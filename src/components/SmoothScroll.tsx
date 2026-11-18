@@ -1,12 +1,8 @@
 "use client";
 
-import { MotionConfig } from "motion/react";
 import { useEffect, type ReactNode } from "react";
 
-/**
- * Scroll suave (Lenis) e respeito a prefers-reduced-motion para todo o site.
- * O Lenis é carregado depois da primeira pintura, para não pesar no carregamento.
- */
+/** Scroll suave (Lenis), carregado depois da primeira pintura e desligado com movimento reduzido. */
 export function SmoothScroll({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -25,6 +21,5 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       destruir?.();
     };
   }, []);
-
-  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
+  return <>{children}</>;
 }

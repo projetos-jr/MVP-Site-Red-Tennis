@@ -1,5 +1,7 @@
 # Direção de arte · Red Tennis
 
+> **Atualização (18/11/2026):** o sistema visual atual é o da v2, "Impresso do clube", descrito em `docs/redesign-v2.md`. As seções 1 e 2 abaixo (site atual e leitura das referências) continuam valendo; as seções 3 a 5 descrevem a v1 e ficam como histórico.
+
 Documento escrito antes do design system, a partir das imagens em `referencias/` e da leitura do site atual.
 
 ## 1. O que o site atual entrega (lido em 17/11/2026)

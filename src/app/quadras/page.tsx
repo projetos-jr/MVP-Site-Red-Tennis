@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Cabeca } from "@/components/Cabeca";
+import { Cabeca, TituloSecao } from "@/components/Cabeca";
+import { Comparador } from "@/components/Comparador";
 import { Fecho } from "@/components/Fecho";
-import { Surge, Titulo } from "@/components/motion";
-import { PhotoSlot } from "@/components/PhotoSlot";
+import { Planta } from "@/components/home/Planta";
 import { Reserva } from "@/components/Reserva";
-import { Btn, Rotulo } from "@/components/ui";
+import { Btn, BtnLinha } from "@/components/ui";
 import { estrutura, locacao, mensagens, quadras } from "@/content/red";
 import { wa } from "@/lib/wa";
 
@@ -19,28 +19,31 @@ export default function Quadras() {
   return (
     <>
       <Cabeca
-        tom="grafite"
-        rotulo="Quadras e locação"
-        linhas={["Três de saibro.", "Uma rápida.", "*Todas iluminadas.*"]}
+        titulo="Três de saibro, uma rápida"
+        foto="rede-manha"
         intro="Quadras isoladas por alambrados altos, cada uma com entrada própria, iluminadas por 18 refletores em seis postes."
       >
-        <Btn href="#reserva">Reservar quadra</Btn>
+        <Btn href="#reserva" tom="claro">
+          Reservar quadra
+        </Btn>
       </Cabeca>
 
-      <section className="secao sup-cal">
-        <div className="wrap grid gap-16 lg:gap-28">
-          {quadras.map((q, i) => (
-            <article key={q.id} className="g12 items-end" style={{ rowGap: "1.5rem" }}>
-              <Surge className={`col-span-full lg:col-span-7 ${i % 2 ? "lg:order-2 lg:col-start-6" : ""}`}>
-                <PhotoSlot name={q.foto} alt={q.alt} sizes="(min-width: 64rem) 58vw, 100vw" className="aspect-[16/10]" prioridade={i === 0} />
-              </Surge>
-              <div className={`col-span-full lg:col-span-4 ${i % 2 ? "lg:order-1" : "lg:col-start-9"}`}>
-                <p className="mono sec">
-                  0{i + 1} · {q.piso}
-                </p>
-                <h2 className="display mt-3" style={{ fontSize: "clamp(2.5rem, 5vw, 4.75rem)" }}>{q.nome}</h2>
-                <p className="mt-5">{q.texto}</p>
-                <dl className="dados mono mt-6">
+      <section className="secao sup-papel" aria-labelledby="pisos-titulo">
+        <div className="wrap">
+          <div className="g12 items-end mb-10" style={{ rowGap: "1.25rem" }}>
+            <TituloSecao id="pisos-titulo" className="col-span-full lg:col-span-7">
+              Dois pisos, dois jogos
+            </TituloSecao>
+            <p className="col-span-full lg:col-span-5 sec">Arraste a linha e compare. No saibro o ponto se constrói; na rápida, se decide.</p>
+          </div>
+          <Comparador />
+          <div className="g12 mt-10" style={{ rowGap: "2.5rem" }}>
+            {quadras.map((q) => (
+              <div key={q.id} className="col-span-full md:col-span-6">
+                <h3 className="sub t-h3">{q.nome === "Rápida" ? "Quadra rápida" : "Saibro"}</h3>
+                <p className="sec mt-1 ui">{q.piso}</p>
+                <p className="mt-4">{q.texto}</p>
+                <dl className="ficha-dados ui mt-5">
                   {q.dados.map((d) => (
                     <div key={d.rotulo}>
                       <dt>{d.rotulo}</dt>
@@ -49,46 +52,31 @@ export default function Quadras() {
                   ))}
                 </dl>
               </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="secao sup-bordo">
-        <div className="wrap g12" style={{ rowGap: "2.5rem" }}>
-          <div className="col-span-full lg:col-span-4">
-            <Rotulo n="02">Estrutura</Rotulo>
-            <Titulo className="display t-h2 mt-6" linhas={["Além", "*da quadra.*"]} />
-            <PhotoSlot
-              name="estrutura-anoitecer"
-              alt="Estrutura da Red Tennis ao anoitecer, com os refletores acesos"
-              briefing="A estrutura ao anoitecer, refletores acesos"
-              className="aspect-[4/3] mt-10 hidden lg:flex"
-            />
-          </div>
-          <ol className="lista-n col-span-full lg:col-span-7 lg:col-start-6 self-start">
-            {estrutura.map((e) => (
-              <li key={e.nome}>
-                <h3 className="display t-h4">{e.nome}</h3>
-                <p className="sec">{e.texto}</p>
-              </li>
             ))}
-          </ol>
+          </div>
         </div>
       </section>
 
-      <section className="secao sup-cal">
+      <section className="secao sup-saibro com-grao" aria-labelledby="planta-titulo">
+        <div className="wrap relative">
+          <TituloSecao id="planta-titulo" className="mb-10">
+            Escolha a quadra
+          </TituloSecao>
+          <Planta />
+        </div>
+      </section>
+
+      <section className="secao sup-papel" aria-labelledby="preco-titulo">
         <div className="wrap g12" style={{ rowGap: "2rem" }}>
           <div className="col-span-full lg:col-span-4">
-            <Rotulo n="03">Locação</Rotulo>
-            <Titulo className="display t-h2 mt-6" linhas={["Preço", "*por hora.*"]} />
+            <TituloSecao id="preco-titulo">Preço por hora</TituloSecao>
             <p className="sec mt-6">{locacao.nota}</p>
             <p className="sec mt-3">Sócios do Clube Red têm de 10% a 20% de desconto.</p>
           </div>
           <div className="col-span-full lg:col-span-8 rolagem" tabIndex={0} role="group" aria-label="Tabela de preços de locação">
             <table className="tabela" style={{ minWidth: 560 }}>
               <caption className="sr-only">Preços de locação por faixa de horário, piso e modalidade</caption>
-              <thead className="mono">
+              <thead>
                 <tr>
                   <th scope="col">Faixa</th>
                   <th scope="col">Piso</th>
@@ -102,21 +90,21 @@ export default function Quadras() {
               <tbody>
                 {locacao.linhas.flatMap((l) => [
                   <tr key={l.faixa + "s"}>
-                    <th scope="rowgroup" rowSpan={2} className="mono" style={{ fontWeight: 500 }}>
+                    <th scope="rowgroup" rowSpan={2} className="ui">
                       {l.faixa}
                     </th>
                     <td>Saibro</td>
                     {l.saibro.map((v, k) => (
-                      <td key={k} className="num display t-h4">
-                        {v}
+                      <td key={k} className="num placar" style={{ fontSize: "2rem" }}>
+                        {v.replace("R$ ", "R$")}
                       </td>
                     ))}
                   </tr>,
                   <tr key={l.faixa + "r"}>
                     <td>Rápida</td>
                     {l.rapida.map((v, k) => (
-                      <td key={k} className="num display t-h4">
-                        {v}
+                      <td key={k} className="num placar" style={{ fontSize: "2rem" }}>
+                        {v.replace("R$ ", "R$")}
                       </td>
                     ))}
                   </tr>,
@@ -127,25 +115,38 @@ export default function Quadras() {
         </div>
       </section>
 
-      <section id="reserva" className="secao sup-grafite">
+      <section id="reserva" className="secao sup-vinho" aria-labelledby="reserva-titulo">
         <div className="wrap">
-          <div className="g12 items-end mb-10" style={{ rowGap: "1.5rem" }}>
-            <div className="col-span-full lg:col-span-8">
-              <Rotulo n="04">Reserva</Rotulo>
-              <Titulo className="display t-h2 mt-6" linhas={["Escolha", "*dia e hora.*"]} />
-            </div>
-            <p className="col-span-full lg:col-span-4 sec">
-              Toque num horário livre e confirme pelo WhatsApp. Planos mensais têm horário fixo e reposição em caso de chuva.
-            </p>
+          <div className="g12 items-end mb-10" style={{ rowGap: "1.25rem" }}>
+            <TituloSecao id="reserva-titulo" className="col-span-full lg:col-span-7">
+              Escolha dia e hora
+            </TituloSecao>
+            <p className="col-span-full lg:col-span-5 sec">Toque num horário livre e confirme pelo WhatsApp. Planos mensais têm horário fixo e reposição em caso de chuva.</p>
           </div>
           <Reserva />
-          <Btn href={wa(mensagens.quadra)} tom="linha" className="mt-10">
-            Prefere combinar direto? Chame
-          </Btn>
+          <BtnLinha href={wa(mensagens.quadra)} className="mt-8">
+            Prefere combinar direto? Chame no WhatsApp
+          </BtnLinha>
         </div>
       </section>
 
-      <Fecho linhas={["O saibro", "está", "*regado.*"]} />
+      <section className="secao sup-bordo" aria-labelledby="estrutura-titulo">
+        <div className="wrap g12" style={{ rowGap: "2rem" }}>
+          <TituloSecao id="estrutura-titulo" className="col-span-full lg:col-span-4">
+            Além da quadra
+          </TituloSecao>
+          <ul className="lista-fio col-span-full lg:col-span-8">
+            {estrutura.map((e) => (
+              <li key={e.nome}>
+                <h3 className="sub">{e.nome}</h3>
+                <p className="sec">{e.texto}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <Fecho titulo="O saibro está regado" />
     </>
   );
 }

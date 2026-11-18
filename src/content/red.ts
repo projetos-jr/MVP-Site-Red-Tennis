@@ -356,6 +356,9 @@ export type Professor = {
   nome: string;
   papel: string;
   slot: string;
+  /** pose do pictograma da ficha */
+  pose: "saque" | "direita" | "voleio" | "kids";
+  anos: number;
   dados: { rotulo: string; valor: string }[];
 };
 
@@ -365,6 +368,8 @@ export const professores: Professor[] = [
     nome: "João Assunção",
     papel: "Professor",
     slot: "professor-joao",
+    pose: "saque",
+    anos: 25, // CONFIRMAR com a Red
     dados: [
       { rotulo: "Anos de quadra", valor: "25" },
       { rotulo: "Certificação", valor: "CBT nível 2" },
@@ -375,6 +380,8 @@ export const professores: Professor[] = [
     nome: "Francisco Olmos",
     papel: "Professor",
     slot: "professor-francisco",
+    pose: "direita",
+    anos: 20, // CONFIRMAR com a Red
     dados: [
       { rotulo: "Anos de quadra", valor: "20" },
       { rotulo: "Certificação", valor: "CBT nível 1" },
@@ -385,6 +392,8 @@ export const professores: Professor[] = [
     nome: "Arnaldo Rodrigues",
     papel: "Professor",
     slot: "professor-arnaldo",
+    pose: "kids",
+    anos: 18, // CONFIRMAR com a Red
     dados: [
       { rotulo: "Anos de quadra", valor: "18" },
       { rotulo: "Certificação", valor: "ITF Play Tennis" },
@@ -395,6 +404,8 @@ export const professores: Professor[] = [
     nome: "Rebatedores",
     papel: "Equipe de apoio",
     slot: "rebatedores",
+    pose: "voleio",
+    anos: 0,
     dados: [
       { rotulo: "Função", valor: "Parceiro de treino" },
       { rotulo: "Para quem", valor: "Categorias A a D" },
@@ -512,4 +523,38 @@ export const nav = [
   { href: "/torneios/", rotulo: "Torneios" },
   { href: "/sobre/", rotulo: "Sobre" },
   { href: "/contato/", rotulo: "Contato" },
+];
+
+/**
+ * Esta semana na Red: a faixa que corre abaixo do hero.
+ * CONFIRMAR com a Red: agenda real da semana (exemplos abaixo).
+ */
+export const semana = [
+  { quando: "Seg 19h", oque: "Ranking, categoria B, quadra 1" },
+  { quando: "Ter 8h", oque: "Turma de iniciantes, quadra 2" },
+  { quando: "Qua 18h", oque: "Red Kids, quadra rápida" },
+  { quando: "Qui 20h", oque: "Ranking, categoria C, quadra 3" },
+  { quando: "Sex 7h", oque: "Paredão livre para alunos" },
+  { quando: "Sáb 9h", oque: "Clínica de saque, 12 vagas" },
+  { quando: "Dom 8h", oque: "Jogos amistosos do clube" },
+];
+
+export type QuadraPlanta = {
+  id: string;
+  nome: string;
+  piso: "saibro" | "rapida";
+  luz: string;
+  /** índice em reservaMock para os horários livres de exemplo */
+  agenda: number;
+};
+
+/**
+ * Planta ilustrativa da Red (posições a confirmar).
+ * CONFIRMAR com a Red: numeração e posição real das quadras.
+ */
+export const planta: QuadraPlanta[] = [
+  { id: "q1", nome: "Quadra 1", piso: "saibro", luz: "6 refletores", agenda: 0 },
+  { id: "q2", nome: "Quadra 2", piso: "saibro", luz: "6 refletores", agenda: 2 },
+  { id: "q3", nome: "Quadra 3", piso: "saibro", luz: "6 refletores", agenda: 4 },
+  { id: "q4", nome: "Quadra rápida", piso: "rapida", luz: "Iluminada", agenda: 1 },
 ];

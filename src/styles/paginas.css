@@ -1,0 +1,223 @@
+/* Páginas internas · Red Tennis v2 */
+@layer components {
+  /* ------------------------------------------------ cabeça */
+  .cabeca {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: min(78vh, 760px);
+    display: flex;
+  }
+  .cabeca > .grao { z-index: -1; opacity: 0.3; }
+  .cabeca .cabeca-foto, .fora .cabeca-foto { position: absolute; inset: 0; z-index: -1; background: var(--saibro); }
+  /* sombra funcional: garante leitura do menu no topo e do texto na base */
+  .cabeca .cabeca-foto::after, .fora .cabeca-foto::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgb(40 8 8 / 0.55) 0, rgb(40 8 8 / 0) 150px),
+      linear-gradient(0deg, rgb(40 8 8 / 0.5) 0, rgb(40 8 8 / 0) 45%);
+  }
+  .cabeca-corpo {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding-top: 140px;
+    padding-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+  .cabeca-titulo {
+    font-style: italic;
+    font-family: var(--f-display-it);
+    font-size: clamp(3rem, 9.4vw, 9rem);
+    max-width: 11ch;
+    text-shadow: 4px 8px 14px rgb(60 14 6 / 0.32);
+  }
+  .cabeca-pe { display: grid; gap: 1.25rem; padding-top: 1.25rem; border-top: var(--linha) solid currentColor; }
+  .cabeca-pe .lead { max-width: 40ch; text-shadow: 0 1px 8px rgb(60 14 6 / 0.35); }
+  .cabeca-acoes { display: flex; flex-wrap: wrap; gap: 0.75rem 1.75rem; align-items: center; }
+  @media (min-width: 64rem) {
+    .cabeca-pe { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+  }
+
+  /* ------------------------------------------------ comparador de pisos */
+  .comp {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    touch-action: pan-y;
+    user-select: none;
+    cursor: ew-resize;
+    background: var(--vinho);
+  }
+  .comp .foto { position: absolute; inset: 0; }
+  .comp .foto img { transform: scale(1.03); }
+  .comp-nome {
+    position: absolute;
+    bottom: 1rem;
+    z-index: 3;
+    color: var(--papel);
+    font-style: italic;
+    font-family: var(--f-display-it);
+    font-size: clamp(1.6rem, 7vw, 6.5rem);
+    pointer-events: none;
+    transition: opacity 240ms var(--sai);
+    text-shadow: 3px 6px 12px rgb(30 6 8 / 0.4);
+  }
+  .comp-eixo { position: absolute; top: 0; bottom: 0; width: 4px; margin-left: -2px; background: var(--papel); z-index: 4; pointer-events: none; }
+  .comp-pega {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 58px;
+    height: 58px;
+    margin: -29px;
+    border-radius: 999px;
+    background: var(--bola);
+    color: var(--vinho);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 6px 16px rgb(30 6 8 / 0.35);
+  }
+  .comp input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; z-index: 5; cursor: ew-resize; margin: 0; }
+  .comp:has(input:focus-visible) .comp-pega { outline: 3px solid var(--papel); outline-offset: 4px; }
+  @media (min-width: 48rem) { .comp { aspect-ratio: 16 / 8; } .comp-nome { bottom: 1.5rem; } }
+
+  /* ------------------------------------------------ listas com fio */
+  .lista-fio { border-top: var(--linha) solid var(--risco); }
+  .lista-fio > li {
+    display: grid;
+    gap: 0.3rem;
+    padding-block: 1.15rem;
+    border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+  }
+  .lista-fio .sub { font-size: 1.25rem; }
+  @media (min-width: 48rem) {
+    .lista-fio > li { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 2rem; align-items: baseline; }
+  }
+
+  /* ------------------------------------------------ programas (aulas) */
+  .programa { padding-block: clamp(2.5rem, 5vw, 4rem); border-top: var(--linha) solid var(--vinho); }
+  .programa-nome { font-style: italic;
+    font-family: var(--f-display-it); font-size: clamp(2.1rem, 9vw, 4.25rem); font-variation-settings: "wdth" 104; }
+  @media (min-width: 48rem) { .programa-nome { font-variation-settings: "wdth" 132; font-size: clamp(2.2rem, 5vw, 4.25rem); } }
+  @media (min-width: 80rem) { .programa-nome { font-variation-settings: "wdth" 150; } }
+  .programa-resumo { font-size: var(--t-lead); color: var(--tinta-2); margin-top: 0.6rem; }
+  .programa-preco .placar { font-size: clamp(3rem, 5vw, 4.5rem); color: var(--saibro); }
+  .pontos { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .pontos li { padding: 0.4rem 0.75rem; background: var(--po); font-family: var(--f-display); font-variation-settings: "wdth" 108; font-weight: 600; font-size: 0.875rem; }
+
+  /* ------------------------------------------------ metodologia: a quadra vista de cima */
+  .metodo {
+    display: grid;
+    border: var(--linha) solid var(--papel);
+    background: var(--saibro-fundo);
+  }
+  .metodo > li { position: relative; padding: 1.5rem 1.25rem 1.75rem; border-bottom: var(--linha) solid var(--papel); display: grid; gap: 0.75rem; align-content: start; }
+  .metodo > li:last-child { border-bottom: 0; }
+  .metodo > li:nth-child(2) { border-bottom: 10px double var(--papel); }
+  .metodo .placar { font-size: 3.4rem; color: var(--bola); }
+  .metodo .sub { font-size: 1.5rem; text-transform: uppercase; }
+  @media (min-width: 64rem) {
+    .metodo { grid-template-columns: repeat(4, minmax(0, 1fr)); min-height: 360px; }
+    .metodo > li { border-bottom: 0; border-right: var(--linha) solid var(--papel); padding: 2rem 1.75rem; }
+    .metodo > li:nth-child(2) { border-bottom: 0; border-right: 10px double var(--papel); }
+    .metodo > li:last-child { border-right: 0; }
+  }
+
+  /* ------------------------------------------------ reserva */
+  .reserva { display: grid; grid-template-columns: repeat(7, minmax(84px, 1fr)); gap: 4px; min-width: 640px; }
+  .reserva-dia { padding: 0.5rem 0.25rem 0.75rem; border-bottom: var(--linha) solid var(--saibro); text-transform: capitalize; }
+  .reserva button {
+    min-height: 44px;
+    width: 100%;
+    font-family: var(--f-display);
+    font-variation-settings: "wdth" 70;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border: 1.5px solid color-mix(in srgb, var(--papel) 35%, transparent);
+    color: var(--papel);
+    transition: background-color var(--rapido) var(--sai), color var(--rapido) var(--sai), transform 120ms var(--sai);
+    cursor: pointer;
+  }
+  .reserva button:active { transform: scale(0.96); }
+  .reserva button:not(:disabled):hover,
+  .reserva button[aria-pressed="true"] { background: var(--papel); color: var(--vinho); border-color: var(--papel); }
+  .reserva button[aria-pressed="true"] { background: var(--bola); border-color: var(--bola); }
+  .reserva button:disabled {
+    color: color-mix(in srgb, var(--papel) 40%, transparent);
+    text-decoration: line-through;
+    border-style: dashed;
+    cursor: not-allowed;
+  }
+
+  /* ------------------------------------------------ indicação */
+  .passos { display: grid; border-top: var(--linha) solid var(--saibro); }
+  .passos li { padding-block: 1.75rem; border-bottom: 1px solid color-mix(in srgb, currentColor 20%, transparent); display: grid; gap: 0.4rem; }
+  .passos .placar { font-size: clamp(5rem, 9vw, 8rem); color: var(--saibro); }
+  .passos .sub { font-size: 1.4rem; text-transform: uppercase; }
+  @media (min-width: 64rem) {
+    .passos { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .passos li { border-bottom: 0; padding-inline: 0 2rem; }
+    .passos li + li { padding-left: 2rem; border-left: 1px solid color-mix(in srgb, currentColor 20%, transparent); }
+  }
+
+  /* ------------------------------------------------ linha do tempo */
+  .tempo li { display: grid; gap: 0.25rem 2rem; padding-block: 1.5rem; border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent); align-items: baseline; }
+  .tempo li:first-child { border-top: var(--linha) solid var(--saibro); }
+  .tempo .placar { font-size: clamp(3.5rem, 7vw, 6rem); color: var(--claro-2); }
+  .tempo .sub { font-size: 1.4rem; text-transform: uppercase; }
+  @media (min-width: 64rem) { .tempo li { grid-template-columns: 2fr 2fr 3fr; } }
+
+  /* ------------------------------------------------ ranking */
+  .sobe-desce { font-family: var(--f-display); font-weight: 700; font-variation-settings: "wdth" 80; }
+  .sobe-desce[data-dir="sobe"] { color: var(--bola); }
+  .sobe-desce[data-dir="desce"] { color: var(--claro-2); }
+  .sup-papel .sobe-desce[data-dir="sobe"], .sup-po .sobe-desce[data-dir="sobe"] { color: #3d6a12; }
+
+  /* ------------------------------------------------ canais (contato) */
+  .canais li { border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent); }
+  .canais li:first-child { border-top: var(--linha) solid var(--saibro); }
+  .canais a { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-block: 1.15rem; text-decoration: none; color: inherit; }
+  .canais a:hover .lead { text-decoration: underline; text-decoration-color: var(--saibro); }
+
+  /* ------------------------------------------------ 404 */
+  .fora { position: relative; isolation: isolate; overflow: hidden; min-height: 100svh; display: flex; align-items: flex-end; }
+  .fora-bola { position: absolute; width: clamp(48px, 6vw, 84px); height: auto; z-index: 1; animation: fora 1.6s cubic-bezier(0.3, 0.6, 0.5, 1) 0.3s both; }
+  @keyframes fora {
+    0% { transform: translate(-30vw, -60vh) rotate(-200deg); }
+    55% { transform: translate(0, 0) rotate(0deg); }
+    70% { transform: translate(4vw, -8vh) rotate(60deg); }
+    100% { transform: translate(9vw, 0) rotate(130deg); }
+  }
+
+  /* ------------------------------------------------ styleguide */
+  .amostras { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); border-top: var(--linha) solid var(--vinho); }
+  .amostras li { border-bottom: 1px solid color-mix(in srgb, var(--vinho) 20%, transparent); }
+  .amostras .cor { height: 120px; }
+  .amostras p { padding: 0.75rem 0.5rem 1rem 0; }
+}
+
+@layer components {
+  .cortina {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    background: var(--saibro);
+    pointer-events: none;
+    animation: cortina 750ms var(--move) 80ms both;
+  }
+  @keyframes cortina {
+    from { clip-path: inset(0 0 0% 0); }
+    to { clip-path: inset(0 0 100% 0); }
+  }
+  .cortina-faixa {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(var(--linha) * 2 + 0.875rem);
+    border-block: var(--linha) solid var(--papel);
+  }
+}

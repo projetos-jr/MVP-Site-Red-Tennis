@@ -1,223 +1,262 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
+import type { ClayScene, Layout } from "@/components/clay/scene";
 import { mensagens } from "@/content/red";
 import { wa } from "@/lib/wa";
-import { AbertoFaixa } from "../Aberto";
-import { Bola, Btn } from "../ui";
+import { PhotoSlot } from "../PhotoSlot";
+import { Bola, Btn, BtnLinha } from "../ui";
 
-const RAIO = 280;
+type Modo = "dia" | "noite";
+type Medida = Layout & { w: number; h: number };
 
-/** Mapa de deslocamento: ondas concêntricas que empurram a superfície para fora do centro. */
-function criaMapa(): string {
-  const n = 256;
-  const tela = document.createElement("canvas");
-  tela.width = tela.height = n;
-  const ctx = tela.getContext("2d");
-  if (!ctx) return "";
-  const img = ctx.createImageData(n, n);
-  for (let y = 0; y < n; y++) {
-    for (let x = 0; x < n; x++) {
-      const dx = (x / (n - 1)) * 2 - 1;
-      const dy = (y / (n - 1)) * 2 - 1;
-      const r = Math.hypot(dx, dy);
-      const queda = Math.max(0, 1 - r) ** 1.6;
-      const amp = r > 0 ? Math.sin(r * Math.PI * 3.2) * queda : 0;
-      const i = (y * n + x) * 4;
-      img.data[i] = 128 + 127 * (dx / (r || 1)) * amp;
-      img.data[i + 1] = 128 + 127 * (dy / (r || 1)) * amp;
-      img.data[i + 2] = 128;
-      img.data[i + 3] = 255;
-    }
+/* Duplicados de clay/scene para não carregar o motor antes da hora. */
+function horaSP(d = new Date()) {
+  const p = new Intl.DateTimeFormat("en-US", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).formatToParts(d);
+  return Number(p.find((x) => x.type === "hour")?.value ?? 17) + Number(p.find((x) => x.type === "minute")?.value ?? 0) / 60;
+}
+const ehNoite = (h: number) => h < 6.3 || h >= 18.6;
+function solDir(h: number): [number, number, number] {
+  const f = Math.min(1, Math.max(0, (h - 6.3) / (18.6 - 6.3)));
+  const el = ((7 + 60 * Math.pow(Math.sin(Math.PI * f), 0.8)) * Math.PI) / 180;
+  const lado = Math.cos(Math.PI * f) * 0.62;
+  return [-lado, Math.sqrt(1 - lado * lado), Math.tan(el)];
+}
+const hhmm = (h: number) => `${Math.floor(h)}h${String(Math.round((h % 1) * 60)).padStart(2, "0")}`;
+
+/** Sombra do título projetada na direção do sol (ou dos refletores, à noite). */
+function sombras(modo: Modo, h: number, fs: number) {
+  if (modo === "noite") {
+    const a = Math.max(3, fs * 0.05);
+    return {
+      texto: `${a * 0.8}px ${a}px ${a * 1.6}px rgb(20 4 4 / 0.4), ${-a * 0.7}px ${a * 0.9}px ${a * 2}px rgb(20 4 4 / 0.25)`,
+      fato: "0 1px 10px rgb(20 4 4 / 0.6)",
+    };
   }
-  ctx.putImageData(img, 0, 0);
-  return tela.toDataURL();
+  const [dx, dy, tanEl] = solDir(h);
+  const comp = Math.min(fs * 0.14, Math.max(fs * 0.025, (fs * 0.035) / Math.max(tanEl, 0.08)));
+  const blur = Math.max(3, comp * 0.6);
+  return {
+    texto: `${(dx * comp).toFixed(1)}px ${(dy * comp).toFixed(1)}px ${blur.toFixed(1)}px rgb(70 18 6 / 0.3)`,
+    fato: `${(dx * 3).toFixed(1)}px ${(dy * 3).toFixed(1)}px 6px rgb(70 18 6 / 0.45)`,
+  };
+}
+
+function legenda(modo: Modo, real: Modo, h: number) {
+  if (modo !== real) {
+    return modo === "noite"
+      ? "Assim fica a quadra à noite, com os 18 refletores acesos."
+      : "Assim fica a quadra às 17h, com sol de fim de tarde.";
+  }
+  if (modo === "noite") return `${hhmm(h)} em São Bernardo. Refletores acesos.`;
+  const periodo = h < 10 ? "Sol da manhã" : h < 14.5 ? "Sol alto" : "Luz de fim de tarde";
+  return `${hhmm(h)} em São Bernardo. ${periodo}.`;
 }
 
 /**
- * Hero "superfície" (ref. 07): o saibro reage. As linhas e a sombra da rede se
- * deformam em volta do cursor (feDisplacementMap) e voltam a ficar lisas;
- * clicar na bola solta uma onda. No celular, a deformação acompanha o scroll.
+ * Hero "A quadra agora": saibro em WebGL visto de cima, com a luz da hora real.
+ * A bola é o ponto final de "Resultado": fica sobre a linha, no cruzamento em T.
  */
 export function Hero() {
   const secao = useRef<HTMLElement>(null);
-  const camada = useRef<SVGGElement>(null);
-  const feImagem = useRef<SVGFEImageElement>(null);
-  const feDesloca = useRef<SVGFEDisplacementMapElement>(null);
-  const amasso = useRef<HTMLDivElement>(null);
-  const bola = useRef<HTMLButtonElement>(null);
-  const estado = useRef({ x: 0, y: 0, ax: 0, ay: 0, e: 0, rodando: false, px: 0, py: 0 });
-  const [mapa, setMapa] = useState("");
-  const [ondas, setOndas] = useState<number[]>([]);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const ponto = useRef<HTMLSpanElement>(null);
+  const ancora = useRef<HTMLSpanElement>(null);
+  const titulo = useRef<HTMLHeadingElement>(null);
+  const cena = useRef<ClayScene | null>(null);
+  const [medida, setMedida] = useState<Medida | null>(null);
+  const [gl, setGl] = useState<"carregando" | "pronto" | "falhou">("carregando");
+  const [hora, setHora] = useState(17.2);
+  const [real, setReal] = useState<Modo>("dia");
+  const [modo, setModo] = useState<Modo>("dia");
+  const [fs, setFs] = useState(160);
 
-  const quadro = useCallback(() => {
-    const s = estado.current;
-    s.x += (s.ax - s.x) * 0.2;
-    s.y += (s.ay - s.y) * 0.2;
-    s.e *= 0.93;
-    const g = camada.current;
-    if (s.e < 0.004) {
-      s.e = 0;
-      s.rodando = false;
-      g?.removeAttribute("filter");
-      if (amasso.current) amasso.current.style.opacity = "0";
-      return;
-    }
-    g?.setAttribute("filter", "url(#amassa)");
-    feImagem.current?.setAttribute("x", String(s.x - RAIO));
-    feImagem.current?.setAttribute("y", String(s.y - RAIO));
-    feDesloca.current?.setAttribute("scale", String(Math.min(s.e, 1.6) * 64));
-    if (amasso.current) {
-      amasso.current.style.transform = `translate(${s.x}px, ${s.y}px) scale(${0.7 + Math.min(s.e, 1) * 0.4})`;
-      amasso.current.style.opacity = String(Math.min(s.e, 1) * 0.9);
-    }
-    requestAnimationFrame(quadro);
-  }, []);
-
-  const acorda = useCallback(() => {
-    // O mapa de deslocamento só é gerado na primeira interação.
-    setMapa((m) => m || criaMapa());
-    if (!estado.current.rodando) {
-      estado.current.rodando = true;
-      requestAnimationFrame(quadro);
-    }
-  }, [quadro]);
-
-  const centroDaBola = useCallback(() => {
-    const el = secao.current;
-    const b = bola.current;
-    if (!el || !b) return { x: 0, y: 0 };
-    const a = el.getBoundingClientRect();
-    const r = b.getBoundingClientRect();
-    return { x: r.left - a.left + r.width / 2, y: r.top - a.top + r.height / 2 };
-  }, []);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const el = secao.current;
-    if (!el) return;
-    const s = estado.current;
-
-    const move = (ev: PointerEvent) => {
-      if (ev.pointerType === "touch") return;
-      const a = el.getBoundingClientRect();
-      s.ax = ev.clientX - a.left;
-      s.ay = ev.clientY - a.top;
-      const v = Math.hypot(ev.clientX - s.px, ev.clientY - s.py);
-      s.px = ev.clientX;
-      s.py = ev.clientY;
-      if (s.e === 0) {
-        s.x = s.ax;
-        s.y = s.ay;
+  const medir = useCallback(() => {
+    const s = secao.current;
+    const p = ponto.current;
+    const a = ancora.current;
+    const t = titulo.current;
+    if (!s || !p || !a || !t) return;
+    // posições pelo layout (offsetTop/Left), que ignoram a animação de entrada
+    const pos = (el: HTMLElement) => {
+      let x = 0;
+      let y = 0;
+      let n: HTMLElement | null = el;
+      while (n && n !== s) {
+        x += n.offsetLeft;
+        y += n.offsetTop;
+        n = n.offsetParent as HTMLElement | null;
       }
-      s.e = Math.min(1, s.e + v / 260);
-      acorda();
+      return { x, y };
     };
+    const rs = { width: s.clientWidth, height: s.clientHeight };
+    const pp = pos(p);
+    const pa = pos(a);
+    const tamanho = parseFloat(getComputedStyle(t).fontSize);
+    const lineW = Math.max(7, tamanho * 0.1);
+    const ballR = Math.max(9, tamanho * 0.118);
+    const baseline = pa.y;
+    const y = baseline + tamanho * 0.075 + lineW / 2;
+    const x = pp.x + p.offsetWidth * 0.5;
+    const k = lineW / 0.05;
+    setFs(tamanho);
+    setMedida({ w: rs.width, h: rs.height, t: { x, y }, ballR, lineW, sideX: -1, netY: -0.05 * rs.height, k });
+  }, []);
 
-    let ultimo = window.scrollY;
-    const rola = () => {
-      const d = Math.abs(window.scrollY - ultimo);
-      ultimo = window.scrollY;
-      if (!window.matchMedia("(hover: none)").matches || window.scrollY > window.innerHeight) return;
-      const c = centroDaBola();
-      s.ax = s.x = c.x;
-      s.ay = s.y = c.y;
-      s.e = Math.min(1, s.e + d / 160);
-      acorda();
-    };
-
-    el.addEventListener("pointermove", move);
-    window.addEventListener("scroll", rola, { passive: true });
+  // hora real e medidas
+  useEffect(() => {
+    const h = horaSP();
+    const m: Modo = ehNoite(h) ? "noite" : "dia";
+    setHora(h);
+    setReal(m);
+    setModo(m);
+    let vivo = true;
+    document.fonts.ready.then(() => vivo && medir());
+    medir();
+    const ro = new ResizeObserver(() => medir());
+    if (secao.current) ro.observe(secao.current);
+    const relogio = setInterval(() => setHora(horaSP()), 60_000);
     return () => {
-      el.removeEventListener("pointermove", move);
-      window.removeEventListener("scroll", rola);
+      vivo = false;
+      ro.disconnect();
+      clearInterval(relogio);
     };
-  }, [acorda, centroDaBola]);
+  }, [medir]);
 
-  const quica = () => {
-    const c = centroDaBola();
-    const s = estado.current;
-    s.ax = s.x = c.x;
-    s.ay = s.y = c.y;
-    s.e = 1.6;
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) acorda();
-    const id = Date.now();
-    setOndas((o) => [...o, id]);
-    setTimeout(() => setOndas((o) => o.filter((n) => n !== id)), 1500);
-  };
+  // motor WebGL, carregado depois da primeira pintura
+  useEffect(() => {
+    const c = canvas.current;
+    const s = secao.current;
+    if (!c || !s) return;
+    let destruido = false;
+    const reduz = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const t = window.setTimeout(async () => {
+      try {
+        const { ClayScene } = await import("@/components/clay/scene");
+        if (destruido) return;
+        // ?gl=forcar liga o WebGL mesmo sem GPU (para testes e capturas)
+        const forcar = new URLSearchParams(window.location.search).get("gl") === "forcar";
+        if (!ClayScene.suportado(forcar)) throw new Error("sem webgl");
+        const estreito = window.innerWidth < 768;
+        const sc = new ClayScene(c, { dprMax: estreito ? 1.5 : 1.25, escala: estreito ? 0.8 : 1, software: forcar });
+        cena.current = sc;
+        setGl("pronto");
+        if (!reduz) sc.entrada();
+        else sc.repouso();
+      } catch {
+        setGl("falhou");
+      }
+    }, 60);
+
+    const io = new IntersectionObserver(([e]) => cena.current?.setVisivel(e.isIntersecting), { threshold: 0 });
+    io.observe(s);
+
+    const move = (e: PointerEvent) => {
+      if (reduz || !cena.current) return;
+      const r = s.getBoundingClientRect();
+      cena.current.ponteiro(e.clientX - r.left, e.clientY - r.top);
+    };
+    const sai = () => cena.current?.saiu();
+    s.addEventListener("pointermove", move, { passive: true });
+    s.addEventListener("pointerleave", sai);
+    return () => {
+      destruido = true;
+      window.clearTimeout(t);
+      io.disconnect();
+      s.removeEventListener("pointermove", move);
+      s.removeEventListener("pointerleave", sai);
+      cena.current?.destruir();
+      cena.current = null;
+    };
+  }, []);
+
+  // repassa medidas e luz ao motor
+  useEffect(() => {
+    const sc = cena.current;
+    if (!sc || !medida || gl !== "pronto") return;
+    sc.resize(medida.w, medida.h);
+    sc.setLayout(medida);
+    sc.setLuz({ modo, hora: modo === real ? hora : 17.1 });
+  }, [medida, modo, real, hora, gl]);
+
+  const sombra = sombras(modo, modo === real ? hora : 17.1, fs);
+  const estilo = { "--sombra-texto": sombra.texto, "--sombra-fato": sombra.fato } as CSSProperties;
 
   return (
-    <section ref={secao} className="hero sup-saibro">
-      <div className="hero-sup" aria-hidden="true">
-        <span className="grao grao-saibro" />
-        <span className="grao grao-claro" />
-        <span className="luz" />
-        <div ref={amasso} className="hero-amasso" />
-        <svg className="hero-svg">
-          <defs>
-            <filter id="amassa" filterUnits="userSpaceOnUse" x="0" y="0" width="100%" height="100%" colorInterpolationFilters="sRGB">
-              <feFlood floodColor="rgb(128,128,128)" result="neutro" />
-              <feImage ref={feImagem} href={mapa || undefined} x="0" y="0" width={RAIO * 2} height={RAIO * 2} result="lente" preserveAspectRatio="none" />
-              <feMerge result="mapa">
-                <feMergeNode in="neutro" />
-                <feMergeNode in="lente" />
-              </feMerge>
-              <feDisplacementMap ref={feDesloca} in="SourceGraphic" in2="mapa" scale="0" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-            <pattern id="trama" width="46" height="32" patternUnits="userSpaceOnUse" patternTransform="skewX(-30)">
-              <path d="M0 0H46M0 0V32" stroke="#5a1f0a" strokeWidth="5" fill="none" />
-            </pattern>
-          </defs>
-          <g ref={camada}>
-            <g style={{ mixBlendMode: "multiply" }} opacity="0.5">
-              <g style={{ transform: "rotate(-13deg)", transformOrigin: "50% 50%", transformBox: "view-box" }}>
-                <rect x="-50%" y="50%" width="200%" height="38" fill="#5a1f0a" />
-                <rect x="-50%" y="50%" width="200%" height="120%" fill="url(#trama)" />
-              </g>
-            </g>
-            <g className="quadra">
-              <line className="l-h" x1="0" y1="100%" x2="100%" y2="100%" pathLength={1} />
-              <line className="l-v" x1="80%" y1="100%" x2="80%" y2="0" pathLength={1} />
-            </g>
-          </g>
-        </svg>
+    <section ref={secao} className="hero" data-luz={modo} style={estilo} aria-labelledby="hero-titulo">
+      <div className="hero-fundo" data-gl={gl} aria-hidden="true">
+        {/* base: o mesmo saibro renderizado antes, aparece na hora; o WebGL entra por cima quando há GPU */}
+        <PhotoSlot name="hero-saibro" alt="" sizes="100vw" prioridade className="hero-still" />
+        <div className="hero-css">
+          <span className="grao" />
+          {medida && (
+            <>
+              <span className="l" style={{ left: 0, right: 0, top: medida.t.y - medida.lineW / 2, height: medida.lineW }} />
+              <span className="l" style={{ left: medida.t.x - medida.lineW / 2, width: medida.lineW, top: 0, height: medida.t.y }} />
+              <span className="b" style={{ left: medida.t.x - medida.ballR, top: medida.t.y - medida.ballR, width: medida.ballR * 2, height: medida.ballR * 2 }}>
+                <Bola />
+              </span>
+            </>
+          )}
+        </div>
+        <canvas ref={canvas} />
       </div>
 
-      <button ref={bola} className="hero-bola" onClick={quica} aria-label="Quicar a bola">
-        <Bola />
-        {ondas.map((id) => (
-          <span key={id} className="onda" />
-        ))}
-      </button>
+      {medida && (
+        <button
+          type="button"
+          className="hero-bola-btn"
+          aria-label="Quicar a bola"
+          onClick={() => cena.current?.quica()}
+          style={{
+            left: medida.t.x - medida.ballR * 1.6,
+            top: medida.t.y - medida.ballR * 1.6,
+            width: medida.ballR * 3.2,
+            height: medida.ballR * 3.2,
+          }}
+        />
+      )}
+
+      <div className="hero-luz ui">
+        <p aria-live="polite">{legenda(modo, real, hora)}</p>
+        <button type="button" onClick={() => setModo(modo === "dia" ? "noite" : "dia")}>
+          {modo === "dia" ? "Acender os refletores" : "Ver de dia"}
+        </button>
+      </div>
 
       <div className="wrap hero-corpo">
-        <h1 className="hero-titulo display t-hero">
+        <h1 id="hero-titulo" ref={titulo} className="hero-titulo display">
           <span className="mask">
-            <span className="sobe" style={{ "--i": 0 } as React.CSSProperties}>
+            <span className="sobe" style={{ "--i": 0 } as CSSProperties}>
               Saibro.
             </span>
           </span>
           <span className="mask">
-            <span className="sobe" style={{ "--i": 1 } as React.CSSProperties}>
+            <span className="sobe" style={{ "--i": 1 } as CSSProperties}>
               Técnica.
             </span>
           </span>
           <span className="mask">
-            <span className="sobe serif" style={{ "--i": 2 } as React.CSSProperties}>
-              Resultado.
+            <span className="sobe" style={{ "--i": 2 } as CSSProperties}>
+              Resultado
+              <span ref={ponto} className="ponto">
+                .
+              </span>
+              <span ref={ancora} className="ancora" />
             </span>
           </span>
         </h1>
-      </div>
-
-      <div className="hero-base" style={{ background: "var(--saibro-escuro)" }}>
-        <div className="wrap hero-base-in">
-          <p className="hero-dados mono" style={{ maxWidth: "none" }}>
-            <span>Rudge Ramos · SBC</span>
-            <span>Saibro · Quadra rápida · Paredão · Squash</span>
-            <AbertoFaixa />
+        <div className="hero-baixo">
+          <p className="hero-fato">
+            Aulas de tênis e quadras para alugar no Rudge Ramos, em São Bernardo do Campo. Três quadras de saibro, uma rápida e um paredão
+            iluminado.
           </p>
-          <Btn href={wa(mensagens.aula)}>Agendar aula experimental</Btn>
+          <div className="hero-acoes">
+            <Btn href={wa(mensagens.aula)} tom="claro">
+              Agendar aula experimental
+            </Btn>
+            <BtnLinha href={wa(mensagens.quadra)}>Reservar quadra</BtnLinha>
+          </div>
         </div>
       </div>
     </section>

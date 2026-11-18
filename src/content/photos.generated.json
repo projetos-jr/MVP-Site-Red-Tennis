@@ -5,25 +5,32 @@
     "widths": [
       480,
       640
-    ]
+    ],
+    "ret": true,
+    "fonte": "red"
   },
   "saibro-quadras": {
-    "width": 1283,
-    "height": 655,
+    "width": 1268,
+    "height": 650,
     "widths": [
       480,
+      640,
       800,
-      1283
-    ]
+      1268
+    ],
+    "ret": true,
+    "fonte": "red"
   },
   "rapida-quadra": {
-    "width": 1273,
-    "height": 660,
+    "width": 1260,
+    "height": 646,
     "widths": [
       480,
       800,
-      1273
-    ]
+      1260
+    ],
+    "ret": true,
+    "fonte": "red"
   },
   "rapida-paredao": {
     "width": 650,
@@ -31,15 +38,19 @@
     "widths": [
       480,
       650
-    ]
+    ],
+    "ret": true,
+    "fonte": "red"
   },
   "saibro-rede": {
     "width": 620,
-    "height": 525,
+    "height": 520,
     "widths": [
       480,
       620
-    ]
+    ],
+    "ret": true,
+    "fonte": "red"
   },
   "saibro-linha": {
     "width": 760,
@@ -47,7 +58,9 @@
     "widths": [
       480,
       760
-    ]
+    ],
+    "ret": true,
+    "fonte": "red"
   },
   "saibro-refletores": {
     "width": 560,
@@ -55,7 +68,9 @@
     "widths": [
       480,
       560
-    ]
+    ],
+    "ret": true,
+    "fonte": "red"
   },
   "rapida-linhas": {
     "width": 760,
@@ -63,6 +78,72 @@
     "widths": [
       480,
       760
-    ]
+    ],
+    "ret": true,
+    "fonte": "red"
+  },
+  "bola-na-linha": {
+    "width": 900,
+    "height": 1125,
+    "widths": [
+      480,
+      640,
+      800,
+      900
+    ],
+    "ret": false,
+    "fonte": "estudio"
+  },
+  "quadra-noite": {
+    "width": 1500,
+    "height": 1000,
+    "widths": [
+      480,
+      640,
+      800,
+      1280,
+      1500
+    ],
+    "ret": false,
+    "fonte": "estudio"
+  },
+  "linha-tarde": {
+    "width": 1800,
+    "height": 900,
+    "widths": [
+      480,
+      640,
+      800,
+      1280,
+      1800
+    ],
+    "ret": false,
+    "fonte": "estudio"
+  },
+  "rede-manha": {
+    "width": 1500,
+    "height": 1000,
+    "widths": [
+      480,
+      640,
+      800,
+      1280,
+      1500
+    ],
+    "ret": false,
+    "fonte": "estudio"
+  },
+  "hero-saibro": {
+    "width": 1800,
+    "height": 1100,
+    "widths": [
+      480,
+      640,
+      800,
+      1280,
+      1800
+    ],
+    "ret": false,
+    "fonte": "estudio"
   }
 }

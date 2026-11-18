@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo, Instrument_Serif, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import { Anybody, Newsreader } from "next/font/google";
 import type { ReactNode } from "react";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -7,10 +7,31 @@ import { SmoothScroll } from "@/components/SmoothScroll";
 import { contato, horarios, site } from "@/content/red";
 import "./globals.css";
 
-const archivo = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--font-archivo", display: "swap" });
-const instrument = Instrument_Serif({ subsets: ["latin"], weight: "400", style: "italic", variable: "--font-instrument", display: "swap" });
-const inter = Inter_Tight({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-inter", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], weight: "500", variable: "--font-mono", display: "swap" });
+const anybody = Anybody({
+  subsets: ["latin"],
+  weight: "variable",
+  axes: ["wdth"],
+  variable: "--font-anybody",
+  display: "swap",
+});
+// A itálica e a serifa não são pré-carregadas: chegam logo depois, sem disputar banda com a primeira imagem.
+const anybodyItalico = Anybody({
+  subsets: ["latin"],
+  weight: "variable",
+  style: "italic",
+  axes: ["wdth"],
+  variable: "--font-anybody-it",
+  display: "swap",
+  preload: false,
+});
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
+  display: "swap",
+  preload: false,
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -32,7 +53,7 @@ export const metadata: Metadata = {
   icons: { icon: "/icon.svg" },
 };
 
-export const viewport: Viewport = { themeColor: "#141210" };
+export const viewport: Viewport = { themeColor: "#b95128" };
 
 const DIAS_SCHEMA = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -68,10 +89,10 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${archivo.variable} ${instrument.variable} ${inter.variable} ${mono.variable}`}>
+    <html lang="pt-BR" className={`${anybody.variable} ${anybodyItalico.variable} ${newsreader.variable}`}>
       <body>
         <SmoothScroll>
-          <a href="#conteudo" className="mono sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[70] focus:bg-bola focus:text-grafite focus:p-3">
+          <a href="#conteudo" className="ui sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[70] focus:bg-bola focus:text-vinho focus:p-3">
             Pular para o conteúdo
           </a>
           <Header />

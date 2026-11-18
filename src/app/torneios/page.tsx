@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Cabeca } from "@/components/Cabeca";
+import { Cabeca, TituloSecao } from "@/components/Cabeca";
 import { Fecho } from "@/components/Fecho";
-import { Titulo } from "@/components/motion";
-import { Agenda, Poster } from "@/components/Poster";
-import { Btn, Rotulo } from "@/components/ui";
-import { mensagens, ranking, resultados } from "@/content/red";
+import { Cartaz, Contagem } from "@/components/home/Torneio";
+import { Btn, BtnLinha } from "@/components/ui";
+import { eventos, mensagens, ranking, resultados } from "@/content/red";
 import { wa } from "@/lib/wa";
 
 export const metadata: Metadata = {
@@ -18,7 +17,7 @@ function Movimento({ mov }: { mov: number }) {
   if (mov === 0) return <span className="sec">=</span>;
   const sobe = mov > 0;
   return (
-    <span style={{ color: sobe ? "var(--bola)" : "var(--areia)" }}>
+    <span className="sobe-desce" data-dir={sobe ? "sobe" : "desce"}>
       <span aria-hidden="true">{sobe ? "▲" : "▼"}</span> {Math.abs(mov)}
       <span className="sr-only">{sobe ? " posições acima" : " posições abaixo"}</span>
     </span>
@@ -29,49 +28,57 @@ export default function Torneios() {
   return (
     <>
       <Cabeca
-        tom="grafite"
-        rotulo="Torneios e ranking"
-        linhas={["Circuito", "Red Tennis.", "*Jogo valendo.*"]}
+        titulo="Jogo valendo"
+        foto="quadra-noite"
+        tom="vinho"
         intro="Etapas ao longo do ano, com chaves por categoria e portas abertas a tenistas de fora. Entre uma etapa e outra, o ranking não para."
       >
-        <Btn href={wa(mensagens.torneio)}>Quero me inscrever</Btn>
+        <Btn href={wa(mensagens.torneio)} tom="claro">
+          Inscrever-se no torneio
+        </Btn>
       </Cabeca>
 
-      <section className="secao sup-grafite" style={{ paddingTop: "clamp(3rem, 6vw, 5rem)" }}>
+      <section className="secao sup-po" aria-labelledby="agenda-titulo">
         <div className="wrap g12" style={{ rowGap: "3rem" }}>
-          <div className="col-span-full lg:col-span-6">
-            <Poster />
+          <div className="col-span-full md:col-span-7 lg:col-span-6">
+            <Cartaz />
           </div>
-          <div className="col-span-full lg:col-span-5 lg:col-start-8">
-            <Rotulo n="01">Agenda</Rotulo>
-            <h2 className="display t-h3 mt-6 mb-8">
-              Próximos
-              <br />
-              <span className="serif">eventos.</span>
-            </h2>
-            <Agenda quantos={4} pular={0} />
+          <div className="col-span-full md:col-span-5 lg:col-span-5 lg:col-start-8 torneios-lado">
+            <TituloSecao id="agenda-titulo">Próximos eventos</TituloSecao>
+            <Contagem />
+            <ul className="agenda">
+              {eventos.map((ev) => (
+                <li key={ev.id}>
+                  <time dateTime={ev.inicio} className="placar">
+                    {ev.dataCurta.replace("—", "–")}
+                  </time>
+                  <div>
+                    <p className="sub">{ev.nome}</p>
+                    <p className="sec">{ev.detalhe}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
 
-      <section className="secao sup-cal">
+      <section className="secao sup-papel" aria-labelledby="res-titulo">
         <div className="wrap g12" style={{ rowGap: "2.5rem" }}>
-          <div className="col-span-full lg:col-span-4">
-            <Rotulo n="02">Resultados</Rotulo>
-            <Titulo className="display t-h2 mt-6" linhas={["Quem", "*levantou a taça.*"]} />
-          </div>
+          <TituloSecao id="res-titulo" className="col-span-full lg:col-span-4">
+            Quem levantou a taça
+          </TituloSecao>
           <div className="col-span-full lg:col-span-7 lg:col-start-6">
             {resultados.map((r) => (
               <div key={r.evento}>
-                <p className="mono sec flex justify-between gap-4 pb-3">
-                  <span>{r.evento}</span>
-                  <span>{r.data}</span>
+                <p className="ui sec pb-3">
+                  {r.evento}, {r.data.toLowerCase()}
                 </p>
                 <table className="tabela">
                   <caption className="sr-only">Campeões por categoria, {r.evento}</caption>
-                  <thead className="mono">
+                  <thead>
                     <tr>
-                      <th scope="col">Cat.</th>
+                      <th scope="col">Categoria</th>
                       <th scope="col">Campeão</th>
                       <th scope="col" className="num">
                         Final
@@ -81,11 +88,15 @@ export default function Torneios() {
                   <tbody>
                     {r.campeoes.map((c) => (
                       <tr key={c.categoria}>
-                        <td className="display t-h3" style={{ color: "var(--saibro)", width: "5rem" }}>
+                        <td className="placar" style={{ fontSize: "2.4rem", color: "var(--saibro)", width: "6rem" }}>
                           {c.categoria}
                         </td>
-                        <td className="display t-h4">{c.nome}</td>
-                        <td className="num mono">{c.placar}</td>
+                        <td className="sub" style={{ fontSize: "1.25rem" }}>
+                          {c.nome}
+                        </td>
+                        <td className="num placar" style={{ fontSize: "1.5rem" }}>
+                          {c.placar}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -96,44 +107,46 @@ export default function Torneios() {
         </div>
       </section>
 
-      <section className="secao sup-grafite">
+      <section className="secao sup-vinho" aria-labelledby="rank-titulo">
         <div className="wrap g12" style={{ rowGap: "2.5rem" }}>
           <div className="col-span-full lg:col-span-4">
-            <Rotulo n="03">Ranking interno</Rotulo>
-            <Titulo className="display t-h2 mt-6" linhas={["Top 10", "*do mês.*"]} />
-            <p className="sec mt-6">
-              Quatro categorias, de A a D. Uma nova classificação sai todo fim de mês, somando os jogos do mês à classificação anterior.
-            </p>
-            <Btn href={wa(mensagens.ranking)} tom="cal" className="mt-8">
-              Entrar no ranking
-            </Btn>
+            <TituloSecao id="rank-titulo">Ranking do mês</TituloSecao>
+            <p className="sec mt-6">Quatro categorias, de A a D. A classificação nova sai todo fim de mês, somando os jogos do mês à anterior.</p>
+            <div className="mt-8 grid gap-2 justify-items-start">
+              <Btn href={wa(mensagens.ranking)}>Entrar no ranking</Btn>
+              <BtnLinha href="/clube-red/">Regras do ranking</BtnLinha>
+            </div>
           </div>
           <div className="col-span-full lg:col-span-7 lg:col-start-6">
             <table className="tabela">
               <caption className="sr-only">Ranking interno, dez primeiros colocados</caption>
-              <thead className="mono">
+              <thead>
                 <tr>
-                  <th scope="col">Pos.</th>
+                  <th scope="col">Posição</th>
                   <th scope="col">Nome</th>
                   <th scope="col">Cat.</th>
                   <th scope="col" className="num">
                     Pontos
                   </th>
                   <th scope="col" className="num">
-                    Mês
+                    No mês
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {ranking.map((j) => (
                   <tr key={j.pos}>
-                    <td className="mono sec" style={{ width: "4rem" }}>
+                    <td className="placar" style={{ fontSize: "1.9rem", width: "5rem" }}>
                       {String(j.pos).padStart(2, "0")}
                     </td>
-                    <td className={j.pos <= 3 ? "display t-h4" : ""}>{j.nome}</td>
-                    <td className="mono">{j.categoria}</td>
-                    <td className="num mono">{j.pontos.toLocaleString("pt-BR")}</td>
-                    <td className="num mono">
+                    <td className={j.pos <= 3 ? "sub" : ""} style={j.pos <= 3 ? { fontSize: "1.2rem" } : undefined}>
+                      {j.nome}
+                    </td>
+                    <td className="ui">{j.categoria}</td>
+                    <td className="num placar" style={{ fontSize: "1.5rem" }}>
+                      {j.pontos.toLocaleString("pt-BR")}
+                    </td>
+                    <td className="num">
                       <Movimento mov={j.mov} />
                     </td>
                   </tr>
@@ -144,7 +157,7 @@ export default function Torneios() {
         </div>
       </section>
 
-      <Fecho linhas={["Seu nome", "na", "*chave.*"]} />
+      <Fecho titulo="Seu nome na chave" />
     </>
   );
 }

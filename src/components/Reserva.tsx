@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { quadras } from "@/content/red";
 import { agendaDaSemana, type DiaAgenda } from "@/lib/reservas";
 import { wa } from "@/lib/wa";
-import { Seta } from "./ui";
+import { Bola } from "./ui";
 
 const fmtDia = new Intl.DateTimeFormat("pt-BR", { weekday: "short", timeZone: "America/Sao_Paulo" });
 const fmtData = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", timeZone: "America/Sao_Paulo" });
@@ -33,22 +33,22 @@ export function Reserva() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <div className="chips mono" role="radiogroup" aria-label="Piso">
+        <div className="chips" role="radiogroup" aria-label="Piso">
           {quadras.map((q) => (
             <label key={q.id}>
               <input type="radio" name="piso" checked={quadra === q.id} onChange={() => setQuadra(q.id)} />
-              {q.nome}
+              <span>{q.nome === "Rápida" ? "Quadra rápida" : "Saibro"}</span>
             </label>
           ))}
         </div>
-        <p className="mono sec">Demonstração · horários de exemplo</p>
+        <p className="ui sec">Demonstração com horários de exemplo</p>
       </div>
 
       <div className="rolagem" data-lenis-prevent tabIndex={0} role="group" aria-label="Horários da semana">
-        <div className="reserva mono">
+        <div className="reserva">
           {agenda.map((d) => (
             <div key={d.data.toISOString()} className="grid gap-px content-start">
-              <p className="reserva-dia">
+              <p className="reserva-dia ui">
                 {fmtDia.format(d.data).replace(".", "")}
                 <br />
                 <span className="sec">{fmtData.format(d.data)}</span>
@@ -84,11 +84,9 @@ export function Reserva() {
           )}
         </p>
         {link && (
-          <a className="btn btn-bola" href={link} target="_blank" rel="noopener noreferrer">
+          <a className="btn btn-claro" href={link} target="_blank" rel="noopener noreferrer">
             <span>Confirmar pelo WhatsApp</span>
-            <span className="seta">
-              <Seta />
-            </span>
+            <Bola className="btn-bola" />
           </a>
         )}
       </div>

@@ -1,26 +1,22 @@
 import { mensagens } from "@/content/red";
 import { wa } from "@/lib/wa";
-import { Titulo } from "./motion";
-import { SombraRaquetes } from "./Texturas";
-import { Btn } from "./ui";
+import { PhotoSlot } from "./PhotoSlot";
+import { Btn, BtnLinha } from "./ui";
 
-/** Chamada final em saibro, com a sombra das raquetes (ref. 04). */
-export function Fecho({ linhas = ["A quadra", "está", "*pronta.*"] }: { linhas?: string[] }) {
+/** Chamada final das páginas: a quadra em luz de fim de tarde. */
+export function Fecho({ titulo = "A quadra está pronta", foto = "linha-tarde" }: { titulo?: string; foto?: string }) {
   return (
-    <section className="sup-saibro relative overflow-hidden isolate" style={{ paddingBlock: "clamp(6rem, 14vw, 13rem)" }}>
-      <div className="absolute inset-0 -z-10" aria-hidden="true">
-        <span className="grao grao-saibro" />
-        <span className="grao grao-claro" />
-        <span className="luz" />
-        <SombraRaquetes className="absolute right-[-42%] md:right-[6%] top-[-6%] h-[112%] w-auto opacity-80" />
-      </div>
-      <div className="wrap relative">
-        <Titulo className="display t-h1" linhas={linhas} />
-        <div className="mt-10 flex flex-wrap gap-4">
-          <Btn href={wa(mensagens.aula)}>Agendar aula experimental</Btn>
-          <Btn href={wa(mensagens.quadra)} tom="grafite">
-            Reservar quadra
+    <section className="fecho" aria-labelledby="fecho-titulo">
+      <PhotoSlot name={foto} alt="" sizes="100vw" className="fecho-foto" />
+      <div className="wrap fecho-corpo">
+        <h2 id="fecho-titulo" className="display fecho-titulo">
+          {titulo}
+        </h2>
+        <div className="hero-acoes">
+          <Btn href={wa(mensagens.aula)} tom="claro">
+            Agendar aula experimental
           </Btn>
+          <BtnLinha href={wa(mensagens.quadra)}>Reservar quadra</BtnLinha>
         </div>
       </div>
     </section>

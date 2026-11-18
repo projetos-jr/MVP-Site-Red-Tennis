@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
-import { Cabeca } from "@/components/Cabeca";
+import { Cabeca, TituloSecao } from "@/components/Cabeca";
 import { Faq } from "@/components/Faq";
 import { Fecho } from "@/components/Fecho";
-import { Ingressos } from "@/components/Ingressos";
-import { Titulo } from "@/components/motion";
-import { Btn, Rotulo } from "@/components/ui";
+import { Carteirinhas } from "@/components/home/Carteirinhas";
+import { Btn } from "@/components/ui";
 import { beneficios, comparativo, faqClube, mensagens, planos, regrasRanking } from "@/content/red";
 import { wa } from "@/lib/wa";
 
@@ -16,43 +15,39 @@ export const metadata: Metadata = {
 };
 
 const INDICACAO = [
-  { n: "1", t: "Você indica", d: "Chame um amigo para uma aula experimental na Red." },
-  { n: "2", t: "Ele fecha o plano", d: "E informa o seu nome na recepção." },
-  { n: "3", t: "Você ganha", d: "Uma aula particular no mês seguinte. Sem limite de indicações." },
+  { t: "Você indica", d: "Chame um amigo para uma aula experimental na Red." },
+  { t: "Ele fecha o plano", d: "E informa o seu nome na recepção." },
+  { t: "Você ganha", d: "Uma aula particular no mês seguinte. Sem limite de indicações." },
 ];
 
 export default function ClubeRed() {
   return (
     <>
       <Cabeca
+        titulo="O clube de quem joga toda semana"
         tom="bordo"
-        rotulo="Clube Red"
-        linhas={["O clube", "*de quem joga*", "*toda semana.*"]}
-        intro="Uma mensalidade, horário garantido e vários motivos para voltar: ranking, torneio do mês e desconto para quem é da casa."
+        intro="Uma mensalidade, horário garantido e motivo para voltar: ranking, torneio do mês e desconto para quem é da casa."
       >
-        <Btn href={wa(mensagens.clube)}>Quero ser sócio</Btn>
+        <Btn href={wa(mensagens.clube)} tom="claro">
+          Quero ser sócio
+        </Btn>
       </Cabeca>
 
-      <section className="secao sup-bordo" style={{ paddingTop: "clamp(3rem, 6vw, 5rem)" }}>
+      <section className="secao sup-bordo" style={{ paddingTop: "clamp(1rem, 3vw, 2rem)" }} aria-label="Planos">
         <div className="wrap">
-          <Rotulo n="01">Planos</Rotulo>
-          <h2 className="sr-only">Planos do Clube Red</h2>
-          <div className="mt-8">
-            <Ingressos />
-          </div>
+          <Carteirinhas />
         </div>
       </section>
 
-      <section className="secao sup-cal">
+      <section className="secao sup-papel" aria-labelledby="comp-titulo">
         <div className="wrap g12" style={{ rowGap: "2rem" }}>
-          <div className="col-span-full lg:col-span-4">
-            <Rotulo n="02">Comparativo</Rotulo>
-            <Titulo className="display t-h2 mt-6" linhas={["Lado", "*a lado.*"]} />
-          </div>
+          <TituloSecao id="comp-titulo" className="col-span-full lg:col-span-4">
+            Lado a lado
+          </TituloSecao>
           <div className="col-span-full lg:col-span-8 rolagem" tabIndex={0} role="group" aria-label="Comparativo dos planos">
             <table className="tabela" style={{ minWidth: 560 }}>
               <caption className="sr-only">Comparativo dos planos do Clube Red</caption>
-              <thead className="mono">
+              <thead>
                 <tr>
                   <th scope="col">O que inclui</th>
                   {planos.map((p) => (
@@ -69,19 +64,19 @@ export default function ClubeRed() {
                       {l.item}
                     </th>
                     {l.valores.map((v, i) => (
-                      <td key={i} className="mono">
+                      <td key={i} className="ui">
                         {v}
                       </td>
                     ))}
                   </tr>
                 ))}
                 <tr>
-                  <th scope="row" className="mono" style={{ fontWeight: 500 }}>
+                  <th scope="row" className="ui">
                     Mensalidade
                   </th>
                   {planos.map((p) => (
-                    <td key={p.id} className="display t-h4">
-                      {p.preco}
+                    <td key={p.id} className="placar" style={{ fontSize: "2.2rem", color: "var(--saibro)" }}>
+                      {p.preco.replace("R$ ", "R$")}
                     </td>
                   ))}
                 </tr>
@@ -91,73 +86,60 @@ export default function ClubeRed() {
         </div>
       </section>
 
-      <section className="secao sup-grafite">
+      <section className="secao sup-vinho" aria-labelledby="ind-titulo">
         <div className="wrap">
-          <Rotulo n="03">Indicação</Rotulo>
-          <Titulo className="display t-h2 mt-6 mb-12" linhas={["Traga um amigo,", "*ganhe uma aula.*"]} />
-          <ol className="grid lg:grid-cols-3 b-t">
+          <TituloSecao id="ind-titulo" className="mb-12">
+            Traga um amigo, ganhe uma aula
+          </TituloSecao>
+          <ol className="passos">
             {INDICACAO.map((p, i) => (
-              <li key={p.n} className={`py-8 lg:py-10 b-b lg:border-b-0 ${i ? "lg:pl-8 lg:b-l" : ""} lg:pr-8`}>
-                <p className="display" style={{ fontSize: "clamp(5rem, 11vw, 10rem)", color: "var(--saibro)" }}>
-                  {p.n}
-                </p>
-                <h3 className="display t-h4 mt-4">{p.t}</h3>
-                <p className="sec mt-2">{p.d}</p>
+              <li key={p.t}>
+                <span className="placar">{i + 1}</span>
+                <h3 className="sub">{p.t}</h3>
+                <p className="sec">{p.d}</p>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      <section className="secao sup-cal">
-        <div className="wrap g12" style={{ rowGap: "2.5rem" }}>
+      <section className="secao sup-papel" aria-labelledby="vant-titulo">
+        <div className="wrap g12" style={{ rowGap: "3rem" }}>
           <div className="col-span-full lg:col-span-5">
-            <Rotulo n="04">Vantagens</Rotulo>
-            <h2 className="display t-h3 mt-6">
-              Ser sócio
-              <br />
-              <span className="serif">vale mais.</span>
-            </h2>
-            <ol className="lista-n mt-8" style={{ gridTemplateColumns: "none" }}>
+            <TituloSecao id="vant-titulo">O que o sócio tem a mais</TituloSecao>
+            <ul className="lista-fio mt-8" style={{ ["--risco" as string]: "var(--saibro)" }}>
               {beneficios.map((b) => (
-                <li key={b.titulo} style={{ display: "block" }}>
-                  <h3 className="display t-h4">{b.titulo}</h3>
-                  <p className="sec mt-1">{b.texto}</p>
+                <li key={b.titulo} style={{ gridTemplateColumns: "none" }}>
+                  <h3 className="sub">{b.titulo}</h3>
+                  <p className="sec">{b.texto}</p>
                 </li>
               ))}
-            </ol>
+            </ul>
           </div>
           <div className="col-span-full lg:col-span-6 lg:col-start-7">
-            <Rotulo n="05">Ranking interno</Rotulo>
-            <h2 className="display t-h3 mt-6">
-              Regras
-              <br />
-              <span className="serif">do jogo.</span>
-            </h2>
-            <ol className="lista-n mt-8">
-              {regrasRanking.map((r) => (
-                <li key={r} style={{ display: "grid", gridTemplateColumns: "3rem 1fr" }}>
-                  <p style={{ gridColumn: 2 }}>{r}</p>
+            <TituloSecao>Regras do ranking</TituloSecao>
+            <ol className="lista-fio mt-8">
+              {regrasRanking.map((r, i) => (
+                <li key={r} style={{ gridTemplateColumns: "3rem 1fr", gap: "0.75rem" }}>
+                  <span className="placar" style={{ fontSize: "1.9rem", color: "var(--saibro)" }}>
+                    {i + 1}
+                  </span>
+                  <p>{r}</p>
                 </li>
               ))}
             </ol>
-            <Btn href={wa(mensagens.ranking)} tom="grafite" className="mt-8">
+            <Btn href={wa(mensagens.ranking)} className="mt-8">
               Entrar no ranking
             </Btn>
           </div>
         </div>
       </section>
 
-      <section className="secao sup-bordo">
+      <section className="secao sup-bordo" aria-labelledby="faq-titulo">
         <div className="wrap g12" style={{ rowGap: "2rem" }}>
-          <div className="col-span-full lg:col-span-4">
-            <Rotulo n="06">Perguntas frequentes</Rotulo>
-            <h2 className="display t-h3 mt-6">
-              Sem letra
-              <br />
-              <span className="serif">miúda.</span>
-            </h2>
-          </div>
+          <TituloSecao id="faq-titulo" className="col-span-full lg:col-span-4">
+            Sem letra miúda
+          </TituloSecao>
           <div className="col-span-full lg:col-span-7 lg:col-start-6">
             <Faq itens={faqClube} />
           </div>
